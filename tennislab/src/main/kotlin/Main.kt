@@ -16,13 +16,18 @@ fun main(args: Array<String>) {
 
         create()
         val usuario = read()
-        println(usuario)
+        usuario?.let {
+            println(it)
+        }?: run{
+            println("NO EXISTE")
+        }
+
     }
 }
 
 fun create(): Usuario {
     val usuario = Usuario.new {
-        nombre = "Nombre"
+        nombre = "Pepe"
         apellido = "Apellido"
         email = "Email@email.com"
         password = "1234"
@@ -30,7 +35,7 @@ fun create(): Usuario {
     return usuario
 }
 
-fun read(): Usuario {
-    val usuario = Usuario.find { Usuarios.nombre eq "Nombre" }
-    return usuario.first()
+fun read(): Usuario? {
+    val usuario = Usuario.find { Usuarios.nombre eq "sndiusafh" }
+    return usuario.firstOrNull()
 }
