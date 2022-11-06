@@ -28,6 +28,8 @@ dependencies {
     // Opcionales
     // Para manejar un pool de conexions mega rápido con HikariCP (no es obligatorio)
     implementation("com.zaxxer:HikariCP:5.0.1")
+    //JColor
+    implementation("com.diogonunes:JColor:5.5.1")
 }
 
 tasks.test {
