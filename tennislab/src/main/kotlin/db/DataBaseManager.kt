@@ -309,14 +309,14 @@ object DataBaseManager : Closeable {
      * @param sqlFile
      * @throws FileNotFoundException
      */
-    @Throws(FileNotFoundException::class)
-    fun initData(sqlFile: String, logWriter: Boolean = false) {
-        this.open()
-
-        check(Files.exists(Paths.get(sqlFile))) { "El fichero $sqlFile no existe" }
-        val sr = ScriptRunner(connection) // Si estas con H2, puedes usar RunScript TODO da error
-        val reader: Reader = BufferedReader(FileReader(sqlFile))
-        sr.setLogWriter(if (logWriter) PrintWriter(System.out) else null)
-        sr.runScript(reader)
-    }
+//    @Throws(FileNotFoundException::class)
+//    fun initData(sqlFile: String, logWriter: Boolean = false) {
+//        this.open()
+//
+//        check(Files.exists(Paths.get(sqlFile))) { "El fichero $sqlFile no existe" }
+//        val sr = ScriptRunner(connection) // Si estas con H2, puedes usar RunScript TODO da error
+//        val reader: Reader = BufferedReader(FileReader(sqlFile))
+//        sr.setLogWriter(if (logWriter) PrintWriter(System.out) else null)
+//        sr.runScript(reader)
+//    }
 }
