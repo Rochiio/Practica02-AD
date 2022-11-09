@@ -1,19 +1,19 @@
+import config.AppConfig
+import db.DataBaseManager
 import models.Usuario
 import models.Usuarios
 import models.enums.tipoUsuario
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
+
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
 fun main(args: Array<String>) {
-    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    initDataBase()
+   // Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
 
     transaction {
-        addLogger(StdOutSqlLogger)
-        SchemaUtils.create(Usuarios)
+//        addLogger(StdOutSqlLogger)
+//        SchemaUtils.create(Usuarios)
 
         create()
         val usuario = read()
@@ -42,4 +42,14 @@ fun create(): Usuario {
 fun read(): Usuario? {
     val usuario = Usuario.find { Usuarios.nombre eq "Pepe" }
     return usuario.firstOrNull()
+}
+
+
+fun initDataBase() {
+    val appConfig = AppConfig.fromPropertiesFile("src/main/resources/config.properties")
+    println("Configuración: $appConfig")
+
+    // Iniciamos la base de datos con la configuracion que hemos leido
+    DataBaseManager.init(appConfig)
+
 }
