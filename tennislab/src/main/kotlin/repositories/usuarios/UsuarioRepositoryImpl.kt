@@ -6,6 +6,9 @@ import mu.KotlinLogging
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
+/**
+ * Implementación repositorio usuarios.
+ */
 
 class UsuarioRepositoryImpl: UsuarioRepository {
     private var logger = KotlinLogging.logger {}
@@ -41,7 +44,7 @@ class UsuarioRepositoryImpl: UsuarioRepository {
         logger.debug { "Añadiendo usuario" }
         val existe = Usuario.find { Usuarios.uuid eq item.uuid }.firstOrNull()
         existe?.let {
-            update(item, existe)
+            update(existe, item)
         } ?: run {
             Usuario.new {
                 nombre=item.nombre

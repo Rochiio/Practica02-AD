@@ -1,23 +1,27 @@
 import config.AppConfig
 import db.DataBaseManager
-import models.Usuario
-import models.Usuarios
+import models.*
 import models.enums.tipoUsuario
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
 
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.LocalDate
 
 
 fun main(args: Array<String>) {
-    initDataBase()
-   // Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    //initDataBase()
+    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
 
     transaction {
-//        addLogger(StdOutSqlLogger)
-//        SchemaUtils.create(Usuarios)
+        addLogger(StdOutSqlLogger)
+        SchemaUtils.create(Maquinas, Encordadores)
 
         create()
-        val usuario = read()
-        usuario?.let {
+        val encordar = read()
+        encordar?.let {
             println(it)
         }?: run{
             println("NO EXISTE")
@@ -27,21 +31,23 @@ fun main(args: Array<String>) {
 }
 
 
-fun create(): Usuario {
-    val usuario = Usuario.new {
-        nombre = "Pepe"
-        apellido = "Apellido"
-        email = "Email@email.com"
-        password = "1234"
-        tipo = tipoUsuario.ADMINISTRADOR.toString()
-        disponible = true
+fun create(): Encordador {
+    val encordador = Encordador.new {
+        automatico=true
+        tensionMaxima=20
+        tensionMinima=16
+        maquina = Maquina.new {
+            modelo = "RPG"
+            fechaAdquisicion = LocalDate.now()
+            disponible = false
+        }
     }
-    return usuario
+    return encordador
 }
 
-fun read(): Usuario? {
-    val usuario = Usuario.find { Usuarios.nombre eq "Pepe" }
-    return usuario.firstOrNull()
+fun read(): Encordador? {
+    val encordador = Encordador.find {Encordadores.automatico eq true}
+    return encordador.firstOrNull()
 }
 
 
