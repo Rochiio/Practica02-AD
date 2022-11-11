@@ -26,7 +26,6 @@ internal class UsuarioRepositoryImplTest {
                     email = "email@email.com"
                     password = "esryu5ert454"
                     tipo = tipoUsuario.TRABAJADOR.toString()
-                    disponible = true
                 }
             }
         }
@@ -47,8 +46,7 @@ internal class UsuarioRepositoryImplTest {
             { assertEquals(encontrado?.apellido, add.apellido) },
             { assertEquals(encontrado?.email, add.email) },
             { assertEquals(encontrado?.password, add.password) },
-            { assertEquals(encontrado?.tipo, add.tipo) },
-            { assertEquals(encontrado?.disponible, add.disponible) }
+            { assertEquals(encontrado?.tipo, add.tipo) }
         )
     }
 
@@ -67,8 +65,7 @@ internal class UsuarioRepositoryImplTest {
             { assertEquals(encontrado?.apellido, add.apellido) },
             { assertEquals(encontrado?.email, add.email) },
             { assertEquals(encontrado?.password, add.password) },
-            { assertEquals(encontrado?.tipo, add.tipo) },
-            { assertEquals(encontrado?.disponible, add.disponible) }
+            { assertEquals(encontrado?.tipo, add.tipo) }
         )
     }
 
@@ -84,8 +81,7 @@ internal class UsuarioRepositoryImplTest {
             { assertEquals(add.apellido, usuarioTest.apellido) },
             { assertEquals(add.email, usuarioTest.email) },
             { assertEquals(add.password, usuarioTest.password) },
-            { assertEquals(add.tipo, usuarioTest.tipo) },
-            { assertEquals(add.disponible, usuarioTest.disponible) }
+            { assertEquals(add.tipo, usuarioTest.tipo) }
         )
     }
 
@@ -100,7 +96,6 @@ internal class UsuarioRepositoryImplTest {
             email = "actu@email.com"
             password = "esryu5ert454"
             tipo = tipoUsuario.TRABAJADOR.toString()
-            disponible = true
         }
         var consulta = repo.update(add,actualizar)
 
@@ -111,8 +106,7 @@ internal class UsuarioRepositoryImplTest {
             { assertEquals(consulta.apellido, actualizar.apellido) },
             { assertEquals(consulta.email, actualizar.email) },
             { assertEquals(consulta.password, actualizar.password) },
-            { assertEquals(consulta.tipo, actualizar.tipo) },
-            { assertEquals(consulta.disponible, actualizar.disponible) }
+            { assertEquals(consulta.tipo, actualizar.tipo) }
         )
     }
 
@@ -142,8 +136,7 @@ internal class UsuarioRepositoryImplTest {
             { assertEquals(lista[0].apellido, add.apellido) },
             { assertEquals(lista[0].email, add.email) },
             { assertEquals(lista[0].password, add.password) },
-            { assertEquals(lista[0].tipo, add.tipo) },
-            { assertEquals(lista[0].disponible, add.disponible) }
+            { assertEquals(lista[0].tipo, add.tipo) }
         )
     }
 }
