@@ -9,19 +9,23 @@ object Encordadores: IntIdTable() {
     val automatico = bool("automatico")
     val tensionMaxima = integer("tensionMaxima")
     val tensionMinima = integer("tensionMinima")
-    val maquina = reference("maquinas_uuid", Maquinas)
+    val maquina = uuid("uuid")
 }
 
 
 class Encordador(id : EntityID<Int>) : IntEntity(id){
     companion object: IntEntityClass<Encordador>(Encordadores)
+    var modelo by Maquinas.modelo
+    var uuid by Maquinas.uuid
+    var fechaAdquisicion by Maquinas.fechaAdquisicion
+    var disponible by Maquinas.disponible
     var automatico by Encordadores.automatico
     var tensionMaxima by Encordadores.tensionMaxima
     var tensionMinima by Encordadores.tensionMinima
-    var maquina by Maquina referencedOn Encordadores.maquina
+    //var maquina by Maquina referencedOn Encordadores.maquina
 
     override fun toString(): String {
-        return "Encordador(automatico=$automatico, tensionMaxima=$tensionMaxima kg, tensionMinima=$tensionMinima kg, maquina=$maquina)"
+        return "Encordador(modelo='$modelo', uuid=$uuid, fechaAdquisicion=$fechaAdquisicion, disponible=$disponible, automatico=$automatico, tensionMaxima=$tensionMaxima, tensionMinima=$tensionMinima)"
     }
 
 

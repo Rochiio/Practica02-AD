@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.addLogger
 
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
+import java.util.UUID
 
 
 fun main(args: Array<String>) {
@@ -18,8 +19,8 @@ fun main(args: Array<String>) {
     transaction {
         addLogger(StdOutSqlLogger)
         SchemaUtils.create(Maquinas, Encordadores)
-
-        create()
+        val maquina = createMaquina()
+        create(maquina)
         val encordar = read()
         encordar?.let {
             println(it)
@@ -31,18 +32,25 @@ fun main(args: Array<String>) {
 }
 
 
-fun create(): Encordador {
+fun create(maquina: Maquina): Encordador {
     val encordador = Encordador.new {
         automatico=true
         tensionMaxima=20
         tensionMinima=16
-        maquina = Maquina.new {
-            modelo = "RPG"
-            fechaAdquisicion = LocalDate.now()
-            disponible = false
-        }
+        uuid = maquina.uuid
     }
     return encordador
+}
+
+fun createMaquina(): Maquina{
+    val maquina = Maquina.new {
+        uuid = UUID.randomUUID()
+        modelo = "Maquinita"
+        disponible = true
+        fechaAdquisicion = LocalDate.now()
+    }
+
+    return maquina
 }
 
 fun read(): Encordador? {
