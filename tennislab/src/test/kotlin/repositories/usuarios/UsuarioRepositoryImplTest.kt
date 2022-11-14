@@ -2,7 +2,7 @@ package repositories.usuarios
 
 import models.Usuario
 import models.Usuarios
-import models.enums.tipoUsuario
+import models.enums.TipoUsuario
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -25,7 +25,7 @@ internal class UsuarioRepositoryImplTest {
                     apellido = "test"
                     email = "email@email.com"
                     password = "esryu5ert454"
-                    tipo = tipoUsuario.TRABAJADOR.toString()
+                    tipo = TipoUsuario.TRABAJADOR.toString()
                 }
             }
         }
@@ -95,7 +95,7 @@ internal class UsuarioRepositoryImplTest {
             apellido = "test"
             email = "actu@email.com"
             password = "esryu5ert454"
-            tipo = tipoUsuario.TRABAJADOR.toString()
+            tipo = TipoUsuario.TRABAJADOR.toString()
         }
         var consulta = repo.update(add,actualizar)
 
