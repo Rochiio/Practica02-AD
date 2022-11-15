@@ -1,11 +1,9 @@
 import config.AppConfig
 import db.DataBaseManager
 import models.*
-import models.enums.tipoUsuario
+import models.maquinas.Personalizadora
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
@@ -15,47 +13,49 @@ import java.util.UUID
 fun main(args: Array<String>) {
     //initDataBase()
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-
+    lateinit var m : Maquina
     transaction {
-        addLogger(StdOutSqlLogger)
-        SchemaUtils.create(Maquinas, Encordadores)
-        val maquina = createMaquina()
-        create(maquina)
-        val encordar = read()
-        encordar?.let {
-            println(it)
-        }?: run{
-            println("NO EXISTE")
-        }
+        SchemaUtils.create(Maquinas, Encordadoras)
+        println("TRANSACCION 1")
+        m = create()
 
+        println(m)
+
+        createEncordadora(m)
+
+        println("---------------------------")
+        println(read())
+        println(maquinaById(m))
     }
+
+
 }
 
 
-fun create(maquina: Maquina): Encordador {
-    val encordador = Encordador.new {
-        automatico=true
-        tensionMaxima=20
-        tensionMinima=16
-        uuid = maquina.uuid
+fun create(): Maquina {
+    val encordador = Maquina.new {
+        modelo = "Encordadora1"
+        fechaAdquisicion = LocalDate.now()
+        disponible = true
     }
     return encordador
 }
 
-fun createMaquina(): Maquina{
-    val maquina = Maquina.new {
-        uuid = UUID.randomUUID()
-        modelo = "Maquinita"
-        disponible = true
-        fechaAdquisicion = LocalDate.now()
+fun createEncordadora(maquina: Maquina): Encordador {
+    return Encordador.new {
+        automatico = true
+        tensionMaxima = 10
+        tensionMinima = 1
+        this.maquinaID = maquina.id
     }
 
-    return maquina
 }
 
 fun read(): Encordador? {
-    val encordador = Encordador.find {Encordadores.automatico eq true}
-    return encordador.firstOrNull()
+    return Encordador.all().map { it }.toList().firstOrNull()
+}
+fun maquinaById(m : Maquina) : Maquina?{
+    return Maquina.findById(m.id)
 }
 
 
