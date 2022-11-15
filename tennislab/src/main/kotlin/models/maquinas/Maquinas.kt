@@ -10,7 +10,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.javatime.date
 import java.util.UUID
 
-object Maquinas : IntIdTable() {
+object Maquinas : IntIdTable("maquinas") {
     val uuid = uuid("uuid").autoGenerate()
     val modelo = varchar("modelo", 50)
     val fechaAdquisicion = date("fechaAdquisicion")

@@ -1,54 +1,61 @@
 import config.AppConfig
 import db.DataBaseManager
 import models.*
-import models.enums.tipoUsuario
+import models.maquinas.Personalizadora
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
+import java.util.UUID
 
 
 fun main(args: Array<String>) {
     //initDataBase()
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-
+    lateinit var m : Maquina
     transaction {
-        addLogger(StdOutSqlLogger)
-        SchemaUtils.create(Maquinas, Encordadores)
+        SchemaUtils.create(Maquinas, Encordadoras)
+        println("TRANSACCION 1")
+        m = create()
 
-        create()
-        val encordar = read()
-        encordar?.let {
-            println(it)
-        }?: run{
-            println("NO EXISTE")
-        }
+        println(m)
 
+        createEncordadora(m)
+
+        println("---------------------------")
+        println(read())
+        println(maquinaById(m))
     }
-    println()
+
+
 }
 
 
-fun create(): Encordador {
-    val encordador = Encordador.new {
-        automatico=true
-        tensionMaxima=20
-        tensionMinima=16
-        maquina = Maquina.new {
-            modelo = "RPG"
-            fechaAdquisicion = LocalDate.now()
-            disponible = false
-        }
+fun create(): Maquina {
+    val encordador = Maquina.new {
+        modelo = "Encordadora1"
+        fechaAdquisicion = LocalDate.now()
+        disponible = true
     }
     return encordador
 }
 
+fun createEncordadora(maquina: Maquina): Encordador {
+    return Encordador.new {
+        automatico = true
+        tensionMaxima = 10
+        tensionMinima = 1
+        this.maquinaID = maquina.id
+    }
+
+}
+
 fun read(): Encordador? {
-    val encordador = Encordador.find {Encordadores.automatico eq true}
-    return encordador.firstOrNull()
+    return Encordador.all().map { it }.toList().firstOrNull()
+}
+fun maquinaById(m : Maquina) : Maquina?{
+    return Maquina.findById(m.id)
 }
 
 
