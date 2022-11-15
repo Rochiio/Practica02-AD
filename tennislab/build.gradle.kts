@@ -28,8 +28,8 @@ dependencies {
     // Opcionales
     // Para manejar un pool de conexions mega rápido con HikariCP (no es obligatorio)
     implementation("com.zaxxer:HikariCP:5.0.1")
-    //JColor
-    implementation("com.diogonunes:JColor:5.5.1")
+    //Terminal
+    implementation("com.github.ajalt.mordant:mordant:2.0.0-beta8")
 }
 
 tasks.test {

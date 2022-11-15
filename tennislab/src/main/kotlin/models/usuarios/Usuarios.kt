@@ -16,7 +16,6 @@ object Usuarios : IntIdTable(){
     val email = varchar("email", 50)
     val password  = varchar("password", 16) //hacer lo de la codificacion sha512
     val tipo = varchar("tipo",13)
-    val disponible = bool("disponible")
     //override val primaryKey = PrimaryKey(id, name = "PK_Usuario_ID")
 }
 
@@ -28,10 +27,8 @@ class Usuario(id: EntityID<Int>): IntEntity(id){
     var email by Usuarios.email
     var password by Usuarios.password
     var tipo by Usuarios.tipo
-    var disponible by Usuarios.disponible
-
     override fun toString(): String {
-        return "Usuario(uuid='$uuid', nombre='$nombre', apellido='$apellido', email='$email', tipo='$tipo', disponible=$disponible)"
+        return "Usuario(uuid='$uuid', nombre='$nombre', apellido='$apellido', email='$email', tipo='$tipo')"
     }
 
 
