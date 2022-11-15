@@ -1,8 +1,7 @@
 package repositories.maquinas
 
-import models.Maquina
-import models.Maquinas
-import org.h2.engine.Database
+import entities.MaquinaDAO
+import entities.MaquinaTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.javatime.dateLiteral
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
+import repositories.MaquinaTable.MaquinaRepositoryImpl
 import java.time.LocalDate
 import java.util.*
 
@@ -35,7 +35,7 @@ internal class MaquinaRepositoryImplTest {
     @Test
     fun findById() = transaction {
 
-        SchemaUtils.create(Maquinas)
+        SchemaUtils.create(MaquinaTable)
 
         var add = repository.add(maquinaTest)
         var found = add?.id?.let { repository.findById(it.value) }

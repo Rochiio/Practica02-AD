@@ -25,7 +25,6 @@ internal class UsuarioRepositoryImplTest {
                     apellido = "test"
                     email = "email@email.com"
                     password = "esryu5ert454"
-                    tipo = TipoUsuario.TRABAJADOR.toString()
                 }
             }
         }

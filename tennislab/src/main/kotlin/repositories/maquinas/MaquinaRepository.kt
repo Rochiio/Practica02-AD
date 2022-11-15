@@ -1,6 +1,6 @@
 package repositories.maquinas
 
-import models.Maquina
+import entities.MaquinaDAO
 import repositories.ICRUD
 import java.util.UUID
 

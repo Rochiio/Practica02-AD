@@ -1,6 +1,8 @@
 import config.AppConfig
-import db.DataBaseManager
-import models.*
+import entities.enums.db.DataBaseManager
+import entities.*
+import entities.enums.TipoTarea
+import entities.pedidos.TareaDAO
 
 import models.enums.TipoUsuario
 import models.usuarios.Trabajador
@@ -12,11 +14,29 @@ import java.util.UUID
 
 
 fun main(args: Array<String>) {
-     var vista= Vista()
-    do {
-        var num = vista.principal()
-        vista.opcionesPrincipal(num)
-    }while (num!=0)
+    var p = "12345"
+    println("Antes de encriptar: $p")
+    var encriptado = PasswordParser.encriptar(p)
+    println("Encriptado: $encriptado")
+
+    if (encriptado==PasswordParser.encriptar("12345")){
+        println("Iguales")
+    }
+
+
+//    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+//    transaction {
+//        SchemaUtils.create(Tareas)
+//        val tarea = crearTarea()
+//        println(tarea)
+//    }
+
+//     var vista= Vista()
+//
+//    do {
+//        var num = vista.principal()
+//        vista.opcionesPrincipal(num)
+//    }while (num!=0)
 
 
     //initDataBase()
@@ -73,9 +93,15 @@ fun create(): Trabajador {
 
     return trabajador
 }
-
-fun createEncordadora(maquina: Maquina): Encordador {
-    return Encordador.new {
+fun crearTarea() : TareaDAO{
+    return TareaDAO.new {
+        precio = 15
+        raqueta = "Raqueta1"
+        tipoTarea = TipoTarea.ENCORDADO
+    }
+}
+fun createEncordadora(maquina: MaquinaDAO): EncordadorDAO {
+    return EncordadorDAO.new {
         automatico = true
         tensionMaxima = 10
         tensionMinima = 1

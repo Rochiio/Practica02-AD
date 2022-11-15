@@ -1,4 +1,4 @@
-package models
+package entities
 
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -15,7 +15,7 @@ object Usuarios : IntIdTable(){
     val apellido  = varchar("apellido", 50)
     val email = varchar("email", 50)
     val password  = varchar("password", 16) //hacer lo de la codificacion sha512
-    val tipo = varchar("tipo",13)
+    //val tipo = varchar("tipo",13)
     //override val primaryKey = PrimaryKey(id, name = "PK_Usuario_ID")
 }
 
@@ -28,7 +28,7 @@ class Usuario(id: EntityID<Int>): IntEntity(id){
     var password by Usuarios.password
     var tipo by Usuarios.tipo
     override fun toString(): String {
-        return "Usuario(uuid='$uuid', nombre='$nombre', apellido='$apellido', email='$email', tipo='$tipo')"
+        return "Usuario(uuid='$uuid', nombre='$nombre', apellido='$apellido', email='$email')"
     }
 
 
