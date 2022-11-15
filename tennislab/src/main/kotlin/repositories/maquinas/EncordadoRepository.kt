@@ -1,6 +1,6 @@
 package repositories.maquinas
 
-import models.Encordador
+import entities.EncordadorDAO
 import repositories.ICRUD
 
 interface EncordadoRepository: ICRUD<Encordador,Int> {

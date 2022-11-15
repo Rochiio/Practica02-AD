@@ -51,7 +51,6 @@ class UsuarioRepositoryImpl: UsuarioRepository {
                 apellido = item.apellido
                 email = item.email
                 password = item.password
-                tipo = item.tipo
             }
         }
     }

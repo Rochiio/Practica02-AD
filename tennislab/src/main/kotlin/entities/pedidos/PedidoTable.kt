@@ -1,7 +1,7 @@
-package models.pedidos
+package entities.pedidos
 
-import models.usuarios.Trabajador
-import models.usuarios.Trabajadores
+import entities.usuarios.TrabajadorDAO
+import entities.usuarios.TrabajadorTable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.javatime.date
 
 object Pedidos: IntIdTable() {
     val uuid = uuid("uuid").autoGenerate()
-    val trabajador = reference("trabajador",Trabajadores)
+    val trabajador = reference("trabajador",TrabajadorTable)
     val estado = varchar("estado",10)
     val entrada = date("fechaEntrada")
     val fechaSalida = date("fechaSalida")

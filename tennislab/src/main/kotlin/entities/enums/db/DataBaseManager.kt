@@ -1,4 +1,4 @@
-package db
+package entities.enums.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger {}
 object DataBaseManager {
     lateinit var appConfig: AppConfig
     fun init(appConfig: AppConfig) {
-        this.appConfig = appConfig
+        DataBaseManager.appConfig = appConfig
         logger.debug("Initializing database")
         // Aplicamos Hiraki para la conexión a la base de datos
         val hikariConfig = HikariConfig().apply {

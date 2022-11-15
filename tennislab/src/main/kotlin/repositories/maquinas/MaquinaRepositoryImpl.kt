@@ -1,10 +1,11 @@
-package repositories.maquinas
+package repositories.MaquinaTable
 
 import models.Maquina
 import models.Maquinas
 
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.transactions.transaction
+import repositories.maquinas.MaquinaRepository
 import java.util.*
 
 class MaquinaRepositoryImpl : MaquinaRepository {
