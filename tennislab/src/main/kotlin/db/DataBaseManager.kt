@@ -3,7 +3,7 @@ package db
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import config.AppConfig
-import models.Encordadores
+import models.Encordadoras
 import models.Maquinas
 import models.Usuarios
 import mu.KotlinLogging
@@ -55,7 +55,7 @@ object DataBaseManager {
         if (appConfig.jdbcshowSQL)
             addLogger(StdOutSqlLogger) // Para que se vea el log de consulas a la base de datos
 
-        SchemaUtils.create(Usuarios, Maquinas, Encordadores)
+        SchemaUtils.create(Usuarios, Maquinas, Encordadoras)
         logger.debug("Tables created")
     }
 }

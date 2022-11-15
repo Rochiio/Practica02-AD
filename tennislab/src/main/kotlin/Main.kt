@@ -1,11 +1,14 @@
 import config.AppConfig
 import db.DataBaseManager
 import models.*
+
 import models.enums.TipoUsuario
 import models.usuarios.Trabajador
 
+
 import view.Vista
 import java.time.LocalDate
+import java.util.UUID
 
 
 fun main(args: Array<String>) {
@@ -71,9 +74,21 @@ fun create(): Trabajador {
     return trabajador
 }
 
+fun createEncordadora(maquina: Maquina): Encordador {
+    return Encordador.new {
+        automatico = true
+        tensionMaxima = 10
+        tensionMinima = 1
+        this.maquinaID = maquina.id
+    }
+
+}
+
 fun read(): Encordador? {
-    val encordador = Encordador.find {Encordadores.automatico eq true}
-    return encordador.firstOrNull()
+    return Encordador.all().map { it }.toList().firstOrNull()
+}
+fun maquinaById(m : Maquina) : Maquina?{
+    return Maquina.findById(m.id)
 }
 
 
