@@ -52,7 +52,6 @@ class UsuarioRepositoryImpl: UsuarioRepository {
                 email = item.email
                 password = item.password
                 tipo = item.tipo
-                disponible = item.disponible
             }
         }
     }
@@ -72,7 +71,6 @@ class UsuarioRepositoryImpl: UsuarioRepository {
             email = updateItem.email
             password = updateItem.password
             tipo = updateItem.tipo
-            disponible = updateItem.disponible
         }
     }
 
@@ -85,7 +83,6 @@ class UsuarioRepositoryImpl: UsuarioRepository {
     override fun delete(item: Usuario): Boolean =transaction{
         logger.debug { "Eliminando Usuario" }
       val existe = Usuario.find { Usuarios.uuid eq item.uuid }.firstOrNull()?: return@transaction false
-      existe.disponible = false
       return@transaction true
     }
 

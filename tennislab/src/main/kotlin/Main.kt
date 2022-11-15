@@ -1,44 +1,77 @@
 import config.AppConfig
 import db.DataBaseManager
 import models.*
-import models.maquinas.Personalizadora
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
 
-import org.jetbrains.exposed.sql.transactions.transaction
+import models.enums.TipoUsuario
+import models.usuarios.Trabajador
+
+
+import view.Vista
 import java.time.LocalDate
 import java.util.UUID
 
 
 fun main(args: Array<String>) {
+     var vista= Vista()
+    do {
+        var num = vista.principal()
+        vista.opcionesPrincipal(num)
+    }while (num!=0)
+
+
     //initDataBase()
-    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-    lateinit var m : Maquina
-    transaction {
-        SchemaUtils.create(Maquinas, Encordadoras)
-        println("TRANSACCION 1")
-        m = create()
-
-        println(m)
-
-        createEncordadora(m)
-
-        println("---------------------------")
-        println(read())
-        println(maquinaById(m))
-    }
-
-
+//    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+//
+//    transaction {
+//        addLogger(StdOutSqlLogger)
+//        SchemaUtils.create(Usuarios, Trabajadores)
+//
+//        var x = create()
+//        println(colorize(x.toString(), Attribute.RED_TEXT()))
+//
+//        var usuarios =Usuario.all()
+//        for (usuario in usuarios){
+//            println(colorize(usuario.toString(), Attribute.RED_TEXT()))
+//        }
+//
+//        var turnos =Turno.all()
+//        for (turno in turnos){
+//            println(colorize(turno.toString(), Attribute.RED_TEXT()))
+//        }
+//
+//        var maquinas = Maquina.all()
+//        for (maquina in maquinas){
+//            println(colorize(maquina.toString(), Attribute.RED_TEXT()))
+//        }
+//
+//
+//    }
 }
 
 
-fun create(): Maquina {
-    val encordador = Maquina.new {
-        modelo = "Encordadora1"
-        fechaAdquisicion = LocalDate.now()
-        disponible = true
+fun create(): Trabajador {
+    val trabajador =Trabajador.new {
+        administrador=false
+        usuario = Usuario.new {
+            nombre="Pepe"
+            apellido="Garcia"
+            email ="vsdf@gmail.com"
+            password ="frgggg"
+            tipo= TipoUsuario.TRABAJADOR.toString()
+        }
+        turno = Turno.new {
+            comienzoTurno="12:00"
+            finTurno="15:30"
+            maquina = Maquina.new {
+                modelo="LPG2015"
+                fechaAdquisicion=LocalDate.now()
+                disponible=false
+
+            }
+        }
     }
-    return encordador
+
+    return trabajador
 }
 
 fun createEncordadora(maquina: Maquina): Encordador {
