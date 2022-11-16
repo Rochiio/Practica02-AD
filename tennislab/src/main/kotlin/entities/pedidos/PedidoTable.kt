@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.date
 
-object Pedidos: IntIdTable() {
+object PedidoTable: IntIdTable() {
     val uuid = uuid("uuid").autoGenerate()
     val trabajador = reference("trabajador",TrabajadorTable)
     val estado = varchar("estado",10)
@@ -20,16 +20,16 @@ object Pedidos: IntIdTable() {
     // TODO tareas
 }
 
-class Pedido(id:EntityID<Int>): IntEntity(id){
-    companion object: IntEntityClass<Pedido>(Pedidos)
-    var uuid by Pedidos.uuid
-    var trabajador by Trabajador referencedOn Pedidos.trabajador
-    var estado by Pedidos.estado
-    var entrega by Pedidos.entrada
-    var fechaSalida by Pedidos.fechaSalida
-    var fechaFinal by Pedidos.fechaFinal
-    var precioTotal by Pedidos.precioTotal
-    var topeEntrega by Pedidos.topeEntrega
+class PedidoDAO(id:EntityID<Int>): IntEntity(id){
+    companion object: IntEntityClass<PedidoDAO>(PedidoTable)
+    var uuid by PedidoTable.uuid
+    var trabajador by TrabajadorDAO referencedOn PedidoTable.trabajador
+    var estado by PedidoTable.estado
+    var entrega by PedidoTable.entrada
+    var fechaSalida by PedidoTable.fechaSalida
+    var fechaFinal by PedidoTable.fechaFinal
+    var precioTotal by PedidoTable.precioTotal
+    var topeEntrega by PedidoTable.topeEntrega
 
     override fun toString(): String {
         return "Pedido(uuid=$uuid, trabajador=$trabajador, estado='$estado', entrega=$entrega, fechaSalida=$fechaSalida, fechaFinal=$fechaFinal, precioTotal=$precioTotal, topeEntrega=$topeEntrega)"

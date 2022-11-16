@@ -1,4 +1,4 @@
-package entities.enums.db
+package db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
