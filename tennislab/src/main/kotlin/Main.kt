@@ -1,11 +1,11 @@
 import config.AppConfig
-import entities.enums.db.DataBaseManager
+import db.DataBaseManager
 import entities.*
 import entities.enums.TipoTarea
 import entities.pedidos.TareaDAO
 
-import models.enums.TipoUsuario
 import models.usuarios.Trabajador
+import utils.PasswordParser
 
 
 import view.Vista
@@ -44,7 +44,7 @@ fun main(args: Array<String>) {
 //
 //    transaction {
 //        addLogger(StdOutSqlLogger)
-//        SchemaUtils.create(Usuarios, Trabajadores)
+//        SchemaUtils.create(UsuarioTable, Trabajadores)
 //
 //        var x = create()
 //        println(colorize(x.toString(), Attribute.RED_TEXT()))
@@ -69,53 +69,53 @@ fun main(args: Array<String>) {
 }
 
 
-fun create(): Trabajador {
-    val trabajador =Trabajador.new {
-        administrador=false
-        usuario = Usuario.new {
-            nombre="Pepe"
-            apellido="Garcia"
-            email ="vsdf@gmail.com"
-            password ="frgggg"
-            tipo= TipoUsuario.TRABAJADOR.toString()
-        }
-        turno = Turno.new {
-            comienzoTurno="12:00"
-            finTurno="15:30"
-            maquina = Maquina.new {
-                modelo="LPG2015"
-                fechaAdquisicion=LocalDate.now()
-                disponible=false
-
-            }
-        }
-    }
-
-    return trabajador
-}
-fun crearTarea() : TareaDAO{
-    return TareaDAO.new {
-        precio = 15
-        raqueta = "Raqueta1"
-        tipoTarea = TipoTarea.ENCORDADO
-    }
-}
-fun createEncordadora(maquina: MaquinaDAO): EncordadorDAO {
-    return EncordadorDAO.new {
-        automatico = true
-        tensionMaxima = 10
-        tensionMinima = 1
-        this.maquinaID = maquina.id
-    }
-
-}
-
-fun read(): Encordador? {
-    return Encordador.all().map { it }.toList().firstOrNull()
-}
-fun maquinaById(m : Maquina) : Maquina?{
-    return Maquina.findById(m.id)
-}
+//fun create(): Trabajador {
+//    val trabajador =Trabajador.new {
+//        administrador=false
+//        usuario = Usuario.new {
+//            nombre="Pepe"
+//            apellido="Garcia"
+//            email ="vsdf@gmail.com"
+//            password ="frgggg"
+//            tipo= TipoUsuario.TRABAJADOR.toString()
+//        }
+//        turno = Turno.new {
+//            comienzoTurno="12:00"
+//            finTurno="15:30"
+//            maquina = Maquina.new {
+//                modelo="LPG2015"
+//                fechaAdquisicion=LocalDate.now()
+//                disponible=false
+//
+//            }
+//        }
+//    }
+//
+//    return trabajador
+//}
+//fun crearTarea() : TareaDAO{
+//    return TareaDAO.new {
+//        precio = 15
+//        raqueta = "Raqueta1"
+//        tipoTarea = TipoTarea.ENCORDADO
+//    }
+//}
+//fun createEncordadora(maquina: MaquinaDAO): EncordadorDAO {
+//    return EncordadorDAO.new {
+//        automatico = true
+//        tensionMaxima = 10
+//        tensionMinima = 1
+//        this.maquinaID = maquina.id
+//    }
+//
+//}
+//
+//fun read(): Encordador? {
+//    return Encordador.all().map { it }.toList().firstOrNull()
+//}
+//fun maquinaById(m : Maquina) : Maquina?{
+//    return Maquina.findById(m.id)
+//}
 
 
 fun initDataBase() {
