@@ -30,6 +30,8 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.0.1")
     //Terminal
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta8")
+    //SHA-512
+    implementation("com.google.guava:guava:31.1-jre")
 }
 
 tasks.test {
