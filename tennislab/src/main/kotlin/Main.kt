@@ -1,6 +1,7 @@
 import config.AppConfig
 import db.DataBaseManager
 import entities.usuarios.TrabajadorDAO
+import entities.usuarios.TrabajadorTable
 
 import entities.usuarios.UsuarioDAO
 import entities.usuarios.UsuarioTable
@@ -24,14 +25,16 @@ fun main(args: Array<String>) {
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
     var repo = UsuarioRepositoryImpl(UsuarioDAO)
     transaction {
-        SchemaUtils.create(UsuarioTable)
+        SchemaUtils.create(UsuarioTable, TrabajadorTable)
         var usuer = Usuario(null,"Pepe","Pele","dfjhihfg","4544",true)
         val guardada = repo.save(usuer)
 
-        var trab = Trabajador(null, guardada.uuid!!,false)
         var salida =TrabajadorDAO.new {
-            //usuario= trab.usuario TODO esto no pilla el uuid
+            usuario=UsuarioDAO.findById(guardada.uuid!!)!!
+            administrador= false
         }
+
+        println(salida)
     }
 
 //    initDataBase()

@@ -8,7 +8,7 @@ import java.util.UUID
  */
 data class Trabajador(
     val id : UUID?,
-    val usuario: UUID,
+    val usuario: Usuario,
     val administrador: Boolean,
     //val turno: Turno
 ) {

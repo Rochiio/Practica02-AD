@@ -1,7 +1,5 @@
 package entities.usuarios
 
-import entities.TurnoDAO
-import entities.TurnoTable
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -15,7 +13,7 @@ import java.util.UUID
  */
 
 object TrabajadorTable: UUIDTable() {
-    val usuario = reference("usuario", UsuarioTable.id)
+    val usuario = reference("usuario", UsuarioTable)
     val iID : Column<Int> = integer("iID").autoIncrement()
     val administrador = bool("administrador")
     //val turno = reference("turno", TurnoTable)
@@ -28,7 +26,7 @@ class TrabajadorDAO(id: EntityID<UUID>) : UUIDEntity(id){
     var administrador by TrabajadorTable.administrador
     //var turno by TurnoDAO referencedOn TrabajadorTable.turno
     override fun toString(): String {
-        return "Trabajador(usuario_uuid=${usuario.id}, uuid=$id, administrador=$administrador)"
+        return "Trabajador(usuario_uuid=${usuario.toStringHerencia()}, uuid=$id, administrador=$administrador)"
     }
 
 

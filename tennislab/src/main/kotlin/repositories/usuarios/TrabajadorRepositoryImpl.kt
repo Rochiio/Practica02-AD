@@ -30,7 +30,7 @@ class TrabajadorRepositoryImpl(
     }
 
     override fun save(item: Trabajador): Trabajador {
-        println(trabajadorDAO.findById(item.id))
+        println(trabajadorDAO.findById(item.id!!))
         trabajadorDAO.findById(item.id)?.let {
             update(item, it)
         } ?: run {
@@ -44,7 +44,7 @@ class TrabajadorRepositoryImpl(
         return trabajadorDAO.new(item.id) {
             administrador = item.administrador
             usuario = item.usuario.uuid?.let { usuarioDAO.findById(it) }!!
-            turno = TurnoDAO.findById(item.turno.uuid)!!
+            //turno = TurnoDAO.findById(item.turno.uuid)!!
         }.fromTrabajadorDaoToTrabajador()
     }
 
@@ -53,13 +53,13 @@ class TrabajadorRepositoryImpl(
         return updateItem.apply {
             usuario = item.usuario.uuid?.let { usuarioDAO.findById(it) }!!
             administrador = item.administrador
-            turno = TurnoDAO.findById(item.turno.uuid)!!
+            //turno = TurnoDAO.findById(item.turno.uuid)!!
         }.fromTrabajadorDaoToTrabajador()
 
     }
 
     override fun delete(item: Trabajador): Boolean = transaction {
-        val existe = trabajadorDAO.findById(item.id) ?: return@transaction false
+        val existe = trabajadorDAO.findById(item.id!!) ?: return@transaction false
         logger.debug { "eliminando trabajador: $item" }
         existe.delete()
         true

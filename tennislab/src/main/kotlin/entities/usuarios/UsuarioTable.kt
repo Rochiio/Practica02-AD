@@ -29,5 +29,9 @@ class UsuarioDAO(id: EntityID<UUID>): UUIDEntity(id){
         return "Usuario(uuid='$id', nombre='$nombre', apellido='$apellido', email='$email', disponible='$disponible')"
     }
 
+    fun toStringHerencia(): String{
+        return "Usuario(nombre='$nombre', apellido='$apellido', email='$email', disponible='$disponible')"
+    }
+
 
 }
