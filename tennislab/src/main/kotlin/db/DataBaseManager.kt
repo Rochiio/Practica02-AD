@@ -3,9 +3,7 @@ package db
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import config.AppConfig
-import models.Encordadores
-import models.Maquinas
-import models.Usuarios
+import entities.UsuarioTable
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -18,7 +16,7 @@ private val logger = KotlinLogging.logger {}
 object DataBaseManager {
     lateinit var appConfig: AppConfig
     fun init(appConfig: AppConfig) {
-        this.appConfig = appConfig
+        DataBaseManager.appConfig = appConfig
         logger.debug("Initializing database")
         // Aplicamos Hiraki para la conexión a la base de datos
         val hikariConfig = HikariConfig().apply {
@@ -55,7 +53,7 @@ object DataBaseManager {
         if (appConfig.jdbcshowSQL)
             addLogger(StdOutSqlLogger) // Para que se vea el log de consulas a la base de datos
 
-        SchemaUtils.create(Usuarios, Maquinas, Encordadores)
+        //SchemaUtils.create(UsuarioTable, MaquinaTable, Encordadoras)
         logger.debug("Tables created")
     }
 }

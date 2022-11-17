@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val mockkVersion: String = "1.13.2"
+
 plugins {
     kotlin("jvm") version "1.7.20"
     application
@@ -14,6 +16,8 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    //MOCKK
+    testImplementation("io.mockk:mockk:${mockkVersion}")
     // Exposed
     implementation("org.jetbrains.exposed:exposed-core:0.39.2")
     implementation("org.jetbrains.exposed:exposed-dao:0.39.2")
@@ -30,6 +34,8 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.0.1")
     //Terminal
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta8")
+    //SHA-512
+    implementation("com.google.guava:guava:31.1-jre")
 }
 
 tasks.test {

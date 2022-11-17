@@ -1,6 +1,5 @@
-package models
+package entities
 
-import models.Turnos.nullable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.UUIDEntity
@@ -11,22 +10,25 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.javatime.date
 import java.util.UUID
 
-object Maquinas : IntIdTable() {
-    val uuid = uuid("uuid").autoGenerate()
+/**
+ * Entidad de maquinas para la base de datos.
+ */
+object MaquinaTable : UUIDTable("maquinas") {
+    //val uuid = uuid("uuid").autoGenerate()
     val modelo = varchar("modelo", 50)
     val fechaAdquisicion = date("fechaAdquisicion")
     val disponible = bool("disponible")
 }
 
-class Maquina(id : EntityID<Int>) : IntEntity(id){
-    companion object : IntEntityClass<Maquina>(Maquinas)
+class MaquinaDAO(id : EntityID<UUID>) : UUIDEntity(id){
+    companion object : UUIDEntityClass<MaquinaDAO>(MaquinaTable)
 
-    var uuid by Maquinas.uuid
-    var modelo by Maquinas.modelo
-    var fechaAdquisicion by Maquinas.fechaAdquisicion
-    var disponible by Maquinas.disponible
+    //var uuid by MaquinaTable.uuid
+    var modelo by MaquinaTable.modelo
+    var fechaAdquisicion by MaquinaTable.fechaAdquisicion
+    var disponible by MaquinaTable.disponible
     override fun toString(): String {
-        return "Maquina(uuid=$uuid, modelo='$modelo', fechaAdquisicion=$fechaAdquisicion, disponible=$disponible)"
+        return "Maquina(uuid=$id, modelo='$modelo', fechaAdquisicion=$fechaAdquisicion, disponible=$disponible)"
     }
 
 
