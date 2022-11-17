@@ -1,11 +1,8 @@
-package entities
+package entities.usuarios
 
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import java.util.*
 
@@ -30,6 +27,10 @@ class UsuarioDAO(id: EntityID<UUID>): UUIDEntity(id){
 
     override fun toString(): String {
         return "Usuario(uuid='$id', nombre='$nombre', apellido='$apellido', email='$email', disponible='$disponible')"
+    }
+
+    fun toStringHerencia(): String{
+        return "Usuario(nombre='$nombre', apellido='$apellido', email='$email', disponible='$disponible')"
     }
 
 

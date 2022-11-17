@@ -8,7 +8,6 @@ fun TrabajadorDAO.fromTrabajadorDaoToTrabajador(): Trabajador {
         id = id.value,
         usuario = usuario.fromUsuarioDaoToUsuario(),
         administrador = administrador,
-        turno = turno.fromTurnoDaoToTurno()
-
+        //turno = turno.fromTurnoDaoToTurno()
     )
 }

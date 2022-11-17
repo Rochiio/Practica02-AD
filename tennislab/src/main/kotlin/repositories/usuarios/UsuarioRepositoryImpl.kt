@@ -1,7 +1,7 @@
 package repositories.usuarios
 
-import entities.UsuarioDAO
-import entities.UsuarioTable
+import entities.usuarios.UsuarioDAO
+import entities.usuarios.UsuarioTable
 import mappers.fromUsuarioDaoToUsuario
 import models.usuarios.Usuario
 import mu.KotlinLogging
@@ -75,7 +75,7 @@ class UsuarioRepositoryImpl(
 
     override fun deleteAll(): Boolean =transaction{
         logger.debug { "Eliminando todos los usuarios"}
-        var num =UsuarioTable.deleteAll()
+        var num = UsuarioTable.deleteAll()
         return@transaction num>0
     }
 }

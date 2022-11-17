@@ -1,7 +1,5 @@
 package entities.usuarios
 
-import entities.UsuarioDAO
-import entities.UsuarioTable
 import entities.pedidos.PedidoDAO
 import entities.pedidos.PedidoTable
 import org.jetbrains.exposed.dao.IntEntity

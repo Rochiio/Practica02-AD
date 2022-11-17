@@ -1,6 +1,6 @@
 package mappers
 
-import entities.UsuarioDAO
+import entities.usuarios.UsuarioDAO
 import models.usuarios.Usuario
 
 fun UsuarioDAO.fromUsuarioDaoToUsuario() : Usuario{

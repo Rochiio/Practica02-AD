@@ -1,7 +1,7 @@
 package repositories.usuarios
 
-import entities.UsuarioDAO
-import entities.UsuarioTable
+import entities.usuarios.UsuarioDAO
+import entities.usuarios.UsuarioTable
 import models.usuarios.Usuario
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
