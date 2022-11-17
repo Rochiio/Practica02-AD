@@ -1,27 +1,16 @@
 import config.AppConfig
 import db.DataBaseManager
-import entities.*
-import entities.enums.TipoTarea
-import entities.pedidos.TareaDAO
-
 import entities.usuarios.TrabajadorDAO
-import entities.usuarios.TrabajadorTable
-import mappers.fromMaquinaDaoToMaquina
-import models.Turno
-import models.maquinas.Maquina
+
+import entities.usuarios.UsuarioDAO
+import entities.usuarios.UsuarioTable
+import models.usuarios.Trabajador
 
 import models.usuarios.Usuario
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import repositories.usuarios.TrabajadorRepositoryImpl
 import repositories.usuarios.UsuarioRepositoryImpl
-import utils.PasswordParser
-
-
-import view.Vista
-import java.time.LocalDate
-import java.util.UUID
 
 
 fun main(args: Array<String>) {
@@ -37,11 +26,12 @@ fun main(args: Array<String>) {
     transaction {
         SchemaUtils.create(UsuarioTable)
         var usuer = Usuario(null,"Pepe","Pele","dfjhihfg","4544",true)
-        println(usuer)
         val guardada = repo.save(usuer)
-        println(guardada)
-        val encontrao = guardada.uuid?.let { repo.findById(it) }
-        println(encontrao)
+
+        var trab = Trabajador(null, guardada.uuid!!,false)
+        var salida =TrabajadorDAO.new {
+            //usuario= trab.usuario TODO esto no pilla el uuid
+        }
     }
 
 //    initDataBase()

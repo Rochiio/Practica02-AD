@@ -1,12 +1,8 @@
 package repositories.usuarios
 
-import db.DataBaseManager
-import entities.UsuarioDAO
-import entities.UsuarioTable
-import entities.usuarios.TrabajadorDAO
+import entities.usuarios.UsuarioDAO
 import entities.usuarios.TrabajadorTable
 import io.mockk.MockKAnnotations
-import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import models.Turno
@@ -18,11 +14,8 @@ import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.assertAll
 
 import java.time.LocalDate
 import java.util.*

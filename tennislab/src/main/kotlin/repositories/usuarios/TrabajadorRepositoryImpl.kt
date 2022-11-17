@@ -1,19 +1,12 @@
 package repositories.usuarios
 
 import entities.TurnoDAO
-import entities.UsuarioDAO
-import entities.UsuarioTable
+import entities.usuarios.UsuarioDAO
 import entities.usuarios.TrabajadorDAO
-import entities.usuarios.TrabajadorTable
 import models.usuarios.Trabajador
 import mu.KotlinLogging
-import entities.UsuarioTable.uuid
 import mappers.fromTrabajadorDaoToTrabajador
-import models.maquinas.Maquina
-import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.UUIDEntityClass
-import org.jetbrains.exposed.sql.SqlExpressionBuilder
-import org.jetbrains.exposed.sql.exposedLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
