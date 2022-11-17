@@ -50,7 +50,7 @@ class TrabajadorRepositoryImpl(
         logger.debug { "añadiendo trabajador: $item" }
         return trabajadorDAO.new(item.id) {
             administrador = item.administrador
-            usuario = usuarioDAO.findById(item.usuario.uuid)!!
+            usuario = item.usuario.uuid?.let { usuarioDAO.findById(it) }!!
             turno = TurnoDAO.findById(item.turno.uuid)!!
         }.fromTrabajadorDaoToTrabajador()
     }
@@ -58,7 +58,7 @@ class TrabajadorRepositoryImpl(
     fun update(item: Trabajador, updateItem: TrabajadorDAO): Trabajador {
         logger.debug { "actualizando trabajador" }
         return updateItem.apply {
-            usuario = usuarioDAO.findById(item.usuario.uuid)!!
+            usuario = item.usuario.uuid?.let { usuarioDAO.findById(it) }!!
             administrador = item.administrador
             turno = TurnoDAO.findById(item.turno.uuid)!!
         }.fromTrabajadorDaoToTrabajador()

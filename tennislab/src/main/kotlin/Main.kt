@@ -36,11 +36,11 @@ fun main(args: Array<String>) {
     var repo = UsuarioRepositoryImpl(UsuarioDAO)
     transaction {
         SchemaUtils.create(UsuarioTable)
-        var usuer = Usuario(UUID.randomUUID(),"Pepe","Pele","dfjhihfg","4544",true)
+        var usuer = Usuario(null,"Pepe","Pele","dfjhihfg","4544",true)
         println(usuer)
         val guardada = repo.save(usuer)
         println(guardada)
-        val encontrao = repo.findByUUID(guardada.uuid)
+        val encontrao = guardada.uuid?.let { repo.findById(it) }
         println(encontrao)
     }
 

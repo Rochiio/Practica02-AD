@@ -31,7 +31,7 @@ internal class UsuarioRepositoryImplTest {
     fun findById() = transaction{
         SchemaUtils.create(UsuarioTable)
         var saveItem = repository.save(usuarioTest)
-        var encontrado = repository.findById(saveItem.uuid)
+        var encontrado = repository.findById(saveItem.uuid!!)
 
         assertAll(
             { assertNotNull(encontrado) },
@@ -47,7 +47,7 @@ internal class UsuarioRepositoryImplTest {
     fun findByUUID()= transaction {
         SchemaUtils.create(UsuarioTable)
         var saveItem = repository.save(usuarioTest)
-        var encontrado = repository.findByUUID(saveItem.uuid)
+        var encontrado = repository.findByUUID(saveItem.uuid!!)
 
         assertAll(
             { assertNotNull(encontrado) },
@@ -92,7 +92,7 @@ internal class UsuarioRepositoryImplTest {
         SchemaUtils.create(UsuarioTable)
         var saveItem = repository.save(usuarioTest)
         var eliminado = repository.delete(saveItem)
-        var find = repository.findById(saveItem.uuid)
+        var find = repository.findById(saveItem.uuid!!)
 
         assertAll(
             { assertTrue (eliminado) },
@@ -112,6 +112,7 @@ internal class UsuarioRepositoryImplTest {
             { assertEquals(lista[0].email, saveItem.email) },
             { assertEquals(lista[0].password, saveItem.password) }
         )
+
 
     }
 

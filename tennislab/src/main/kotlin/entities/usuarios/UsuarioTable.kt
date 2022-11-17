@@ -16,7 +16,7 @@ object UsuarioTable : UUIDTable(){
     val nombre = varchar("nombre", 50)
     val apellido  = varchar("apellido", 50)
     val email = varchar("email", 50)
-    val password  = varchar("password", 16) //hacer lo de la codificacion sha512
+    val password  = varchar("password",10) //hacer lo de la codificacion sha512
     val disponible = bool("disponible")
 }
 
