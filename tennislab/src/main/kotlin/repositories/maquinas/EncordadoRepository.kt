@@ -4,5 +4,5 @@ import entities.EncordadorDAO
 import models.maquinas.Encordador
 import repositories.ICRUD
 
-interface EncordadoRepository: ICRUD<EncordadorDAO, Encordador,Int> {
+interface EncordadoRepository: ICRUD<Encordador,Int> {
 }

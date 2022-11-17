@@ -7,11 +7,11 @@ import java.util.*
  * Clase Usuario.
  */
 data class Usuario(
-    var uuid: UUID?,
-    val nombre: String,
-    val apellido:String,
-    val email:String,
-    val password:String,
-    val disponible: Boolean
+    var uuid: UUID,
+    var nombre: String,
+    var apellido:String,
+    var email:String,
+    var password:String,
+    var disponible: Boolean
 ) {
 }

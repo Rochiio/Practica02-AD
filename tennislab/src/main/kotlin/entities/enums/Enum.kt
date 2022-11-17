@@ -5,7 +5,7 @@ package entities.enums
 //}
 
 enum class TipoMaquina{
-    AUTOMATICA, SEMIAUTOMATICA
+    AUTOMATICA, MANUAL
 }
 
 enum class Estado{
