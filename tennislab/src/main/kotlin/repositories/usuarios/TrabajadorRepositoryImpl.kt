@@ -5,6 +5,7 @@ import entities.TurnoDAO
 import entities.UsuarioDAO
 import entities.UsuarioTable
 import entities.usuarios.TrabajadorDAO
+import entities.usuarios.TrabajadorTable
 import models.usuarios.Trabajador
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -31,7 +32,7 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
      */
     override fun findByUUID(uuid: UUID): TrabajadorDAO? =transaction{
         logger.debug { "Buscando trabajador por uuid $uuid"}
-        TrabajadorDAO.find { UsuarioTable.uuid eq uuid }.firstOrNull()
+        TrabajadorDAO.find { TrabajadorTable.usuario eq uuid }.firstOrNull()
     }
 
 
@@ -40,7 +41,7 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
      */
     override fun add(item: Trabajador): TrabajadorDAO =transaction{
         logger.debug { "añadiendo trabajador: $item" }
-        val existe = TrabajadorDAO.find { UsuarioTable.uuid eq item.usuario.uuid!! }.firstOrNull()
+        val existe = TrabajadorDAO.find{TrabajadorTable.usuario eq item.usuario.uuid!!}.firstOrNull()
         existe?.let {
             update(item, existe)
         } ?: run {
