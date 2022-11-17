@@ -7,7 +7,7 @@ import java.util.*
  * Clase Usuario.
  */
 data class Usuario(
-    var uuid: UUID?,
+    var uuid: UUID,
     val nombre: String,
     val apellido:String,
     val email:String,

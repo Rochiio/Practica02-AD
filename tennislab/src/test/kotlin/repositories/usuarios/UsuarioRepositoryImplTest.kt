@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 //package repositories.usuarios
+=======
+package repositories.usuarios//package repositories.usuarios
+>>>>>>> 6bf9ce7639f84cffb5cd70e636c5af14c143252a
 //TODO LO he dejado para acordarme de hacerlos bine jaja
 //import models.Usuario
 //import models.UsuarioTable
