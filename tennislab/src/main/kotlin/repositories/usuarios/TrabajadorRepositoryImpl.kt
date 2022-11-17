@@ -46,7 +46,7 @@ class TrabajadorRepositoryImpl(
         return item
     }
 
-    fun add(item: Trabajador): Trabajador {
+    override fun add(item: Trabajador): Trabajador {
         logger.debug { "añadiendo trabajador: $item" }
         return trabajadorDAO.new(item.id) {
             administrador = item.administrador
@@ -74,6 +74,10 @@ class TrabajadorRepositoryImpl(
 
     override fun findAll(): List<Trabajador> {
         return trabajadorDAO.all().map { it.fromTrabajadorDaoToTrabajador() }
+    }
+
+    override fun deleteAll(): Boolean {
+        TODO("Not yet implemented")
     }
 
 

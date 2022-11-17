@@ -15,6 +15,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import repositories.usuarios.TrabajadorRepositoryImpl
+import repositories.usuarios.UsuarioRepositoryImpl
 import utils.PasswordParser
 
 
@@ -24,17 +25,23 @@ import java.util.UUID
 
 
 fun main(args: Array<String>) {
-    var p = "12345"
-    println("Antes de encriptar: $p")
-    var encriptado = PasswordParser.encriptar(p)
-    println("Encriptado: $encriptado")
+    //     var vista= Vista()
+//
+//    do {
+//        var num = vista.principal()
+//        vista.opcionesPrincipal(num)
+//    }while (num!=0)
 
-    if (encriptado==PasswordParser.encriptar("12345")){
-        println("Iguales")
-    }
-
-    if (encriptado == PasswordParser.encriptar("12345")) {
-        println("Iguales")
+    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    var repo = UsuarioRepositoryImpl(UsuarioDAO)
+    transaction {
+        SchemaUtils.create(UsuarioTable)
+        var usuer = Usuario(UUID.randomUUID(),"Pepe","Pele","dfjhihfg","4544",true)
+        println(usuer)
+        val guardada = repo.save(usuer)
+        println(guardada)
+        val encontrao = repo.findByUUID(guardada.uuid)
+        println(encontrao)
     }
 
 //    initDataBase()
@@ -80,12 +87,7 @@ fun main(args: Array<String>) {
 //        println(tarea)
 //    }
 
-//     var vista= Vista()
-//
-//    do {
-//        var num = vista.principal()
-//        vista.opcionesPrincipal(num)
-//    }while (num!=0)
+
 
 
     //initDataBase()
