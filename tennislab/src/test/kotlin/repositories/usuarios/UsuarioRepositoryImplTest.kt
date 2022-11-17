@@ -1,4 +1,4 @@
-//package repositories.usuarios
+package repositories.usuarios//package repositories.usuarios
 //TODO LO he dejado para acordarme de hacerlos bine jaja
 //import models.Usuario
 //import models.UsuarioTable

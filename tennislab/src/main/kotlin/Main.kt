@@ -3,8 +3,18 @@ import db.DataBaseManager
 import entities.*
 import entities.enums.TipoTarea
 import entities.pedidos.TareaDAO
+import entities.usuarios.TrabajadorDAO
+import entities.usuarios.TrabajadorTable
+import mappers.fromMaquinaDaoToMaquina
+import models.Turno
+import models.maquinas.Maquina
 
 import models.usuarios.Trabajador
+import models.usuarios.Usuario
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
+import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.PasswordParser
 
 
@@ -19,8 +29,42 @@ fun main(args: Array<String>) {
     var encriptado = PasswordParser.encriptar(p)
     println("Encriptado: $encriptado")
 
-    if (encriptado==PasswordParser.encriptar("12345")){
+    if (encriptado == PasswordParser.encriptar("12345")) {
         println("Iguales")
+    }
+    initDataBase()
+    val repo = TrabajadorRepositoryImpl(TrabajadorDAO, UsuarioDAO)
+    var maqui = Maquina(UUID.randomUUID(), "modelo1", LocalDate.now(), true)
+    var turno = Turno(UUID.randomUUID(), "10", "13", maqui)
+    var usuario = Usuario(UUID.randomUUID(), "moah", "asidah", "emal", "pass", true)
+    var trabajador = Trabajador(usuario.uuid, usuario, true, turno)
+
+    transaction {
+
+        var a = UsuarioDAO.new(usuario.uuid) {
+            iID = 1
+            nombre = usuario.nombre
+            apellido = usuario.apellido
+            email = usuario.email
+            password = usuario.password
+            disponible = usuario.disponible
+        }
+        var m = MaquinaDAO.new(maqui.uuid) {
+            modelo = maqui.modelo
+            fechaAdquisicion = maqui.fechaAdquisicion
+            disponible = maqui.disponible
+        }
+
+        var t = TurnoDAO.new(turno.uuid) {
+            iID = 1
+            comienzoTurno = turno.comienzoTurno
+            finTurno = turno.comienzoTurno
+            maquina = null
+            pedidos = null
+        }
+        SchemaUtils.create(TrabajadorTable, UsuarioTable, MaquinaTable)
+        println(repo.save(trabajador))
+
     }
 
 
