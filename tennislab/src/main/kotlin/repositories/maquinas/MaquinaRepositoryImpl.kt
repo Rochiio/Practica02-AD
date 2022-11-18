@@ -8,13 +8,13 @@ import java.util.*
 //class MaquinaRepositoryImpl : MaquinaRepository {
 //
 //    private var logger = KotlinLogging.logger {}
-//    override fun findById(id: Int): Maquina? = transaction {
-//        logger.debug { "buscando maquina con id: $id" }
-//        Maquina.findById(id)
+//    override fun findById(uuid: Int): Maquina? = transaction {
+//        logger.debug { "buscando maquina con uuid: $uuid" }
+//        Maquina.findById(uuid)
 //    }
 //
 //    override fun findByUUID(uuid: UUID): Maquina? = transaction {
-//        logger.debug { "buscando maquina con id: $id" }
+//        logger.debug { "buscando maquina con uuid: $uuid" }
 //        Maquina.find { Maquinas.uuid eq uuid }.firstOrNull()
 //    }
 //

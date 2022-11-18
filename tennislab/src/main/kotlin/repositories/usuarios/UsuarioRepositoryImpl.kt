@@ -57,7 +57,6 @@ class UsuarioRepositoryImpl(
             password = item.password
             disponible = item.disponible
         }.fromUsuarioDaoToUsuario()
-
     }
 
     override fun delete(item: Usuario): Boolean =transaction{

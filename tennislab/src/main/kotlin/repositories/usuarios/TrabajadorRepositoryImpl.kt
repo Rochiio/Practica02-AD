@@ -1,12 +1,14 @@
 package repositories.usuarios
 
-import entities.TurnoDAO
 import entities.usuarios.UsuarioDAO
 import entities.usuarios.TrabajadorDAO
+import entities.usuarios.TrabajadorTable
 import models.usuarios.Trabajador
 import mu.KotlinLogging
 import mappers.fromTrabajadorDaoToTrabajador
+import mappers.fromUsuarioDaoToUsuario
 import org.jetbrains.exposed.dao.UUIDEntityClass
+import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -19,58 +21,62 @@ class TrabajadorRepositoryImpl(
 ) : TrabajadorRepository {
 
     private var logger = KotlinLogging.logger {}
-    override fun findById(id: UUID): Trabajador? {
-        logger.debug { "buscando trabajador con id: $id" }
-        return trabajadorDAO.findById(id)?.fromTrabajadorDaoToTrabajador()
+
+
+    override fun findById(id: UUID): Trabajador? =transaction{
+        logger.debug { "buscando trabajador con uuid: $id" }
+        trabajadorDAO.findById(id)?.fromTrabajadorDaoToTrabajador()
     }
 
-    override fun findByUUID(uuid: UUID): Trabajador? {
-        logger.debug { "buscando trabajador con id: $uuid" }
-        return trabajadorDAO.findById(uuid)?.fromTrabajadorDaoToTrabajador()
+    override fun findByUUID(uuid: UUID): Trabajador? =transaction{
+        logger.debug { "buscando trabajador con uuid: $uuid" }
+        trabajadorDAO.findById(uuid)?.fromTrabajadorDaoToTrabajador()
     }
 
-    override fun save(item: Trabajador): Trabajador {
-        println(trabajadorDAO.findById(item.id!!))
-        trabajadorDAO.findById(item.id)?.let {
-            update(item, it)
+    override fun save(item: Trabajador): Trabajador =transaction{
+        logger.debug { "Save trabajador" }
+        item.uuid?.let {
+            trabajadorDAO.findById(it)?.let {
+                update(item, it)
+            }
         } ?: run {
             add(item)
         }
-        return item
     }
 
-    override fun add(item: Trabajador): Trabajador {
-        logger.debug { "añadiendo trabajador: $item" }
-        return trabajadorDAO.new(item.id) {
+    override fun add(item: Trabajador): Trabajador =transaction{
+        logger.debug { "Add trabajador"}
+        trabajadorDAO.new {
+            usuario = usuarioDAO.findById(item.usuario.uuid!!)!!
             administrador = item.administrador
-            usuario = item.usuario.uuid?.let { usuarioDAO.findById(it) }!!
-            //turno = TurnoDAO.findById(item.turno.uuid)!!
         }.fromTrabajadorDaoToTrabajador()
     }
 
-    fun update(item: Trabajador, updateItem: TrabajadorDAO): Trabajador {
+    fun update(item: Trabajador, updateItem: TrabajadorDAO): Trabajador =transaction{
         logger.debug { "actualizando trabajador" }
-        return updateItem.apply {
-            usuario = item.usuario.uuid?.let { usuarioDAO.findById(it) }!!
+        updateItem.apply {
+            usuario = usuarioDAO.findById(item.usuario.uuid!!)!!
             administrador = item.administrador
-            //turno = TurnoDAO.findById(item.turno.uuid)!!
         }.fromTrabajadorDaoToTrabajador()
-
     }
 
-    override fun delete(item: Trabajador): Boolean = transaction {
-        val existe = trabajadorDAO.findById(item.id!!) ?: return@transaction false
+    override fun delete(item: Trabajador): Boolean =transaction{
+        val existe = item.uuid?.let { trabajadorDAO.findById(it) } ?: return@transaction false
         logger.debug { "eliminando trabajador: $item" }
         existe.delete()
-        true
+        return@transaction true
     }
 
-    override fun findAll(): List<Trabajador> {
-        return trabajadorDAO.all().map { it.fromTrabajadorDaoToTrabajador() }
+    override fun findAll(): List<Trabajador> =transaction{
+        logger.debug { "Buscando todos los trabajadores"}
+        trabajadorDAO.all().map { it.fromTrabajadorDaoToTrabajador()}.toList()
     }
 
-    override fun deleteAll(): Boolean {
-        TODO("Not yet implemented")
+
+    override fun deleteAll(): Boolean =transaction{
+        logger.debug { "Eliminando todos los trabajadores"}
+        var num = TrabajadorTable.deleteAll()
+        return@transaction num>0
     }
 
 

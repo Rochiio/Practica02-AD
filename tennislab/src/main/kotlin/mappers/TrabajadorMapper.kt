@@ -5,7 +5,7 @@ import models.usuarios.Trabajador
 
 fun TrabajadorDAO.fromTrabajadorDaoToTrabajador(): Trabajador {
     return Trabajador(
-        id = id.value,
+        uuid = id.value,
         usuario = usuario.fromUsuarioDaoToUsuario(),
         administrador = administrador,
         //turno = turno.fromTurnoDaoToTurno()
