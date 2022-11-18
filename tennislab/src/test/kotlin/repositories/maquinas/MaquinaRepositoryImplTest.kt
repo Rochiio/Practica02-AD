@@ -37,7 +37,7 @@ internal class MaquinaRepositoryImplTest {
 //        SchemaUtils.create(MaquinaTable)
 //
 //        var add = repository.add(maquinaTest)
-//        var found = add?.id?.let { repository.findById(it.value) }
+//        var found = add?.uuid?.let { repository.findById(it.value) }
 //
 //        assertNotNull(found)
 //    }

@@ -149,7 +149,7 @@ fun main(args: Array<String>) {
 //        automatico = true
 //        tensionMaxima = 10
 //        tensionMinima = 1
-//        this.maquinaID = maquina.id
+//        this.maquinaID = maquina.uuid
 //    }
 //
 //}
@@ -158,7 +158,7 @@ fun main(args: Array<String>) {
 //    return Encordador.all().map { it }.toList().firstOrNull()
 //}
 //fun maquinaById(m : Maquina) : Maquina?{
-//    return Maquina.findById(m.id)
+//    return Maquina.findById(m.uuid)
 //}
 
 

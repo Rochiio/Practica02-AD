@@ -4,7 +4,7 @@ import models.usuarios.Trabajador
 import java.util.UUID
 
 /**
- * Entities, models, id
+ * Entities, models, uuid
  */
 interface ICRUD<T,ID> {
     fun findById(id: ID):T?
