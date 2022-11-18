@@ -29,8 +29,8 @@ class UsuarioRepositoryImpl(
     override fun save(item: Usuario): Usuario =transaction{
         logger.debug { "Save usuario" }
         item.uuid?.let {
-            usuarioDAO.findById(it)?.let {
-                update(item, it)
+            usuarioDAO.findById(it)?.let { update ->
+                update(item, update)
             }
         } ?: run {
             add(item)
