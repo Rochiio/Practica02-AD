@@ -6,5 +6,5 @@ import repositories.ICRUD
 import java.util.UUID
 
 
-interface MaquinaRepository : ICRUD<Maquina, Int> {
+interface MaquinaRepository : ICRUD<Maquina, UUID> {
 }
