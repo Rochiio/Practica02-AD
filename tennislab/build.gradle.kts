@@ -4,6 +4,7 @@ val mockkVersion: String = "1.13.2"
 
 plugins {
     kotlin("jvm") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.20"
     application
 }
 
@@ -36,6 +37,8 @@ dependencies {
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta8")
     //SHA-512
     implementation("com.google.guava:guava:31.1-jre")
+    // Serializa Json
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 }
 
 tasks.test {

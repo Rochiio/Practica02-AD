@@ -1,11 +1,8 @@
 package repositories.maquinas
 
-import entities.MaquinaDAO
-import entities.MaquinaTable
-import entities.usuarios.UsuarioDAO
-import entities.usuarios.UsuarioTable
+import entities.maquinas.MaquinaDAO
+import entities.maquinas.MaquinaTable
 import models.maquinas.Maquina
-import models.usuarios.Usuario
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -13,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
-import repositories.MaquinaTable.MaquinaRepositoryImpl
-import repositories.usuarios.UsuarioRepositoryImpl
 import java.time.LocalDate
 import java.util.*
 

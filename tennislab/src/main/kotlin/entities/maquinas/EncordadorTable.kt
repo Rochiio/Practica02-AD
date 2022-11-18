@@ -1,4 +1,4 @@
-package entities
+package entities.maquinas
 
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -9,7 +9,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
  * Entidad de encordador para la base de datos.
  */
 object EncordadorTable: IntIdTable() {
-    val maquina = reference("maquina",MaquinaTable)
+    val maquina = reference("maquina", MaquinaTable)
     val automatico = bool("automatico")
     val tensionMaxima = integer("tensionMaxima")
     val tensionMinima = integer("tensionMinima")

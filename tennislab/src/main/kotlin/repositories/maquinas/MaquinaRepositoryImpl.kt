@@ -1,17 +1,13 @@
-package repositories.MaquinaTable
+package repositories.maquinas
 
-import entities.MaquinaDAO
-import entities.MaquinaTable
-import entities.usuarios.UsuarioDAO
+import entities.maquinas.MaquinaDAO
+import entities.maquinas.MaquinaTable
 import mappers.fromMaquinaDaoToMaquina
-import mappers.fromUsuarioDaoToUsuario
 import models.maquinas.Maquina
-import models.usuarios.Usuario
 import mu.KotlinLogging
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import repositories.maquinas.MaquinaRepository
 import java.util.*
 
 class MaquinaRepositoryImpl(

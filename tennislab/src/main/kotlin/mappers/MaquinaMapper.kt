@@ -1,6 +1,6 @@
 package mappers
 
-import entities.MaquinaDAO
+import entities.maquinas.MaquinaDAO
 import models.maquinas.Maquina
 
 fun MaquinaDAO.fromMaquinaDaoToMaquina() : Maquina = Maquina(
