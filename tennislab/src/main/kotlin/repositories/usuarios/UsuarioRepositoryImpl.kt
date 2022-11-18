@@ -1,7 +1,7 @@
 package repositories.usuarios
 
-import entities.UsuarioDAO
-import entities.UsuarioTable
+import entities.usuarios.UsuarioDAO
+import entities.usuarios.UsuarioTable
 import mappers.fromUsuarioDaoToUsuario
 import models.usuarios.Usuario
 import mu.KotlinLogging
@@ -28,12 +28,13 @@ class UsuarioRepositoryImpl(
 
     override fun save(item: Usuario): Usuario =transaction{
         logger.debug { "Save usuario" }
-        usuarioDAO.findById(item.uuid)?.let {
-            update(item, it)
+        item.uuid?.let {
+            usuarioDAO.findById(it)?.let { update ->
+                update(item, update)
+            }
         } ?: run {
             add(item)
         }
-        item
     }
 
     override fun add(item: Usuario): Usuario =transaction{
@@ -56,11 +57,10 @@ class UsuarioRepositoryImpl(
             password = item.password
             disponible = item.disponible
         }.fromUsuarioDaoToUsuario()
-
     }
 
     override fun delete(item: Usuario): Boolean =transaction{
-        val existe = usuarioDAO.findById(item.uuid) ?: return@transaction false
+        val existe = item.uuid?.let { usuarioDAO.findById(it) } ?: return@transaction false
         logger.debug { "eliminando usuario: $item" }
         existe.delete()
         return@transaction true
@@ -68,13 +68,13 @@ class UsuarioRepositoryImpl(
 
     override fun findAll(): List<Usuario> =transaction{
         logger.debug { "Buscando todos los usuarios"}
-        usuarioDAO.all().map { it.fromUsuarioDaoToUsuario() }
+        usuarioDAO.all().map { it.fromUsuarioDaoToUsuario()}.toList()
     }
 
 
     override fun deleteAll(): Boolean =transaction{
         logger.debug { "Eliminando todos los usuarios"}
-        var num =UsuarioTable.deleteAll()
+        var num = UsuarioTable.deleteAll()
         return@transaction num>0
     }
 }
