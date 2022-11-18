@@ -15,6 +15,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import java.util.*
 
+/**
+ * TODO creo que es por el save, hay algo mal, pero no se si es por culpa del guardado del usuario que no deberia.
+ * O por el propio guardado de trabajador que intenta hacer un new o algo asi.
+ */
 internal class TrabajadorRepositoryImplTest {
     private var usuarioTest: Usuario = Usuario(UUID.randomUUID(),"Prueba","Test","prueba@gmail.com","123456",true)
     private lateinit var usuarioTrabajador: Usuario
