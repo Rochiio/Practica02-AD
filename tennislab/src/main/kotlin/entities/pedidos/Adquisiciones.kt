@@ -5,6 +5,9 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
+/**
+ * Entidad adquisiciones para la base de datos.
+ */
 object AdquisicionesTable : IntIdTable() {
     var tarea = reference("tarea", TareaTable)
     var producto = varchar("producto", 50)

@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 /**
- * Clase maquina
+ * Modelo maquina
  */
 data class Maquina(
     val uuid : UUID?,

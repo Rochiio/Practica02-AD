@@ -1,11 +1,11 @@
 package mappers
 
-import entities.pedidos.PedidoTable.uuid
 import entities.usuarios.ClienteDAO
-import entities.usuarios.TrabajadorDAO
 import models.usuarios.Cliente
-import models.usuarios.Trabajador
 
+/**
+ * Mapper de clienteDAO a cliente modelo
+ */
 fun ClienteDAO.fromClienteDaoToCliente(): Cliente {
         return Cliente(
             uuid = id.value,

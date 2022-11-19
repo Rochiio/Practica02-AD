@@ -4,7 +4,7 @@ import java.util.*
 
 
 /**
- * Clase Usuario.
+ * Modelo Usuario.
  */
 data class Usuario(
     var uuid: UUID?,

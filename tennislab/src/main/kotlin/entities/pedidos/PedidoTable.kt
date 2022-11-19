@@ -12,6 +12,9 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.javatime.date
 import java.util.*
 
+/**
+ * Entidad pedido para la  base de datos.
+ */
 object PedidoTable: UUIDTable() {
     //val uuid = uuid("uuid").autoGenerate()
     //val trabajador = reference("trabajador",TrabajadorTable)

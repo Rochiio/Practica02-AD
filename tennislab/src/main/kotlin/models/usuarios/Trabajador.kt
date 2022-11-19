@@ -3,7 +3,7 @@ package models.usuarios
 import java.util.UUID
 
 /**
- * Clase trabajador.
+ * Modelo trabajador.
  */
 data class Trabajador(
     val uuid : UUID?,

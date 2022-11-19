@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import java.util.*
 
 /**
- * Clase UsuarioTable
+ * Entidad Usuario para la base de datos.
  */
 object UsuarioTable : UUIDTable(){
     val nombre = varchar("nombre", 50)

@@ -12,7 +12,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import java.util.*
 
 /**
- * Entidad de clinetes para la base de datos.
+ * Entidad de clientes para la base de datos.
  */
 object ClienteTable: UUIDTable() {
     val usuario = reference("usuario", UsuarioTable)
