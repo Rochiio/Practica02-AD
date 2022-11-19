@@ -26,7 +26,7 @@ internal class TrabajadorRepositoryImplTest {
     private var repoUsuario = UsuarioRepositoryImpl(UsuarioDAO)
     private var repository = TrabajadorRepositoryImpl(TrabajadorDAO, UsuarioDAO)
 
-
+private lateinit var tDAO : TrabajadorDAO
     @BeforeEach
     fun setUp() {
         Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
@@ -36,7 +36,8 @@ internal class TrabajadorRepositoryImplTest {
             repoUsuario.deleteAll()
 
             usuarioTrabajador = repoUsuario.save(usuarioTest)
-            trabTest = Trabajador(UUID.randomUUID(),usuarioTrabajador,false)
+            trabTest = Trabajador(usuarioTrabajador.uuid,usuarioTrabajador,false)
+
         }
     }
 

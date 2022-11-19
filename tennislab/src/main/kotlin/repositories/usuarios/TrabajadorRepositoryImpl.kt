@@ -46,6 +46,13 @@ class TrabajadorRepositoryImpl(
 
     override fun add(item: Trabajador): Trabajador =transaction{
         logger.debug { "Add trabajador"}
+        usuarioDAO.new {
+            nombre = item.usuario.nombre
+            apellido = item.usuario.apellido
+            email = item.usuario.email
+            password = item.usuario.password
+            disponible = item.usuario.disponible
+        }
         trabajadorDAO.new {
             usuario = usuarioDAO.findById(item.usuario.uuid!!)!!
             administrador = item.administrador

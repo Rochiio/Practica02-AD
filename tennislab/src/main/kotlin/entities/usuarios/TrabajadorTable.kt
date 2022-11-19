@@ -14,7 +14,7 @@ import java.util.UUID
 
 object TrabajadorTable: UUIDTable() {
     val iID : Column<Int> = integer("iID").autoIncrement()
-    val usuario = reference("usuario", UsuarioTable)
+    val usuario = reference("usuario_id", UsuarioTable.id)
     val administrador = bool("administrador")
     //val turno = reference("turno", TurnoTable)
 }
