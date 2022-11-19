@@ -11,6 +11,9 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import java.util.UUID
 
+/**
+ * Entidad turno para la base de datos.
+ */
 object TurnoTable: UUIDTable() {
     var iID : Column<Int> = integer("iID").autoIncrement()
     val comienzoTurno = varchar("comienzoTurno",5)

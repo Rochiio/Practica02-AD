@@ -3,8 +3,12 @@ package view
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
 
+/**
+ * Vista del usuario.
+ */
 class Vista {
     private var terminal = Terminal()
+
 
     /**
      * Funcion principal para el inicio
@@ -20,6 +24,7 @@ class Vista {
             }while(opcion in 1.. 0)
         return opcion
     }
+
 
     /**
      * Acciones a realizar dependiendo de la respuesta en la funcion principal

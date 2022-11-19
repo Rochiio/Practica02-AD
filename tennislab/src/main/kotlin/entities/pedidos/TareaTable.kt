@@ -6,6 +6,9 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
+/**
+ * Entidad tarea para la base de datos.
+ */
 object TareaTable : IntIdTable(){
     var precio = long("precio")
     var raqueta = varchar("raqueta", 50).nullable()

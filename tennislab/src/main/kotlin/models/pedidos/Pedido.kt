@@ -9,6 +9,9 @@ import utils.serializer.UUIDSerializer
 import java.time.LocalDate
 import java.util.*
 
+/**
+ * Modelo de pedido. Con serializacion para pasar a JSON.
+ */
 @Serializable
 data class Pedido(
     @Serializable(with = UUIDSerializer::class)

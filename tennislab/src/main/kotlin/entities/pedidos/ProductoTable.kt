@@ -7,6 +7,9 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import java.util.*
 
+/**
+ * Entidad producto para la base de datos.
+ */
 object ProductoTable: UUIDTable() {
     val tipo = enumeration("tipoProducto",TipoProduct::class)
     val marca = varchar("marca",100)

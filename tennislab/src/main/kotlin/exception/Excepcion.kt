@@ -3,6 +3,9 @@ package exception
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
 
+/**
+ * Excepciones personalizadas
+ */
 sealed interface Excepcion
 class UserError(val item: String) : Excepcion
 class MaquinaError(val item: String) : Excepcion
