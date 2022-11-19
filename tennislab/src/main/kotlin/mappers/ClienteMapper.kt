@@ -8,8 +8,12 @@ import models.usuarios.Cliente
  */
 fun ClienteDAO.fromClienteDaoToCliente(): Cliente {
         return Cliente(
-            uuid = id.value,
-            usuario = usuario.fromUsuarioDaoToUsuario()
+            id = id.value,
+            uuid = uuid,
+            nombre = nombre,
+            apellido = apellido,
+            email = email,
+            password = password,
         )
 }
 

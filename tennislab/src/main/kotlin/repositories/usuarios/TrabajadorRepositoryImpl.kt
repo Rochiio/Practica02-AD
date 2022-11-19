@@ -1,14 +1,11 @@
 package repositories.usuarios
 
-import entities.usuarios.UsuarioDAO
 import entities.usuarios.TrabajadorDAO
 import entities.usuarios.TrabajadorTable
 import models.usuarios.Trabajador
 import mu.KotlinLogging
 import mappers.fromTrabajadorDaoToTrabajador
-import mappers.fromUsuarioDaoToUsuario
 import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
