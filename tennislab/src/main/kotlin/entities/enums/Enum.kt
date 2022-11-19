@@ -15,3 +15,7 @@ enum class Estado{
 enum class TipoTarea{
     ENCORDADO, PERSONALIZADO, ADQUISICION
 }
+
+enum class TipoProduct{
+    RAQUETA, CORDAJE, COMPLEMENTO
+}
