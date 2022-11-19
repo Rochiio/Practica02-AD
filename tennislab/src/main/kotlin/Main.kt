@@ -1,71 +1,76 @@
 import config.AppConfig
 import db.DataBaseManager
-import entities.*
-import entities.enums.TipoTarea
-import entities.pedidos.TareaDAO
 import entities.usuarios.TrabajadorDAO
 import entities.usuarios.TrabajadorTable
-import mappers.fromMaquinaDaoToMaquina
-import models.Turno
-import models.maquinas.Maquina
 
+import entities.usuarios.UsuarioDAO
+import entities.usuarios.UsuarioTable
 import models.usuarios.Trabajador
+
 import models.usuarios.Usuario
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import repositories.usuarios.TrabajadorRepositoryImpl
-import utils.PasswordParser
-
-
-import view.Vista
-import java.time.LocalDate
-import java.util.UUID
+import repositories.usuarios.UsuarioRepositoryImpl
 
 
 fun main(args: Array<String>) {
-    var p = "12345"
-    println("Antes de encriptar: $p")
-    var encriptado = PasswordParser.encriptar(p)
-    println("Encriptado: $encriptado")
+    //     var vista= Vista()
+//
+//    do {
+//        var num = vista.principal()
+//        vista.opcionesPrincipal(num)
+//    }while (num!=0)
 
-    if (encriptado == PasswordParser.encriptar("12345")) {
-        println("Iguales")
-    }
-    initDataBase()
-    val repo = TrabajadorRepositoryImpl(TrabajadorDAO, UsuarioDAO)
-    var maqui = Maquina(UUID.randomUUID(), "modelo1", LocalDate.now(), true)
-    var turno = Turno(UUID.randomUUID(), "10", "13", maqui)
-    var usuario = Usuario(UUID.randomUUID(), "moah", "asidah", "emal", "pass", true)
-    var trabajador = Trabajador(usuario.uuid, usuario, true, turno)
-
+    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    var repo = UsuarioRepositoryImpl(UsuarioDAO)
     transaction {
+        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+        var usuer = Usuario(null,"Pepe","Pele","dfjhihfg","4544",true)
+        val guardada = repo.save(usuer)
 
-        var a = UsuarioDAO.new(usuario.uuid) {
-            iID = 1
-            nombre = usuario.nombre
-            apellido = usuario.apellido
-            email = usuario.email
-            password = usuario.password
-            disponible = usuario.disponible
-        }
-        var m = MaquinaDAO.new(maqui.uuid) {
-            modelo = maqui.modelo
-            fechaAdquisicion = maqui.fechaAdquisicion
-            disponible = maqui.disponible
+        var salida =TrabajadorDAO.new {
+            usuario=UsuarioDAO.findById(guardada.uuid!!)!!
+            administrador= false
         }
 
-        var t = TurnoDAO.new(turno.uuid) {
-            iID = 1
-            comienzoTurno = turno.comienzoTurno
-            finTurno = turno.comienzoTurno
-            maquina = null
-            pedidos = null
-        }
-        SchemaUtils.create(TrabajadorTable, UsuarioTable, MaquinaTable)
-        println(repo.save(trabajador))
-
+        println(salida)
     }
+
+//    initDataBase()
+//    val repo = TrabajadorRepositoryImpl(TrabajadorDAO, UsuarioDAO)
+//    var maqui = Maquina(UUID.randomUUID(), "modelo1", LocalDate.now(), true)
+//    var turno = Turno(UUID.randomUUID(), "10", "13", maqui)
+//    var usuario = Usuario(UUID.randomUUID(), "moah", "asidah", "emal", "pass", true)
+//    var trabajador = Trabajador(usuario.uuid, usuario, true, turno)
+//
+//    transaction {
+//
+//        var a = UsuarioDAO.new(usuario.uuid) {
+//            iID = 1
+//            nombre = usuario.nombre
+//            apellido = usuario.apellido
+//            email = usuario.email
+//            password = usuario.password
+//            disponible = usuario.disponible
+//        }
+//        var m = MaquinaDAO.new(maqui.uuid) {
+//            modelo = maqui.modelo
+//            fechaAdquisicion = maqui.fechaAdquisicion
+//            disponible = maqui.disponible
+//        }
+//
+//        var t = TurnoDAO.new(turno.uuid) {
+//            iID = 1
+//            comienzoTurno = turno.comienzoTurno
+//            finTurno = turno.comienzoTurno
+//            maquina = null
+//            pedidos = null
+//        }
+//        SchemaUtils.create(TrabajadorTable, UsuarioTable, MaquinaTable)
+//        println(repo.save(trabajador))
+//
+//    }
 
 
 //    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
@@ -75,12 +80,7 @@ fun main(args: Array<String>) {
 //        println(tarea)
 //    }
 
-//     var vista= Vista()
-//
-//    do {
-//        var num = vista.principal()
-//        vista.opcionesPrincipal(num)
-//    }while (num!=0)
+
 
 
     //initDataBase()
@@ -149,7 +149,7 @@ fun main(args: Array<String>) {
 //        automatico = true
 //        tensionMaxima = 10
 //        tensionMinima = 1
-//        this.maquinaID = maquina.id
+//        this.maquinaID = maquina.uuid
 //    }
 //
 //}
@@ -158,7 +158,7 @@ fun main(args: Array<String>) {
 //    return Encordador.all().map { it }.toList().firstOrNull()
 //}
 //fun maquinaById(m : Maquina) : Maquina?{
-//    return Maquina.findById(m.id)
+//    return Maquina.findById(m.uuid)
 //}
 
 

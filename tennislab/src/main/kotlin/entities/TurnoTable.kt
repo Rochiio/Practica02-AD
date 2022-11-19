@@ -25,7 +25,7 @@ class TurnoDAO(id: EntityID<UUID>): UUIDEntity(id){
     var iID by TurnoTable.iID
     var comienzoTurno by TurnoTable.comienzoTurno
     var finTurno by TurnoTable.finTurno
-    var maquina by MaquinaDAO optionalReferencedOn  TurnoTable.maquina
+    var maquina by MaquinaDAO optionalReferencedOn TurnoTable.maquina
     var pedidos by PedidoDAO optionalReferencedOn TurnoTable.pedidos
 
     override fun toString(): String {
