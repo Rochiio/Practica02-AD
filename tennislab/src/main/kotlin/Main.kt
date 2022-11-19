@@ -1,17 +1,5 @@
 import config.AppConfig
 import db.DataBaseManager
-import entities.usuarios.TrabajadorDAO
-import entities.usuarios.TrabajadorTable
-
-import entities.usuarios.UsuarioDAO
-import entities.usuarios.UsuarioTable
-import models.usuarios.Trabajador
-
-import models.usuarios.Usuario
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
-import repositories.usuarios.UsuarioRepositoryImpl
 
 
 fun main(args: Array<String>) {

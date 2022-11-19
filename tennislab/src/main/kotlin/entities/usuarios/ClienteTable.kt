@@ -2,6 +2,7 @@ package entities.usuarios
 
 import entities.pedidos.PedidoDAO
 import entities.pedidos.PedidoTable
+import entities.usuarios.TrabajadorTable.autoGenerate
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.UUIDEntity
@@ -14,17 +15,26 @@ import java.util.*
 /**
  * Entidad de clientes para la base de datos.
  */
-object ClienteTable: UUIDTable() {
-    val usuario = reference("usuario", UsuarioTable)
+object ClienteTable: IntIdTable() {
+    val uuid = ClienteTable.uuid("uuid").autoGenerate()
+    val nombre = ClienteTable.varchar("nombre", 50)
+    val apellido= ClienteTable.varchar("apellido", 50)
+    val email  = ClienteTable.varchar("email", 50)
+    val password = ClienteTable.varchar("password", 20)
     //val pedidos = reference("pedidos", PedidoTable)
 }
 
-class ClienteDAO(id: EntityID<UUID>): UUIDEntity(id){
-    companion object: UUIDEntityClass<ClienteDAO>(ClienteTable)
-    var usuario by UsuarioDAO referencedOn ClienteTable.usuario
+class ClienteDAO(id: EntityID<Int>): IntEntity(id){
+    companion object: IntEntityClass<ClienteDAO>(ClienteTable)
+    var uuid by ClienteTable.uuid
+    var nombre by ClienteTable.nombre
+    var apellido by ClienteTable.apellido
+    var email by ClienteTable.email
+    var password by ClienteTable.password
+    override fun toString(): String {
+        return "ClienteDAO(uuid=$uuid, nombre='$nombre', apellido='$apellido', email='$email', password='$password')"
+    }
     //val pedidos by PedidoDAO referrersOn ClienteTable.pedidos
 
-    override fun toString(): String {
-        return "Cliente(uuid=${id.value} usuario=${usuario.toStringHerencia()})"
-    }
+
 }
