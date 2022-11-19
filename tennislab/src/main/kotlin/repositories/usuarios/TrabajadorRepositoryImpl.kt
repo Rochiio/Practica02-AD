@@ -7,6 +7,7 @@ import models.usuarios.Trabajador
 import mu.KotlinLogging
 import mappers.fromTrabajadorDaoToTrabajador
 import mappers.fromUsuarioDaoToUsuario
+import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -16,8 +17,7 @@ import java.util.*
  * Implementación del repositorio de trabajadores.
  */
 class TrabajadorRepositoryImpl(
-    private var trabajadorDAO: UUIDEntityClass<TrabajadorDAO>,
-    private var usuarioDAO: UUIDEntityClass<UsuarioDAO>
+    private var trabajadorDAO: IntEntityClass<TrabajadorDAO>,
 ) : TrabajadorRepository {
 
     private var logger = KotlinLogging.logger {}
@@ -28,7 +28,7 @@ class TrabajadorRepositoryImpl(
      * @param id id por el que buscar al trabajador.
      * @return trabajador o no dependiendo de si lo han encontrado.
      */
-    override fun findById(id: UUID): Trabajador? =transaction{
+    override fun findById(id: Int): Trabajador? =transaction{
         logger.debug { "buscando trabajador con uuid: $id" }
         trabajadorDAO.findById(id)?.fromTrabajadorDaoToTrabajador()
     }
@@ -41,7 +41,7 @@ class TrabajadorRepositoryImpl(
      */
     override fun findByUUID(uuid: UUID): Trabajador? =transaction{
         logger.debug { "buscando trabajador con uuid: $uuid" }
-        trabajadorDAO.findById(uuid)?.fromTrabajadorDaoToTrabajador()
+        trabajadorDAO.find { TrabajadorTable.uuid eq uuid }.firstOrNull()?.fromTrabajadorDaoToTrabajador()
     }
 
 
@@ -52,9 +52,9 @@ class TrabajadorRepositoryImpl(
      */
     override fun save(item: Trabajador): Trabajador =transaction{
         logger.debug { "Save trabajador" }
-        item.uuid?.let {
-            trabajadorDAO.findById(it)?.let {
-                update(item, it)
+        item.id?.let {
+            trabajadorDAO.findById(it)?.let { update ->
+                update(item, update)
             }
         } ?: run {
             add(item)
@@ -70,8 +70,12 @@ class TrabajadorRepositoryImpl(
     override fun add(item: Trabajador): Trabajador =transaction{
         logger.debug { "Add trabajador"}
         trabajadorDAO.new {
-            usuario = usuarioDAO.findById(item.usuario.uuid!!)!!
-            administrador = item.administrador
+            nombre = item.nombre
+            apellido = item.apellido
+            email = item.email
+            password = item.password
+            disponible = item.disponible
+            administrador= item.administrador
         }.fromTrabajadorDaoToTrabajador()
     }
 
@@ -85,8 +89,12 @@ class TrabajadorRepositoryImpl(
     fun update(item: Trabajador, updateItem: TrabajadorDAO): Trabajador =transaction{
         logger.debug { "actualizando trabajador" }
         updateItem.apply {
-            usuario = usuarioDAO.findById(item.usuario.uuid!!)!!
-            administrador = item.administrador
+            nombre = item.nombre
+            apellido = item.apellido
+            email = item.email
+            password = item.password
+            disponible = item.disponible
+            administrador= item.administrador
         }.fromTrabajadorDaoToTrabajador()
     }
 
@@ -97,7 +105,7 @@ class TrabajadorRepositoryImpl(
      * @return boolean dependiendo de si ha sido eliminado o no.
      */
     override fun delete(item: Trabajador): Boolean =transaction{
-        val existe = item.uuid?.let { trabajadorDAO.findById(it) } ?: return@transaction false
+        val existe = item.id?.let { trabajadorDAO.findById(it) } ?: return@transaction false
         logger.debug { "eliminando trabajador: $item" }
         existe.delete()
         return@transaction true

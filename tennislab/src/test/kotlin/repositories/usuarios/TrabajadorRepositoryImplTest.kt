@@ -15,93 +15,104 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import java.util.*
 
-/**
- * TODO creo que es por el save, hay algo mal, pero no se si es por culpa del guardado del usuario que no deberia.
- * O por el propio guardado de trabajador que intenta hacer un new o algo asi.
- */
+
 internal class TrabajadorRepositoryImplTest {
-    private var usuarioTest: Usuario = Usuario(UUID.randomUUID(),"Prueba","Test","prueba@gmail.com","123456",true)
-    private lateinit var usuarioTrabajador: Usuario
-    private lateinit var trabTest: Trabajador
-    private var repoUsuario = UsuarioRepositoryImpl(UsuarioDAO)
-    private var repository = TrabajadorRepositoryImpl(TrabajadorDAO, UsuarioDAO)
+    private var trabTest: Trabajador = Trabajador(null, null, "Prueba", "Test", "prueba@gmail.com","12345",
+        disponible = true,
+        administrador = false
+    )
+    private var repository = TrabajadorRepositoryImpl(TrabajadorDAO)
 
 
     @BeforeEach
     fun setUp() {
         Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
         transaction{
-            SchemaUtils.create(UsuarioTable, TrabajadorTable)
+            SchemaUtils.create(TrabajadorTable)
             repository.deleteAll()
-            repoUsuario.deleteAll()
-
-            usuarioTrabajador = repoUsuario.save(usuarioTest)
-            trabTest = Trabajador(UUID.randomUUID(),usuarioTrabajador,false)
         }
     }
 
 
     @Test
     fun findById() = transaction{
-        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+        SchemaUtils.create(TrabajadorTable)
 
         var guardado = repository.save(trabTest)
-        var encontrado = repository.findById(guardado.uuid!!)
+        var encontrado = repository.findById(guardado.id!!)
 
         assertAll(
             { assertNotNull(encontrado) },
+            { assertEquals(encontrado?.id, guardado.id) },
             { assertEquals(encontrado?.uuid, guardado.uuid) },
-            { assertEquals(encontrado?.usuario, guardado.usuario) },
-            { assertEquals(encontrado?.administrador, guardado.administrador)}
+            { assertEquals(encontrado?.nombre, guardado.nombre) },
+            { assertEquals(encontrado?.apellido, guardado.apellido) },
+            { assertEquals(encontrado?.email, guardado.email) },
+            { assertEquals(encontrado?.password, guardado.password) },
+            { assertEquals(encontrado?.disponible, guardado.disponible) },
+            { assertEquals(encontrado?.administrador, guardado.administrador) }
         )
     }
 
     @Test
     fun findByUUID() = transaction{
-        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+        SchemaUtils.create(TrabajadorTable)
 
         var guardado = repository.save(trabTest)
         var encontrado = repository.findByUUID(guardado.uuid!!)
 
         assertAll(
             { assertNotNull(encontrado) },
+            { assertEquals(encontrado?.id, guardado.id) },
             { assertEquals(encontrado?.uuid, guardado.uuid) },
-            { assertEquals(encontrado?.usuario, guardado.usuario) },
-            { assertEquals(encontrado?.administrador, guardado.administrador)}
+            { assertEquals(encontrado?.nombre, guardado.nombre) },
+            { assertEquals(encontrado?.apellido, guardado.apellido) },
+            { assertEquals(encontrado?.email, guardado.email) },
+            { assertEquals(encontrado?.password, guardado.password) },
+            { assertEquals(encontrado?.disponible, guardado.disponible) },
+            { assertEquals(encontrado?.administrador, guardado.administrador) }
         )
     }
 
     @Test
     fun save() = transaction{
-        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+        SchemaUtils.create(TrabajadorTable)
 
         var guardado = repository.save(trabTest)
 
         assertAll(
-            { assertNotNull(guardado) },
+            { assertNotNull(guardado.id) },
             { assertNotNull(guardado.uuid) },
-            { assertEquals(guardado.usuario, trabTest.usuario) },
+            { assertEquals(guardado.nombre, trabTest.nombre) },
+            { assertEquals(guardado.apellido, trabTest.apellido) },
+            { assertEquals(guardado.email, trabTest.email) },
+            { assertEquals(guardado.password, trabTest.password) },
+            { assertEquals(guardado.disponible, trabTest.disponible) },
             { assertEquals(guardado.administrador, trabTest.administrador) }
         )
     }
 
     @Test
     fun add() = transaction{
-        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+        SchemaUtils.create(TrabajadorTable)
 
         var guardado = repository.add(trabTest)
 
         assertAll(
-            { assertNotNull(guardado) },
+            { assertNotNull(guardado.id) },
             { assertNotNull(guardado.uuid) },
-            { assertEquals(guardado.usuario, trabTest.usuario) },
+            { assertEquals(guardado.nombre, trabTest.nombre) },
+            { assertEquals(guardado.apellido, trabTest.apellido) },
+            { assertEquals(guardado.email, trabTest.email) },
+            { assertEquals(guardado.password, trabTest.password) },
+            { assertEquals(guardado.disponible, trabTest.disponible) },
             { assertEquals(guardado.administrador, trabTest.administrador) }
         )
     }
 
     @Test
     fun delete() = transaction{
-        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+        SchemaUtils.create(TrabajadorTable)
 
         var guardado = repository.add(trabTest)
         var eliminado = repository.delete(guardado)
@@ -111,22 +122,27 @@ internal class TrabajadorRepositoryImplTest {
 
     @Test
     fun findAll() = transaction{
-        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+        SchemaUtils.create(TrabajadorTable)
 
         var guardado = repository.add(trabTest)
         var lista = repository.findAll()
 
         assertAll(
             { assertTrue(lista.isNotEmpty()) },
+            { assertEquals(lista[0].id, guardado.id) },
             { assertEquals(lista[0].uuid, guardado.uuid) },
-            { assertEquals(lista[0].usuario, guardado.usuario) },
+            { assertEquals(lista[0].nombre, guardado.nombre) },
+            { assertEquals(lista[0].apellido, guardado.apellido) },
+            { assertEquals(lista[0].email, guardado.email) },
+            { assertEquals(lista[0].password, guardado.password) },
+            { assertEquals(lista[0].disponible, guardado.disponible) },
             { assertEquals(lista[0].administrador, guardado.administrador) }
         )
     }
 
     @Test
     fun deleteAll() =transaction{
-        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+        SchemaUtils.create(TrabajadorTable)
         repository.save(trabTest)
         var delete = repository.deleteAll()
 
