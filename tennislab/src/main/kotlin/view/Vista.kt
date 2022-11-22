@@ -22,7 +22,6 @@ class Vista(
      */
     fun principal():Int{
         var opcion:Int
-
             do{
                 terminal.println(brightBlue("------ Bienvenido a tennislab🎾🎾 ------ \nelija una opción."))
                 terminal.println("1- Iniciar sesión \n" +
@@ -67,10 +66,133 @@ class Vista(
             }
 
             if (correcto!=null){
-
-            }else{
-                principal()
+                if (correcto.administrador){
+                    administradorBucle()
+                }else{
+                    encordadorBucle()
+                }
             }
+    }
+
+
+    /**
+     * Bucle vista si el usuario es un encordador.
+     */
+    private fun encordadorBucle(){
+
+    }
+
+    /**
+     * Bucle vista si el usuario es un administrador.
+     */
+    private fun administradorBucle(){
+        var opcion: Int
+        do {
+            terminal.println(brightBlue("------ Admin ------"))
+            do {
+                terminal.println(
+                    "1- Trabajadores \n" +
+                            "2- Maquinas \n" +
+                            "3- Pedidos \n" +
+                            "4- Productos \n" +
+                            "0- Salir"
+                )
+                opcion = readln().toIntOrNull() ?: -1
+            } while (opcion < 0 || opcion > 4)
+            opcionesBucleAdmin(opcion)
+        }while(opcion!=0)
+
+    }
+
+
+    /**
+     * Opciones del bucle del administrador
+     */
+    private fun opcionesBucleAdmin(opcion: Int) {
+        when(opcion){
+            1 ->{administradorBucleUsuarios()}
+            2 ->{}
+            3 ->{}
+            4 ->{}
+            0 ->{terminal.println(brightBlue.bg("Saliendo de la sesión"))
+            }
+        }
+    }
+
+
+    /**
+     * Bucle vista si el usuario es un administrador y selecciona los trabajadores.
+     */
+    private fun administradorBucleUsuarios(){
+        var opcion: Int
+        do{
+            terminal.println(brightBlue("------ Trabajadores Admin ------"))
+            do {
+                terminal.println(
+                    "1- Añadir Trabajador \n" +
+                        "2- Actualizar Trabajador \n"+
+                        "3- Listar Trabajadores \n"+
+                        "4- Eliminar trabajador \n"+
+                        "0- Salir")
+                opcion= readln().toIntOrNull() ?: -1
+            }while (opcion<0 || opcion>4)
+            opcionesBucleAdminUsuarios(opcion)
+        }while (opcion!=0)
+    }
+
+    private fun opcionesBucleAdminUsuarios(opcion: Int) {
+        when(opcion){
+            1 ->{addTrabajador()}
+            2 ->{}
+            3 ->{getTrabajadores()}
+            4 ->{}
+            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de trabajadores"))
+            }
+        }
+    }
+
+    private fun getTrabajadores() {
+        var lista = trabController.getAllTrabajadores()
+        if (lista.isEmpty()){
+            println("Lista vacía")
+        }else{
+            lista.forEach { println(it) }
+        }
+    }
+
+
+    /**
+     * Crear el trabajador
+     */
+    private fun addTrabajador() {
+        print("Nombre usuario: ")
+        var nombre = readln()
+        print("Apellido usuario: ")
+        var apellido = readln()
+
+        var email:String
+        do {
+            print("Correo usuario: ")
+            email = readln()
+        }while (!email.matches(Regex("[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}")))
+        print("Contraseña usuario: ")
+        var password = readln()
+
+        var respuesta:String
+        var admin: Boolean
+        do {
+            print("Administrador (S/N)")
+            respuesta = readln()
+        }while (respuesta!="S" && respuesta!="N")
+        admin = respuesta=="S"
+
+
+        var usario = Trabajador(null, null, nombre, apellido, email, PasswordParser.encriptar(password), true, admin)
+        try {
+            trabController.addTrabajador(usario)
+        }catch (e: TrabajadorError){
+            log(e)
+        }
     }
 
 

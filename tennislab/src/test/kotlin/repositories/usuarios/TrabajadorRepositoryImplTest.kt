@@ -133,8 +133,10 @@ internal class TrabajadorRepositoryImplTest {
 
         var guardado = repository.add(trabTest)
         var eliminado = repository.delete(guardado)
+        var encontrado = repository.findByUUID(guardado.uuid!!)
 
         assertTrue(eliminado)
+        assertFalse(encontrado?.disponible!!)
     }
 
     @Test
