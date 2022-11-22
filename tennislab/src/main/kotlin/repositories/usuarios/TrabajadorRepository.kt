@@ -6,4 +6,5 @@ import java.util.*
 
 
 interface TrabajadorRepository: ICRUD<Trabajador, Int> {
+    fun findByEmail(email: String): Trabajador?
 }

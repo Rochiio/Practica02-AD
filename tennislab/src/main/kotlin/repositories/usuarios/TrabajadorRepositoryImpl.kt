@@ -18,6 +18,10 @@ class TrabajadorRepositoryImpl(
 ) : TrabajadorRepository {
 
     private var logger = KotlinLogging.logger {}
+    override fun findByEmail(email: String): Trabajador? =transaction{
+        logger.debug { "buscando trabajador con email: $email" }
+        trabajadorDAO.find { TrabajadorTable.email eq email }.firstOrNull()?.fromTrabajadorDaoToTrabajador()
+    }
 
 
     /**
