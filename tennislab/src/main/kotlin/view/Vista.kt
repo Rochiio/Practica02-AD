@@ -248,18 +248,29 @@ class Vista(
      * Para crear trabajadores.
      */
     fun creacionTrabajadores():Trabajador{
-        print("Nombre usuario: ")
-        val nombre = readln()
-        print("Apellido usuario: ")
-        val apellido = readln()
+        var nombre:String
+        do {
+            print("Nombre usuario: ")
+            nombre = readln()
+        }while (nombre.isEmpty())
+
+        var apellido:String
+        do {
+            print("Apellido usuario: ")
+            apellido = readln()
+        }while (apellido.isEmpty())
 
         var email:String
         do {
             print("Correo usuario: ")
             email = readln()
         }while (!email.matches(Regex("[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}")))
-        print("Contraseña usuario: ")
-        val password = readln()
+
+        var password:String
+        do {
+            print("Contraseña usuario: ")
+            password = readln()
+        }while (password.isEmpty())
 
         var respuesta:String
         val admin: Boolean
