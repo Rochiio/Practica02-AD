@@ -2,11 +2,15 @@ package view
 
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
+import controller.TrabajadoresController
+import utils.PasswordParser
 
 /**
  * Vista del usuario.
  */
-class Vista {
+class Vista(
+    private var trabController: TrabajadoresController
+) {
     private var terminal = Terminal()
 
 
@@ -41,18 +45,21 @@ class Vista {
      * Bucle del login para el logeo del trabajador en su turno.
      */
     private fun loginBucle() {
-        //do {
+        var email: String
+        var password: String
+
+        do {
             terminal.println(brightBlue("------ Log In Usuario ------"))
                 do {
                     terminal.print("Correo: ")
-                    var email = readln()
+                    email = readln()
                 }while (!email.matches(Regex("[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}")))
 
             terminal.print("Contraseña: ")
-            var password = readln()
-            println()
-            //var correcto = controller.user()
-        //TODO ver si en el controlador es correcto
-        //}while()
+            password = readln()
+
+            var correcto = trabController.getTrabajadorByEmailAndPassword(email,PasswordParser.encriptar(password))
+
+        }while(false)
     }
 }

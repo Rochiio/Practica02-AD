@@ -67,8 +67,10 @@ class MaquinaRepositoryImpl(
     override fun add(item: Maquina): Maquina = transaction {
         logger.debug { "añadiendo maquina: $item" }
         maquinaDAO.new {
+            marca = item.marca
             modelo = item.modelo
             fechaAdquisicion = item.fechaAdquisicion
+            numeroSerie = item.numeroSerie
             disponible = item.disponible
         }.fromMaquinaDaoToMaquina()
     }
@@ -83,8 +85,10 @@ class MaquinaRepositoryImpl(
     private fun update(item: Maquina, updateItem: MaquinaDAO): Maquina =transaction{
         logger.debug { "actualizando maquina" }
         updateItem.apply {
+            marca = item.marca
             modelo = item.modelo
             fechaAdquisicion = item.fechaAdquisicion
+            numeroSerie = item.numeroSerie
             disponible = item.disponible
         }.fromMaquinaDaoToMaquina()
     }

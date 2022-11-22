@@ -8,7 +8,9 @@ import models.maquinas.Maquina
  */
 fun MaquinaDAO.fromMaquinaDaoToMaquina() : Maquina = Maquina(
     uuid = id.value,
+    marca = marca,
     modelo = modelo,
     fechaAdquisicion = fechaAdquisicion,
+    numeroSerie = numeroSerie,
     disponible = disponible
 )

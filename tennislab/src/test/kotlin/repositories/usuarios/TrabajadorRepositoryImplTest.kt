@@ -31,6 +31,27 @@ internal class TrabajadorRepositoryImplTest {
 
 
     @Test
+    fun findByEmail() = transaction{
+        SchemaUtils.create(TrabajadorTable)
+
+        var guardado = repository.save(trabTest)
+        var encontrado = repository.findByEmail(guardado.email)
+
+        assertAll(
+            { assertNotNull(encontrado) },
+            { assertEquals(encontrado?.id, guardado.id) },
+            { assertEquals(encontrado?.uuid, guardado.uuid) },
+            { assertEquals(encontrado?.nombre, guardado.nombre) },
+            { assertEquals(encontrado?.apellido, guardado.apellido) },
+            { assertEquals(encontrado?.email, guardado.email) },
+            { assertEquals(encontrado?.password, guardado.password) },
+            { assertEquals(encontrado?.disponible, guardado.disponible) },
+            { assertEquals(encontrado?.administrador, guardado.administrador) }
+        )
+    }
+
+
+    @Test
     fun findById() = transaction{
         SchemaUtils.create(TrabajadorTable)
 
