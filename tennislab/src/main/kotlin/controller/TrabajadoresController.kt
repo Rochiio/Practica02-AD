@@ -4,6 +4,7 @@ import exception.TrabajadorError
 import models.usuarios.Trabajador
 import org.jetbrains.exposed.sql.transactions.transaction
 import repositories.usuarios.TrabajadorRepository
+import java.util.*
 
 
 class TrabajadoresController(var repository: TrabajadorRepository) {
@@ -39,7 +40,7 @@ class TrabajadoresController(var repository: TrabajadorRepository) {
         existe?.let {
             throw  TrabajadorError("Ya existe un trabajador con este email")
         }?: run{
-            repository.add(trabajador)
+            repository.save(trabajador)
         }
     }
 
@@ -49,5 +50,36 @@ class TrabajadoresController(var repository: TrabajadorRepository) {
      */
     fun getAllTrabajadores():List<Trabajador>{
         return repository.findAll()
+    }
+
+
+    /**
+     * Actualizar un trabajador
+     */
+    @Throws(TrabajadorError::class)
+    fun updateTrabajador(trabajador:Trabajador){
+        var existe = repository.findByEmail(trabajador.email)
+        existe?.let {
+            throw  TrabajadorError("Ya existe un trabajador con este email")
+        }?: run{
+            repository.save(trabajador)
+        }
+    }
+
+
+    /**
+     * Eliminar un trabajador
+     */
+    fun deleteTrabajador(trabajador:Trabajador){
+        repository.delete(trabajador)
+    }
+
+    fun getTrabajadorByUUID(uuid: UUID): Trabajador?{
+        var existe = repository.findByUUID(uuid)
+        existe?.let {
+            return existe
+        }?: run{
+            throw  TrabajadorError("No existe un trabajador con este UUID")
+        }
     }
 }

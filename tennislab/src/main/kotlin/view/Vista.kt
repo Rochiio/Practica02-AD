@@ -7,6 +7,7 @@ import exception.TrabajadorError
 import exception.log
 import models.usuarios.Trabajador
 import utils.PasswordParser
+import java.util.*
 
 /**
  * Vista del usuario.
@@ -27,7 +28,7 @@ class Vista(
                 terminal.println("1- Iniciar sesión \n" +
                                         "0- Salir")
                 opcion = readln().toIntOrNull()?: 2
-            }while(opcion in 1.. 0)
+            }while(opcion !in 0.. 1)
         return opcion
     }
 
@@ -98,7 +99,7 @@ class Vista(
                             "0- Salir"
                 )
                 opcion = readln().toIntOrNull() ?: -1
-            } while (opcion < 0 || opcion > 4)
+            } while (opcion !in 0.. 4)
             opcionesBucleAdmin(opcion)
         }while(opcion!=0)
 
@@ -140,23 +141,94 @@ class Vista(
         }while (opcion!=0)
     }
 
+
+    /**
+     * Opciones bucle de conf de trabajadores del administrador.
+     */
     private fun opcionesBucleAdminUsuarios(opcion: Int) {
         when(opcion){
             1 ->{addTrabajador()}
-            2 ->{}
+            2 ->{actuTrabajador()}
             3 ->{getTrabajadores()}
-            4 ->{}
+            4 ->{eliminarTrabajador()}
             0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de trabajadores"))
             }
         }
     }
 
+
+    /**
+     * Eliminar un trabajador.
+     */
+    private fun eliminarTrabajador() {
+        var id: UUID? = null
+        var correcto=true
+
+        do {
+            print("Dime el UUID del trabajador a eliminar: ")
+            var id = readln()
+            try {
+                correcto=true
+                UUID.fromString(id)
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            var encontrado = trabController.getTrabajadorByUUID(id!!)
+            var usuario = creacionTrabajadores()
+            usuario.id = encontrado?.id
+            trabController.updateTrabajador(usuario)
+        }catch (e: TrabajadorError){
+            log(e)
+        }
+
+    }
+
+    /**
+     * Actualizar trabajador
+     */
+    private fun actuTrabajador() {
+        var id: UUID? = null
+        var correcto=true
+
+            do {
+                print("Dime el UUID del trabajador a actualizar: ")
+                var id = readln()
+                try {
+                    correcto=true
+                    UUID.fromString(id)
+                }catch (e: Exception){
+                    !correcto
+                }
+
+            }while(!correcto)
+
+        try {
+            var encontrado = trabController.getTrabajadorByUUID(id!!)
+            encontrado?.let{
+                trabController.deleteTrabajador(encontrado)
+            }
+        }catch (e: TrabajadorError){
+            log(e)
+        }
+
+    }
+
+
+    /**
+     * Conseguir todos los trabajadores
+     */
     private fun getTrabajadores() {
         var lista = trabController.getAllTrabajadores()
         if (lista.isEmpty()){
             println("Lista vacía")
         }else{
-            lista.forEach { println(it) }
+            for (trab in lista){
+                terminal.println(green(trab.toString()))
+            }
         }
     }
 
@@ -165,6 +237,19 @@ class Vista(
      * Crear el trabajador
      */
     private fun addTrabajador() {
+       var usuario = creacionTrabajadores()
+        try {
+            trabController.addTrabajador(usuario)
+        }catch (e: TrabajadorError){
+            log(e)
+        }
+    }
+
+
+    /**
+     * Para crear trabajadores.
+     */
+    fun creacionTrabajadores():Trabajador{
         print("Nombre usuario: ")
         var nombre = readln()
         print("Apellido usuario: ")
@@ -187,12 +272,7 @@ class Vista(
         admin = respuesta=="S"
 
 
-        var usario = Trabajador(null, null, nombre, apellido, email, PasswordParser.encriptar(password), true, admin)
-        try {
-            trabController.addTrabajador(usario)
-        }catch (e: TrabajadorError){
-            log(e)
-        }
+        return Trabajador(null, null, nombre, apellido, email, PasswordParser.encriptar(password), true, admin)
     }
 
 
