@@ -4,6 +4,9 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
+/**
+ * Entidad personalizado para la base de datos.
+ */
 object PersonalizadoTable : IntIdTable(){
     val tarea = reference("tarea", TareaTable)
     var peso = integer("peso")

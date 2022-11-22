@@ -1,22 +1,24 @@
 package entities
 
+import entities.maquinas.MaquinaDAO
+import entities.maquinas.MaquinaTable
 import entities.pedidos.PedidoDAO
 import entities.pedidos.PedidoTable
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import java.util.UUID
 
+/**
+ * Entidad turno para la base de datos.
+ */
 object TurnoTable: UUIDTable() {
     var iID : Column<Int> = integer("iID").autoIncrement()
     val comienzoTurno = varchar("comienzoTurno",5)
     val finTurno = varchar("finTurno",5)
-    val maquina = reference("maquina",MaquinaTable).nullable()
+    val maquina = reference("maquina", MaquinaTable).nullable()
     var pedidos = reference("pedidos", PedidoTable).nullable()
 }
 

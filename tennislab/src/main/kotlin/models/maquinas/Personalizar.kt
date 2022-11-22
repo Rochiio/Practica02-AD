@@ -1,7 +1,7 @@
 package models.maquinas
 
 /**
- * Clase personalizar.
+ * Modelo personalizar.
  */
 data class Personalizar(
     val maquina: Maquina,

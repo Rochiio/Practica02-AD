@@ -1,17 +1,5 @@
 import config.AppConfig
 import db.DataBaseManager
-import entities.usuarios.TrabajadorDAO
-import entities.usuarios.TrabajadorTable
-
-import entities.usuarios.UsuarioDAO
-import entities.usuarios.UsuarioTable
-import models.usuarios.Trabajador
-
-import models.usuarios.Usuario
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
-import repositories.usuarios.UsuarioRepositoryImpl
 
 
 fun main(args: Array<String>) {
@@ -22,19 +10,19 @@ fun main(args: Array<String>) {
 //        vista.opcionesPrincipal(num)
 //    }while (num!=0)
 
-    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-    var repo = UsuarioRepositoryImpl(UsuarioDAO)
-    transaction {
-        SchemaUtils.create(UsuarioTable, TrabajadorTable)
-        var usuer = Usuario(null,"Pepe","Pele","dfjhihfg","4544",true)
-        val guardada = repo.save(usuer)
+//    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+//    var repo = UsuarioRepositoryImpl(UsuarioDAO)
+//    transaction {
+//        SchemaUtils.create(UsuarioTable, TrabajadorTable)
+//        var usuer = Usuario(null,"Pepe","Pele","dfjhihfg","4544",true)
+//        val guardada = repo.save(usuer)
+//
+//        var salida =TrabajadorDAO.new {
+//            usuario=UsuarioDAO.findById(guardada.uuid!!)!!
+//            administrador= false
+//        }
 
-        var salida =TrabajadorDAO.new {
-            usuario=UsuarioDAO.findById(guardada.uuid!!)!!
-            administrador= false
-        }
 
-        println(salida)
     }
 
 //    initDataBase()
@@ -110,7 +98,7 @@ fun main(args: Array<String>) {
 //
 //
 //    }
-}
+
 
 
 //fun create(): Trabajador {

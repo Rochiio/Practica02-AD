@@ -3,12 +3,17 @@ package models.usuarios
 import java.util.UUID
 
 /**
- * Clase trabajador.
+ * Modelo trabajador.
  */
 data class Trabajador(
-    val uuid : UUID?,
-    val usuario: Usuario,
-    val administrador: Boolean,
+    var id: Int?,
+    var uuid: UUID?,
+    var nombre: String,
+    var apellido:String,
+    var email:String,
+    var password:String,
+    var disponible: Boolean,
+    var administrador: Boolean
     //val turno: Turno
 ) {
 }
