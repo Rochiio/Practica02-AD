@@ -1,14 +1,30 @@
 import config.AppConfig
+import controller.TrabajadoresController
 import db.DataBaseManager
+import entities.usuarios.TrabajadorDAO
+import entities.usuarios.TrabajadorTable
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
+import repositories.usuarios.TrabajadorRepositoryImpl
+import view.Vista
 
 
 fun main(args: Array<String>) {
-    //     var vista= Vista()
-//
-//    do {
-//        var num = vista.principal()
-//        vista.opcionesPrincipal(num)
-//    }while (num!=0)
+    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    transaction{
+        SchemaUtils.create(TrabajadorTable)
+
+        var vista= Vista(TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)))
+
+        do {
+            var num = vista.principal()
+            vista.opcionesPrincipal(num)
+        }while (num!=0)
+    }
+
+
+
 
 //    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
 //    var repo = UsuarioRepositoryImpl(UsuarioDAO)
