@@ -16,9 +16,9 @@ fun log(e: Excepcion){
     var t = Terminal()
 
     when (e) {
-        is TrabajadorError -> t.println(red("Error con el trabajador ${e.item}"))
-        is ClienteError -> t.println(red("Error con el cliente ${e.item}"))
-        is MaquinaError -> t.println(red("Error con la máquina ${e.item}"))
-        is PedidoError -> t.println(red("Error con el pedido ${e.item}"))
+        is TrabajadorError -> t.println(red("Error con trabajadores -> ${e.item}"))
+        is ClienteError -> t.println(red("Error con clientes -> ${e.item}"))
+        is MaquinaError -> t.println(red("Error con máquinas -> ${e.item}"))
+        is PedidoError -> t.println(red("Error con pedidos -> ${e.item}"))
     }
 }

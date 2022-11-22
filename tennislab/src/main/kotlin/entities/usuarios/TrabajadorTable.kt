@@ -20,7 +20,7 @@ object TrabajadorTable: IntIdTable() {
     val nombre = varchar("nombre",50)
     val apellido= varchar("apellido",50)
     val email  = varchar("email",50)
-    val password = varchar("password",20)
+    val password = varchar("password",200)
     val disponible = bool("disponible")
     val administrador = bool("administrador")
 }
