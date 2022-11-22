@@ -58,7 +58,7 @@ class Vista(
                 }while (!email.matches(Regex("[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}")))
 
             terminal.print("Contraseña: ")
-        var password: String = readln()
+        val password: String = readln()
 
             try {
                  correcto = trabController.getTrabajadorByEmailAndPassword(email,PasswordParser.encriptar(password))
@@ -67,9 +67,9 @@ class Vista(
             }
 
             if (correcto!=null){
-                if (correcto.administrador){
+                if (correcto.administrador && correcto.disponible){
                     administradorBucle()
-                }else{
+                }else if(!correcto.administrador && correcto.disponible){
                     encordadorBucle()
                 }
             }
@@ -162,14 +162,14 @@ class Vista(
      */
     private fun eliminarTrabajador() {
         var id: UUID? = null
-        var correcto=true
+        var correcto=false
 
         do {
             print("Dime el UUID del trabajador a eliminar: ")
-            var id = readln()
+            val leer = readln()
             try {
+                id =UUID.fromString(leer)
                 correcto=true
-                UUID.fromString(id)
             }catch (e: Exception){
                 !correcto
             }
@@ -177,10 +177,8 @@ class Vista(
         }while(!correcto)
 
         try {
-            var encontrado = trabController.getTrabajadorByUUID(id!!)
-            var usuario = creacionTrabajadores()
-            usuario.id = encontrado?.id
-            trabController.updateTrabajador(usuario)
+            val encontrado = id?.let { trabController.getTrabajadorByUUID(it) }
+            encontrado?.let{ trabController.deleteTrabajador(encontrado) }
         }catch (e: TrabajadorError){
             log(e)
         }
@@ -192,14 +190,14 @@ class Vista(
      */
     private fun actuTrabajador() {
         var id: UUID? = null
-        var correcto=true
+        var correcto=false
 
             do {
                 print("Dime el UUID del trabajador a actualizar: ")
-                var id = readln()
+                val linea = readln()
                 try {
+                    id = UUID.fromString(linea)
                     correcto=true
-                    UUID.fromString(id)
                 }catch (e: Exception){
                     !correcto
                 }
@@ -207,10 +205,10 @@ class Vista(
             }while(!correcto)
 
         try {
-            var encontrado = trabController.getTrabajadorByUUID(id!!)
-            encontrado?.let{
-                trabController.deleteTrabajador(encontrado)
-            }
+            val encontrado = id?.let { trabController.getTrabajadorByUUID(it) }
+            val usuario = creacionTrabajadores()
+            usuario.id = encontrado?.id
+            trabController.updateTrabajador(usuario)
         }catch (e: TrabajadorError){
             log(e)
         }
@@ -222,7 +220,7 @@ class Vista(
      * Conseguir todos los trabajadores
      */
     private fun getTrabajadores() {
-        var lista = trabController.getAllTrabajadores()
+        val lista = trabController.getAllTrabajadores()
         if (lista.isEmpty()){
             println("Lista vacía")
         }else{
@@ -237,7 +235,7 @@ class Vista(
      * Crear el trabajador
      */
     private fun addTrabajador() {
-       var usuario = creacionTrabajadores()
+       val usuario = creacionTrabajadores()
         try {
             trabController.addTrabajador(usuario)
         }catch (e: TrabajadorError){
@@ -251,9 +249,9 @@ class Vista(
      */
     fun creacionTrabajadores():Trabajador{
         print("Nombre usuario: ")
-        var nombre = readln()
+        val nombre = readln()
         print("Apellido usuario: ")
-        var apellido = readln()
+        val apellido = readln()
 
         var email:String
         do {
@@ -261,10 +259,10 @@ class Vista(
             email = readln()
         }while (!email.matches(Regex("[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}")))
         print("Contraseña usuario: ")
-        var password = readln()
+        val password = readln()
 
         var respuesta:String
-        var admin: Boolean
+        val admin: Boolean
         do {
             print("Administrador (S/N)")
             respuesta = readln()

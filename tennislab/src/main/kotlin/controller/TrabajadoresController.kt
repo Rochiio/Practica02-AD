@@ -70,10 +70,21 @@ class TrabajadoresController(var repository: TrabajadorRepository) {
     /**
      * Eliminar un trabajador
      */
+    @Throws(TrabajadorError::class)
     fun deleteTrabajador(trabajador:Trabajador){
-        repository.delete(trabajador)
+        var correcto =repository.delete(trabajador)
+        if(correcto){
+            println("Trabajador eliminado correctamente")
+        }else{
+            throw  TrabajadorError("Problemas al eliminar el trabajador")
+        }
     }
 
+
+    /**
+     * Conseguir un trabajador por el uuid.
+     */
+    @Throws(TrabajadorError::class)
     fun getTrabajadorByUUID(uuid: UUID): Trabajador?{
         var existe = repository.findByUUID(uuid)
         existe?.let {
