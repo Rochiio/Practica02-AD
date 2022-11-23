@@ -7,8 +7,10 @@ import entities.pedidos.TareaTable.nullable
 import java.util.*
 
 data class Tarea(
+    var id : Int?,
     var uuid : UUID?,
     var precio : Long,
     var raqueta : String?,
-    var tipoTarea : TipoTarea
+    var tipoTarea : TipoTarea,
+    var disponible : Boolean
 )

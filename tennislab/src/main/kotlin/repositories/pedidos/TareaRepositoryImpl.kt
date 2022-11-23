@@ -27,9 +27,10 @@ class TareaRepositoryImpl(private var tareaDao: IntEntityClass<TareaDAO>) : Tare
 
     override fun save(item: Tarea): Tarea = transaction {
         logger.debug { "Save trabajador" }
-        var result = tareaDao.find { TareaTable.uuid eq item.uuid!! }.firstOrNull()
-        result?.let {
-            update(item, result)
+        item.id?.let {
+            tareaDao.findById(it)?.let { update ->
+                update(item, update)
+            }
         } ?: run {
             add(item)
         }
@@ -40,27 +41,27 @@ class TareaRepositoryImpl(private var tareaDao: IntEntityClass<TareaDAO>) : Tare
         updateItem.apply {
             uuid = item.uuid!!
             precio = item.precio
-            raqueta = item.raqueta
+            raqueta = item.raqueta!!
             tipoTarea = item.tipoTarea
+            disponible = item.disponible
+
         }.fromTareaDaoToTarea()
     }
 
     override fun add(item: Tarea): Tarea = transaction {
         logger.debug { "actualizando item" }
         tareaDao.new {
-            uuid = item.uuid!!
             precio = item.precio
-            raqueta = item.raqueta
+            raqueta = item.raqueta!!
             tipoTarea = item.tipoTarea
+            disponible = item.disponible
         }.fromTareaDaoToTarea()
     }
 
     override fun delete(item: Tarea): Boolean = transaction {
-        val existe = item.uuid?.let {
-            tareaDao.find { TareaTable.uuid eq item.uuid!! }
-        } ?: return@transaction false
-        logger.debug { "eliminando tarea" }
-        existe.first().delete()
+        val existe = item.id?.let { tareaDao.findById(it) } ?: return@transaction false
+        logger.debug { "eliminando tarea: $item" }
+        existe.disponible = false
         return@transaction true
     }
 
