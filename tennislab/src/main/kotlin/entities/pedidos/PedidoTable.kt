@@ -15,10 +15,11 @@ import java.util.*
 /**
  * Entidad pedido para la  base de datos.
  */
-object PedidoTable: UUIDTable() {
-    //val uuid = uuid("uuid").autoGenerate()
+object PedidoTable : IntIdTable() {
+    val uuid = uuid("uuid").autoGenerate()
+
     //val trabajador = reference("trabajador",TrabajadorTable)
-    val estado = varchar("estado",10)
+    val estado = varchar("estado", 10)
     val fechaEntrada = date("fechaEntrada")
     val fechaSalida = date("fechaSalida")
     val fechaFinal = date("fechaFinal")
@@ -27,9 +28,11 @@ object PedidoTable: UUIDTable() {
     // TODO tareas
 }
 
-class PedidoDAO(id:EntityID<UUID>): UUIDEntity(id){
-    companion object: UUIDEntityClass<PedidoDAO>(PedidoTable)
-    // uuid by PedidoTable.uuid
+class PedidoDAO(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<PedidoDAO>(PedidoTable)
+
+    var uuid by PedidoTable.uuid
+
     //var trabajador by TrabajadorDAO referencedOn PedidoTable.trabajador
     var estado by PedidoTable.estado
     var fechaEntrada by PedidoTable.fechaEntrada
