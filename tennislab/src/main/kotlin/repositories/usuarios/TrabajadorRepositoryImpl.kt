@@ -115,7 +115,7 @@ class TrabajadorRepositoryImpl(
     override fun delete(item: Trabajador): Boolean =transaction{
         val existe = item.id?.let { trabajadorDAO.findById(it) } ?: return@transaction false
         logger.debug { "eliminando trabajador: $item" }
-        existe.delete()
+        existe.disponible = false
         return@transaction true
     }
 
