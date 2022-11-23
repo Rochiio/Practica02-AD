@@ -1,8 +1,6 @@
 package repositories.maquinas
 
 
-import entities.EncordadorTable
-import entities.enums.TipoMaquina
 import entities.maquinas.PersonalizadorDAO
 import entities.maquinas.PersonalizadorTable
 import mappers.fromPersonalizadorDaoToPersonalizadora
@@ -30,7 +28,7 @@ class PersonalizadoraRepositoryImpl(private var personalizadorDAO: IntEntityClas
 
     override fun save(item: Personalizadora): Personalizadora = transaction {
         logger.debug { "Save trabajador" }
-        var result = personalizadorDAO.find { EncordadorTable.uuid eq item.uuid!! }.firstOrNull()
+        var result = personalizadorDAO.find { PersonalizadorTable.uuid eq item.uuid!! }.firstOrNull()
         result?.let {
             update(item, result)
         }?: run{

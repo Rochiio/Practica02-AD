@@ -10,6 +10,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
  * Entidad tarea para la base de datos.
  */
 object TareaTable : IntIdTable(){
+    var uuid = uuid("uuid").autoGenerate()
     var precio = long("precio")
     var raqueta = varchar("raqueta", 50).nullable()
     var tipoTarea = enumeration("tipoTarea", TipoTarea::class)
@@ -17,12 +18,13 @@ object TareaTable : IntIdTable(){
 
 class TareaDAO(id : EntityID<Int>) : IntEntity(id){
     companion object : IntEntityClass<TareaDAO>(TareaTable)
+    var uuid by TareaTable.uuid
     var precio by TareaTable.precio
     var raqueta by TareaTable.raqueta
     var tipoTarea by TareaTable.tipoTarea
 
     override fun toString(): String {
-        return "Tarea(precio=$precio, raqueta='$raqueta', tipoTarea=$tipoTarea)"
+        return "Tarea(uuid=$uuid, precio=$precio, raqueta='$raqueta', tipoTarea=$tipoTarea)"
     }
 
 
