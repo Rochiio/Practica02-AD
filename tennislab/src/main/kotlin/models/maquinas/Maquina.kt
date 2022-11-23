@@ -6,7 +6,7 @@ import java.util.UUID
 /**
  * Modelo maquina
  */
-data class Maquina(
+open class Maquina(
     val uuid : UUID?,
     val marca: String,
     val modelo: String,

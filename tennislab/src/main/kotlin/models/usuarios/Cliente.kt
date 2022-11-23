@@ -6,7 +6,7 @@ import java.util.*
  * Modelo de cliente.
  */
 data class Cliente(
-    var id: Int?,
+    var id : Int?,
     var uuid: UUID?,
     var nombre: String,
     var apellido:String,

@@ -69,7 +69,6 @@ class TrabajadorRepositoryImpl(
      * @return trabajador
      */
     override fun add(item: Trabajador): Trabajador =transaction{
-        logger.debug { "Add trabajador"}
         trabajadorDAO.new {
             nombre = item.nombre
             apellido = item.apellido
