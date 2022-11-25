@@ -8,7 +8,7 @@ import java.util.*
  * Modelo de encordador
  */
 data class Encordador(
-    val uuid : UUID?,
+    var uuid : UUID?,
     val marca: String,
     val modelo: String,
     val fechaAdquisicion: LocalDate,

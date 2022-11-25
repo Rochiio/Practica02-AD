@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Assertions.*
 
 
 internal class TrabajadorRepositoryImplTest {
-    private var trabTest: Trabajador = Trabajador(null, null, "Prueba", "Test", "prueba@gmail.com","12345",
-        disponible = true,
+    private var trabTest: Trabajador = Trabajador(
+        null, "Prueba", "Test", "prueba@gmail.com", "12345", disponible = true,
         administrador = false
     )
     private var repository = TrabajadorRepositoryImpl(TrabajadorDAO)
