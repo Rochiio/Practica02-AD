@@ -121,6 +121,9 @@ class Vista(
     }
 
 
+    //----------------------------------------- TRABAJADORES -----------------------------------------------------------
+
+
     /**
      * Bucle vista si el usuario es un administrador y selecciona los trabajadores.
      */
@@ -283,6 +286,9 @@ class Vista(
 
         return Trabajador(null, null, nombre, apellido, email, PasswordParser.encriptar(password), true, admin)
     }
+
+
+
 
 
 }
