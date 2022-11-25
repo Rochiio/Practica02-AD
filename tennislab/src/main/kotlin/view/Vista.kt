@@ -2,18 +2,24 @@ package view
 
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
+import controller.MaquinasController
 import controller.TrabajadoresController
+import entities.enums.TipoMaquina
+import exception.MaquinaError
 import exception.TrabajadorError
 import exception.log
+import models.maquinas.Encordador
 import models.usuarios.Trabajador
 import utils.PasswordParser
+import java.time.LocalDate
 import java.util.*
 
 /**
  * Vista del usuario.
  */
 class Vista(
-    private var trabController: TrabajadoresController
+    private var trabController: TrabajadoresController,
+    private var maquinaController: MaquinasController
 ) {
     private var terminal = Terminal()
 
@@ -112,12 +118,217 @@ class Vista(
     private fun opcionesBucleAdmin(opcion: Int) {
         when(opcion){
             1 ->{administradorBucleUsuarios()}
-            2 ->{}
+            2 ->{administradorBucleMaquinas()}
             3 ->{}
             4 ->{}
             0 ->{terminal.println(brightBlue.bg("Saliendo de la sesión"))
             }
         }
+    }
+
+
+    //------------------------------------------- MAQUINAS -------------------------------------------------------------
+
+    /**
+     * Bucle para elegir que máquinas queremos ver.
+     */
+    private fun administradorBucleMaquinas() {
+        var opcion: Int
+        do{
+            terminal.println(brightBlue("------ Máquinas Admin ------"))
+            do {
+                terminal.println(
+                    "1- Encordadoras \n" +
+                            "2- Personalizadoras \n"+
+                            "0- Salir")
+                opcion= readln().toIntOrNull() ?: -1
+            }while (opcion<0 || opcion>4)
+            opcionesBucleAdminMaquinas(opcion)
+        }while (opcion!=0)
+    }
+
+
+    /**
+     * Opciones del bucle de administrador.
+     */
+    private fun opcionesBucleAdminMaquinas(opcion: Int) {
+        when(opcion){
+            1 -> bucleEncordadorasAdmin()
+            2 -> buclePersonalizadorasAdmin()
+            0 -> terminal.println(brightBlue.bg("Saliendo de la configuración de máquinas"))
+        }
+
+    }
+
+
+    /**
+     * Bucle personalizadoras.
+     */
+    private fun buclePersonalizadorasAdmin() {
+        TODO("Not yet implemented")
+    }
+
+
+    //--------------------------------------------- ENCORDADORAS -------------------------------------------------------
+
+
+    /**
+     * Bucle encordadoras.
+     */
+    private fun bucleEncordadorasAdmin() {
+        var opcion: Int
+        do{
+            terminal.println(brightBlue("------ Encordadoras Admin ------"))
+            do {
+                terminal.println(
+                    "1- Añadir Encordadora \n" +
+                            "2- Actualizar Encordadora \n"+
+                            "3- Listar Encordadoras \n"+
+                            "4- Eliminar Encordadora \n"+
+                            "0- Salir")
+                opcion= readln().toIntOrNull() ?: -1
+            }while (opcion<0 || opcion>4)
+            opcionesBucleAdminEncordadoras(opcion)
+        }while (opcion!=0)
+    }
+
+    private fun opcionesBucleAdminEncordadoras(opcion: Int) {
+        when(opcion){
+            1 ->{addEncordadora()}
+            2 ->{actuEncordadora()}
+            3 ->{getEncordadoras()}
+            4 ->{eliminarEncordadora()}
+            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de encordadoras"))
+            }
+        }
+    }
+
+
+    /**
+     * Eliminar una encordadora
+     */
+    private fun eliminarEncordadora() {
+        var id: UUID? = null
+        var correcto=false
+
+        do {
+            print("Dime el UUID de la encordadora a eliminar: ")
+            val leer = readln()
+            try {
+                id =UUID.fromString(leer)
+                correcto=true
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            val encontrado = id?.let { maquinaController.getEncordadoraByUUID(it) }
+            encontrado?.let{ maquinaController.deleteEncordadora(it) }
+        }catch (e: TrabajadorError){
+            log(e)
+        }
+    }
+
+
+    /**
+     * Ver todas las encordadoras.
+     */
+    private fun getEncordadoras() {
+        val lista = maquinaController.getAllEncordadoras()
+        if (lista.isEmpty()){
+            println("Lista vacía")
+        }else{
+            for (enc in lista){
+                terminal.println(green(enc.toString()))
+            }
+        }
+    }
+
+
+    /**
+     * Actualizar una encordadora.
+     */
+    private fun actuEncordadora() {
+        var id: UUID? = null
+        var correcto=false
+
+        do {
+            print("Dime el UUID de la encordadora a actualizar: ")
+            val linea = readln()
+            try {
+                id = UUID.fromString(linea)
+                correcto=true
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            val encontrado = id?.let { maquinaController.getEncordadoraByUUID(it) }
+            encontrado?.let {
+                var encordadora = creacionEncordadora()
+                encordadora.uuid = it.uuid
+                maquinaController.updateEncordadora(encordadora)
+            }
+        }catch (e: TrabajadorError){
+            log(e)
+        }
+
+    }
+
+    /**
+     * Añadir una encordadora.
+     */
+    private fun addEncordadora() {
+        val encordadora = creacionEncordadora()
+        try {
+            maquinaController.addEncordadora(encordadora)
+        }catch (e: MaquinaError){
+            log(e)
+        }
+    }
+
+
+    /**
+     * Creacion de una encordadora preguntando al usuario.
+     */
+    private fun creacionEncordadora(): Encordador {
+        var marca:String
+        do {
+            print("Marca encordadora: ")
+            marca = readln()
+        }while (marca.isEmpty())
+        var modelo:String
+        do {
+            print("Modelo encordadora: ")
+            modelo = readln()
+        }while (modelo.isEmpty())
+        var fecha:String
+        do {
+            print("Fecha adquisición encordadora dd-MM-yyyy: ")
+            fecha=readln()
+        }while (!fecha.matches(Regex("^([0-2][0-9]|3[0-1])(-)(0[1-9]|1[0-2])\\2(\\d{4})\$")))
+        var tipo:String
+        do {
+            print("Tipo de automaticidad AUTOMATICA/MANUAL: ")
+            tipo= readln()
+        }while (tipo != "AUTOMATICA" && tipo != "MANUAL")
+        var tensionMin:Int
+        do {
+            print("Tensión mínima encordadora: ")
+            tensionMin= readln().toIntOrNull()?:0
+        }while (tensionMin<=0)
+        var tensionMax:Int
+        do {
+            print("Tensión máxima encordadora: ")
+            tensionMax= readln().toIntOrNull()?:0
+        }while (tensionMax<=0)
+
+        var campos = fecha.split("-")
+        return Encordador(null,marca,modelo, LocalDate.of(campos[2].toInt(),campos[1].toInt(),campos[0].toInt()),true, TipoMaquina.valueOf(tipo),tensionMax,tensionMin)
     }
 
 
@@ -209,9 +420,11 @@ class Vista(
 
         try {
             val encontrado = id?.let { trabController.getTrabajadorByUUID(it) }
-            val usuario = creacionTrabajadores()
-            usuario.id = encontrado?.id
-            trabController.updateTrabajador(usuario)
+            encontrado?.let {
+                var usuario = creacionTrabajadores()
+                usuario.uuid = it.uuid
+                trabController.updateTrabajador(usuario)
+            }
         }catch (e: TrabajadorError){
             log(e)
         }
@@ -284,7 +497,7 @@ class Vista(
         admin = respuesta=="S"
 
 
-        return Trabajador(null, null, nombre, apellido, email, PasswordParser.encriptar(password), true, admin)
+        return Trabajador(null, null,nombre, apellido, email, PasswordParser.encriptar(password), true, admin)
     }
 
 

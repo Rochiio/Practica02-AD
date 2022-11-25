@@ -41,7 +41,6 @@ class EncordadoRepositoryImpl(private var encordadorDAO: IntEntityClass<Encordad
     override fun add(item: Encordador): Encordador = transaction {
         logger.debug { "añadiendo encordador" }
         encordadorDAO.new {
-            uuid = item.uuid!!
             modelo = item.modelo
             marca = item.marca
             fechaAdquisicion = item.fechaAdquisicion
@@ -55,7 +54,6 @@ class EncordadoRepositoryImpl(private var encordadorDAO: IntEntityClass<Encordad
     fun update(item: Encordador, updateItem: EncordadorDAO): Encordador = transaction {
         logger.debug { "acualizando encordador" }
         updateItem.apply {
-            uuid = item.uuid!!
             modelo = item.modelo
             marca = item.marca
             fechaAdquisicion = item.fechaAdquisicion
@@ -68,7 +66,7 @@ class EncordadoRepositoryImpl(private var encordadorDAO: IntEntityClass<Encordad
 
     override fun delete(item: Encordador): Boolean = transaction {
         val existe = item.uuid?.let {
-            encordadorDAO.find { EncordadorTable.uuid eq item.uuid }
+            encordadorDAO.find { EncordadorTable.uuid eq item.uuid!! }
         } ?: return@transaction false
         logger.debug { "eliminando encordador" }
         existe.first().delete()

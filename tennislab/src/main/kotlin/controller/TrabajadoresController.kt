@@ -2,7 +2,6 @@ package controller
 
 import exception.TrabajadorError
 import models.usuarios.Trabajador
-import org.jetbrains.exposed.sql.transactions.transaction
 import repositories.usuarios.TrabajadorRepository
 import java.util.*
 
@@ -58,12 +57,7 @@ class TrabajadoresController(var repository: TrabajadorRepository) {
      */
     @Throws(TrabajadorError::class)
     fun updateTrabajador(trabajador:Trabajador){
-        var existe = repository.findByEmail(trabajador.email)
-        existe?.let {
-            throw  TrabajadorError("Ya existe un trabajador con este email")
-        }?: run{
-            repository.save(trabajador)
-        }
+        repository.save(trabajador)
     }
 
 
@@ -85,7 +79,7 @@ class TrabajadoresController(var repository: TrabajadorRepository) {
      * Conseguir un trabajador por el uuid.
      */
     @Throws(TrabajadorError::class)
-    fun getTrabajadorByUUID(uuid: UUID): Trabajador?{
+    fun getTrabajadorByUUID(uuid: UUID): Trabajador {
         var existe = repository.findByUUID(uuid)
         existe?.let {
             return existe
