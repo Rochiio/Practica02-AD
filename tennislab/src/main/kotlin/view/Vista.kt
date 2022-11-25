@@ -9,6 +9,7 @@ import exception.MaquinaError
 import exception.TrabajadorError
 import exception.log
 import models.maquinas.Encordador
+import models.maquinas.Personalizadora
 import models.usuarios.Trabajador
 import utils.PasswordParser
 import java.time.LocalDate
@@ -161,11 +162,168 @@ class Vista(
     }
 
 
+    //-------------------------------------- PERSONALIZADORAS ----------------------------------------------------------
+
+
     /**
      * Bucle personalizadoras.
      */
     private fun buclePersonalizadorasAdmin() {
-        TODO("Not yet implemented")
+        var opcion: Int
+        do{
+            terminal.println(brightBlue("------ Personalizadoras Admin ------"))
+            do {
+                terminal.println(
+                    "1- Añadir Personalizadora \n" +
+                            "2- Actualizar Personalizadora \n"+
+                            "3- Listar Personalizadoras \n"+
+                            "4- Eliminar Personalizadora \n"+
+                            "0- Salir")
+                opcion= readln().toIntOrNull() ?: -1
+            }while (opcion<0 || opcion>4)
+            opcionesBucleAdminPersonalizadoras(opcion)
+        }while (opcion!=0)
+    }
+
+    private fun opcionesBucleAdminPersonalizadoras(opcion: Int) {
+        when(opcion){
+            1 ->{addPersonalizadora()}
+            2 ->{actuPersonalizadora()}
+            3 ->{getPersonalizadoras()}
+            4 ->{eliminarPersonalizadora()}
+            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de personalizadoras"))
+            }
+        }
+    }
+
+
+    /**
+     * Eliminar una personalizadora
+     */
+    private fun eliminarPersonalizadora() {
+        var id: UUID? = null
+        var correcto=false
+
+        do {
+            print("Dime el UUID de la personalizadora a eliminar: ")
+            val leer = readln()
+            try {
+                id =UUID.fromString(leer)
+                correcto=true
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            val encontrado = id?.let { maquinaController.getPersonalizadoraByUUID(it) }
+            encontrado?.let{ maquinaController.deletePersonalizadora(it) }
+        }catch (e: MaquinaError){
+            log(e)
+        }
+    }
+
+
+    /**
+     * Ver todas las personalizadoras.
+     */
+    private fun getPersonalizadoras() {
+        val lista = maquinaController.getAllPersonalizadoras()
+        if (lista.isEmpty()){
+            println("Lista vacía")
+        }else{
+            for (per in lista){
+                terminal.println(green(per.toString()))
+            }
+        }
+    }
+
+
+    /**
+     * Actualizar una personalizadora.
+     */
+    private fun actuPersonalizadora() {
+        var id: UUID? = null
+        var correcto=false
+
+        do {
+            print("Dime el UUID de la personalizadora a actualizar: ")
+            val linea = readln()
+            try {
+                id = UUID.fromString(linea)
+                correcto=true
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            val encontrado = id?.let { maquinaController.getPersonalizadoraByUUID(it) }
+            encontrado?.let {
+                var personalizadora = creacionPersonalizadora()
+                personalizadora.uuid = it.uuid
+                maquinaController.updatePersonalizadora(personalizadora)
+            }
+        }catch (e:MaquinaError){
+            log(e)
+        }
+
+    }
+
+    /**
+     * Añadir una personalizadora.
+     */
+    private fun addPersonalizadora() {
+        val personalizadora = creacionPersonalizadora()
+        try {
+            maquinaController.addPersonalizadora(personalizadora)
+        }catch (e: MaquinaError){
+            log(e)
+        }
+    }
+
+
+    /**
+     * Creacion de una personalizadora preguntando al usuario.
+     */
+    private fun creacionPersonalizadora(): Personalizadora {
+        var marca:String
+        do {
+            print("Marca personalizadora: ")
+            marca = readln()
+        }while (marca.isEmpty())
+        var modelo:String
+        do {
+            print("Modelo personalizadora: ")
+            modelo = readln()
+        }while (modelo.isEmpty())
+        var fecha:String
+        do {
+            print("Fecha adquisición personalizadora dd-MM-yyyy: ")
+            fecha=readln()
+        }while (!fecha.matches(Regex("^([0-2][0-9]|3[0-1])(-)(0[1-9]|1[0-2])\\2(\\d{4})\$")))
+        var maniobrabilidad:String
+        do{
+            print("Maniobrabilidad personalizadora SI/NO: ")
+            maniobrabilidad = readln()
+        }while (maniobrabilidad!="SI" && maniobrabilidad!="NO")
+        var balance:String
+        do{
+            print("Balance personalizadora SI/NO: ")
+            balance = readln()
+        }while (balance!="SI" && balance!="NO")
+        var rigidez:String
+        do{
+            print("Rigidez personalizadora SI/NO: ")
+            rigidez = readln()
+        }while (rigidez!="SI" && rigidez!="NO")
+
+
+        var campos = fecha.split("-")
+        return Personalizadora(null,marca,modelo,LocalDate.of(campos[2].toInt(),campos[1].toInt(),campos[0].toInt()),
+            true, maniobrabilidad=="SI", balance=="SI", rigidez=="SI")
     }
 
 
@@ -226,7 +384,7 @@ class Vista(
         try {
             val encontrado = id?.let { maquinaController.getEncordadoraByUUID(it) }
             encontrado?.let{ maquinaController.deleteEncordadora(it) }
-        }catch (e: TrabajadorError){
+        }catch (e: MaquinaError){
             log(e)
         }
     }
@@ -273,7 +431,7 @@ class Vista(
                 encordadora.uuid = it.uuid
                 maquinaController.updateEncordadora(encordadora)
             }
-        }catch (e: TrabajadorError){
+        }catch (e: MaquinaError){
             log(e)
         }
 
