@@ -1,8 +1,7 @@
 package repositories.maquinas
 
-import entities.maquinas.PersonalizadorDAO
-import models.maquinas.Personalizar
+import models.maquinas.Personalizadora
 import repositories.ICRUD
 
-interface PersonalizadoraRepository : ICRUD<Personalizar,Int> {
+interface PersonalizadoraRepository : ICRUD<Personalizadora,Int> {
 }

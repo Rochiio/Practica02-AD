@@ -50,14 +50,13 @@ internal class TrabajadorRepositoryImplTest {
         )
     }
 
-
     @Test
     fun findById() = transaction{
         SchemaUtils.create(TrabajadorTable)
 
         var guardado = repository.save(trabTest)
         var encontrado = repository.findById(guardado.id!!)
-
+        println(encontrado)
         assertAll(
             { assertNotNull(encontrado) },
             { assertEquals(encontrado?.id, guardado.id) },

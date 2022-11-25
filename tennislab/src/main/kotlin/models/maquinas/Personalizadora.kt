@@ -1,19 +1,19 @@
 package models.maquinas
 
-import entities.enums.TipoMaquina
 import java.time.LocalDate
 import java.util.*
 
 /**
- * Modelo de encordador
+ * Modelo personalizar.
  */
-data class Encordador(
+data class Personalizadora(
     val uuid : UUID?,
     val marca: String,
     val modelo: String,
     val fechaAdquisicion: LocalDate,
     val disponible: Boolean,
-    val automatico: TipoMaquina,
-    val tensionMaxima: Int,
-    val tensionMinima: Int
-)
+    val maniobrabilidad: Boolean,
+    val balance: Boolean,
+    val rigidez: Boolean
+) {
+}

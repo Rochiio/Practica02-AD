@@ -13,7 +13,7 @@ import java.util.*
 
 internal class ClienteRepositoryImplTest {
 
-    private var clienteTest: Cliente = Cliente(null, null,"Prueba","test","cliente@prueba.com","123456")
+    private var clienteTest: Cliente = Cliente(1, UUID.randomUUID(),"Prueba","test","cliente@prueba.com","123456")
     private var repository = ClienteRepositoryImpl(ClienteDAO)
 
 
