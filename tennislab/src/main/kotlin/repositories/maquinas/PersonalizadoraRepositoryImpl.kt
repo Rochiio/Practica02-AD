@@ -68,7 +68,7 @@ class PersonalizadoraRepositoryImpl(private var personalizadorDAO: IntEntityClas
 
     override fun delete(item: Personalizadora): Boolean = transaction {
         val existe = item.uuid?.let {
-            personalizadorDAO.find { PersonalizadorTable.uuid eq item.uuid }
+            personalizadorDAO.find { PersonalizadorTable.uuid eq item.uuid!! }
         } ?: return@transaction false
         logger.debug { "eliminando Personalizadora" }
         existe.first().delete()

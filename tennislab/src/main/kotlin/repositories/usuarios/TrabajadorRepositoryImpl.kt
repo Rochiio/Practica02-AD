@@ -55,10 +55,10 @@ class TrabajadorRepositoryImpl(
         logger.debug { "Save trabajador" }
         item.id?.let {
             trabajadorDAO.findById(it)?.let { update ->
-                update(item, update)
+                return@transaction update(item, update)
             }
         } ?: run {
-            add(item)
+            return@transaction add(item)
         }
     }
 
