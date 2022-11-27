@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Assertions.*
 
 
 internal class TrabajadorRepositoryImplTest {
-    private var trabTest: Trabajador = Trabajador(
+    private var trabTest: Trabajador = Trabajador(null,
         null, "Prueba", "Test", "prueba@gmail.com", "12345", disponible = true,
         administrador = false
     )
