@@ -1,6 +1,5 @@
 package controller
 
-import com.google.common.base.Predicates.equalTo
 import exception.TrabajadorError
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -8,16 +7,13 @@ import io.mockk.impl.annotations.*
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import models.usuarios.Trabajador
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.PasswordParser
 import java.util.*
-import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 internal class TrabajadoresControllerTest {
@@ -154,6 +150,8 @@ internal class TrabajadoresControllerTest {
         }
 
         assertEquals("Problemas al eliminar el trabajador", exception.item)
+
+        verify(exactly=1){repository.delete(test)}
     }
 
     @Test
@@ -172,5 +170,17 @@ internal class TrabajadoresControllerTest {
         )
 
         verify(exactly=1){ repository.findByUUID(test.uuid!!) }
+    }
+
+    @Test
+    fun getTrabajadorByUUIDErrorNoExiste(){
+        every{ repository.findByUUID(test.uuid!!)} returns null
+        var exception = assertThrows(TrabajadorError::class.java){
+            controller.getTrabajadorByUUID(test.uuid!!)
+        }
+
+        assertEquals("No existe un trabajador con este UUID", exception.item)
+
+        verify(exactly=1){ repository.findByUUID(test.uuid!!)}
     }
 }

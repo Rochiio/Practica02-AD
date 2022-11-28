@@ -20,7 +20,7 @@ object ClienteTable: IntIdTable() {
     val nombre = ClienteTable.varchar("nombre", 50)
     val apellido= ClienteTable.varchar("apellido", 50)
     val email  = ClienteTable.varchar("email", 50)
-    val password = ClienteTable.varchar("password", 20)
+    val password = ClienteTable.varchar("password", 200)
     //val pedidos = reference("pedidos", PedidoTable)
 }
 
