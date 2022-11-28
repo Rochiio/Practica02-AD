@@ -1,6 +1,7 @@
 package controller
 
 import entities.enums.TipoMaquina
+import exception.MaquinaError
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -57,6 +58,18 @@ internal class MaquinasControllerTest {
     }
 
     @Test
+    fun addEncordadoraErrorYaExiste(){
+        every { encordado.findByUUID(encordadora.uuid!!)} returns encordadora
+        var exception = assertThrows(MaquinaError::class.java){
+            controller.addEncordadora(encordadora)
+        }
+
+        assertEquals("Ya existe una encordadora con este UUID", exception.item)
+
+        verify(exactly=1){encordado.findByUUID(encordadora.uuid!!)}
+    }
+
+    @Test
     fun getEncordadoraByUUID() {
         every { encordado.findByUUID(encordadora.uuid!!)} returns encordadora
 
@@ -74,6 +87,18 @@ internal class MaquinasControllerTest {
         )
 
         verify(exactly=1){ encordado.findByUUID(encordadora.uuid!!) }
+    }
+
+    @Test
+    fun getEncordadoraByUUIDErrorNoExiste(){
+        every {encordado.findByUUID(encordadora.uuid!!)} returns null
+        var exception = assertThrows(MaquinaError::class.java){
+            controller.getEncordadoraByUUID(encordadora.uuid!!)
+        }
+
+        assertEquals("No existe la encordadora con este UUID", exception.item)
+
+        verify(exactly=1){encordado.findByUUID(encordadora.uuid!!)}
     }
 
 
@@ -110,6 +135,18 @@ internal class MaquinasControllerTest {
     }
 
     @Test
+    fun deleteEncordadoraErrorNoEliminado() {
+        every { encordado.delete(encordadora) } returns false
+        var exception = assertThrows(MaquinaError::class.java){
+            controller.deleteEncordadora(encordadora)
+        }
+
+        assertEquals("Problemas al eliminar la encordadora",exception.item)
+
+        verify(exactly=1){encordado.delete(encordadora)}
+    }
+
+    @Test
     fun addPersonalizadora() {
         every { personalizado.findByUUID(personalizadora.uuid!!) } returns null
         every { personalizado.save(personalizadora) } returns personalizadora
@@ -133,6 +170,18 @@ internal class MaquinasControllerTest {
     }
 
     @Test
+    fun addPersonalizadoraErrorYaExiste(){
+        every { personalizado.findByUUID(personalizadora.uuid!!) } returns personalizadora
+        var exception = assertThrows(MaquinaError::class.java){
+            controller.addPersonalizadora(personalizadora)
+        }
+
+        assertEquals("Ya existe una personalizadora con este UUID", exception.item)
+
+        verify(exactly=1){personalizado.findByUUID(personalizadora.uuid!!)}
+    }
+
+    @Test
     fun getPersonalizadoraByUUID() {
         every { personalizado.findByUUID(personalizadora.uuid!!)} returns personalizadora
 
@@ -150,6 +199,16 @@ internal class MaquinasControllerTest {
         )
 
         verify(exactly=1){ personalizado.findByUUID(personalizadora.uuid!!) }
+    }
+
+    @Test
+    fun getPersonalizadoraByUUIDErrorNoExiste(){
+        every{personalizado.findByUUID(personalizadora.uuid!!)} returns null
+        var exception = assertThrows(MaquinaError::class.java){
+            controller.getPersonalizadoraByUUID(personalizadora.uuid!!)
+        }
+        assertEquals("No existe la personalizadora con este UUID",exception.item)
+        verify(exactly=1){personalizado.findByUUID(personalizadora.uuid!!)}
     }
 
 
@@ -182,5 +241,16 @@ internal class MaquinasControllerTest {
         assertTrue(eliminado)
 
         verify(exactly=1){ personalizado.delete(personalizadora) }
+    }
+
+    @Test
+    fun deletePersonalizadoraErrorNoEliminado(){
+        every { personalizado.delete(personalizadora) } returns false
+        var exception = assertThrows(MaquinaError::class.java){
+            controller.deletePersonalizadora(personalizadora)
+        }
+
+        assertEquals("Problemas al eliminar la personalizadora",exception.item)
+        verify(exactly=1){personalizado.delete(personalizadora)}
     }
 }

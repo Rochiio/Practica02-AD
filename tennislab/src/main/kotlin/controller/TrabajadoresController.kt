@@ -18,9 +18,7 @@ class TrabajadoresController(private var repository: TrabajadorRepository) {
     fun getTrabajadorByEmailAndPassword(email: String, password: String): Trabajador?{
         var find = repository.findByEmail(email)
         find?.let {
-            if (find.password == password){
-
-            }else{
+            if (find.password != password){
                 throw TrabajadorError("Trabajador incorrecto")
             }
         }?: run {
@@ -56,7 +54,7 @@ class TrabajadoresController(private var repository: TrabajadorRepository) {
     /**
      * Actualizar un trabajador
      */
-    @Throws(TrabajadorError::class)
+    //@Throws(TrabajadorError::class)
     fun updateTrabajador(trabajador:Trabajador){
         repository.save(trabajador)
     }
