@@ -1,7 +1,9 @@
 package entities.pedidos
 
+import entities.pedidos.PedidoDAO.Companion.referrersOn
 import entities.usuarios.TrabajadorDAO
 import entities.usuarios.TrabajadorTable
+import models.pedidos.Tarea
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.UUIDEntity
@@ -18,14 +20,12 @@ import java.util.*
 object PedidoTable : IntIdTable() {
     val uuid = uuid("uuid").autoGenerate()
 
-    //val trabajador = reference("trabajador",TrabajadorTable)
     val estado = varchar("estado", 10)
     val fechaEntrada = date("fechaEntrada")
     val fechaSalida = date("fechaSalida")
     val fechaFinal = date("fechaFinal")
     val precioTotal = float("precioFinal")
     val topeEntrega = date("topeEntrega")
-    // TODO tareas
 }
 
 class PedidoDAO(id: EntityID<Int>) : IntEntity(id) {
@@ -40,9 +40,10 @@ class PedidoDAO(id: EntityID<Int>) : IntEntity(id) {
     var fechaFinal by PedidoTable.fechaFinal
     var precioTotal by PedidoTable.precioTotal
     var topeEntrega by PedidoTable.topeEntrega
+    val tareas by TareaDAO referrersOn TareaTable.id_pedido
 
     override fun toString(): String {
-        return "Pedido(uuid=${id.value}, estado='$estado', entrega=$fechaEntrada, fechaSalida=$fechaSalida, fechaFinal=$fechaFinal, precioTotal=$precioTotal, topeEntrega=$topeEntrega)"
+        return "Pedido(uuid=${id.value}, estado='$estado', entrega=$fechaEntrada, fechaSalida=$fechaSalida, fechaFinal=$fechaFinal, precioTotal=$precioTotal, topeEntrega=$topeEntrega, tareas=$tareas)"
     }
 
 

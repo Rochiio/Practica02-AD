@@ -39,6 +39,8 @@ dependencies {
     implementation("com.google.guava:guava:31.1-jre")
     // Serializa Json
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 tasks.test {

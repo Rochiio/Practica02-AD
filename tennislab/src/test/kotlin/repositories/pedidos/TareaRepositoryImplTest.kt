@@ -12,10 +12,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import java.util.*
 
 internal class TareaRepositoryImplTest {
 
-    private var tareaTest = Tarea(null, null, 10, "raquetaTest", TipoTarea.ENCORDADO, true)
+    private var tareaTest = Tarea(null, null, UUID.randomUUID(), UUID.randomUUID(), "descripcion", 10, TipoTarea.ENCORDADO, true)
     private var repository = TareaRepositoryImpl(TareaDAO)
 
     @BeforeEach
@@ -39,8 +40,10 @@ internal class TareaRepositoryImplTest {
             { assertNotNull(encontrado) },
             { assertEquals(guardado.uuid, encontrado?.uuid) },
             { assertEquals(guardado.id, encontrado?.id) },
+            { assertEquals(guardado.idMaquina, encontrado?.idMaquina) },
+            { assertEquals(guardado.idTrabajador, encontrado?.idTrabajador) },
             { assertEquals(guardado.precio, encontrado?.precio) },
-            { assertEquals(guardado.raqueta, encontrado?.raqueta) },
+            {assertEquals(guardado.descripcion, encontrado?.descripcion)},
             { assertEquals(guardado.tipoTarea, encontrado?.tipoTarea) }
         )
     }
@@ -55,11 +58,13 @@ internal class TareaRepositoryImplTest {
 
         assertAll(
             { assertNotNull(encontrado) },
-            { assertEquals(encontrado?.uuid, guardado.uuid) },
-            { assertEquals(encontrado?.id, guardado.id) },
-            { assertEquals(encontrado?.precio, guardado.precio) },
-            { assertEquals(encontrado?.raqueta, guardado.raqueta) },
-            { assertEquals(encontrado?.tipoTarea, guardado.tipoTarea) }
+            { assertEquals(guardado.uuid, encontrado?.uuid) },
+            { assertEquals(guardado.id, encontrado?.id) },
+            { assertEquals(guardado.idMaquina, encontrado?.idMaquina) },
+            { assertEquals(guardado.idTrabajador, encontrado?.idTrabajador) },
+            { assertEquals(guardado.precio, encontrado?.precio) },
+            {assertEquals(guardado.descripcion, encontrado?.descripcion)},
+            { assertEquals(guardado.tipoTarea, encontrado?.tipoTarea) }
         )
     }
 
@@ -70,11 +75,12 @@ internal class TareaRepositoryImplTest {
         var guardado = repository.save(tareaTest)
 
         assertAll(
-            { assertNotNull(guardado) },
-            { assertNotNull(guardado.id) },
-            { assertNotNull(guardado.uuid) },
+            { assertNotNull(tareaTest) },
+            { assertEquals(guardado.id, 1) },
+            { assertEquals(guardado.idMaquina, tareaTest.idMaquina) },
+            { assertEquals(guardado.idTrabajador, tareaTest.idTrabajador) },
             { assertEquals(guardado.precio, tareaTest.precio) },
-            { assertEquals(guardado.raqueta, tareaTest.raqueta) },
+            {assertEquals(guardado.descripcion, tareaTest.descripcion)},
             { assertEquals(guardado.tipoTarea, tareaTest.tipoTarea) }
         )
     }
@@ -86,11 +92,12 @@ internal class TareaRepositoryImplTest {
         var guardado = repository.add(tareaTest)
 
         assertAll(
-            { assertNotNull(guardado) },
-            { assertNotNull(guardado.id) },
-            { assertNotNull(guardado.uuid) },
+            { assertNotNull(tareaTest) },
+            { assertEquals(guardado.id, 1) },
+            { assertEquals(guardado.idMaquina, tareaTest.idMaquina) },
+            { assertEquals(guardado.idTrabajador, tareaTest.idTrabajador) },
             { assertEquals(guardado.precio, tareaTest.precio) },
-            { assertEquals(guardado.raqueta, tareaTest.raqueta) },
+            {assertEquals(guardado.descripcion, tareaTest.descripcion)},
             { assertEquals(guardado.tipoTarea, tareaTest.tipoTarea) }
         )
     }
@@ -114,15 +121,16 @@ internal class TareaRepositoryImplTest {
         var guardado = repository.add(tareaTest)
         var lista = repository.findAll()
 
-        assertAll(
-            { assertTrue(lista.isNotEmpty()) },
 
+        assertAll(
+            { assertNotNull(lista.isNotEmpty()) },
             { assertEquals(lista[0].uuid, guardado.uuid) },
             { assertEquals(lista[0].id, guardado.id) },
+            { assertEquals(lista[0].idMaquina, guardado.idMaquina) },
+            { assertEquals(lista[0].idTrabajador, guardado.idTrabajador) },
             { assertEquals(lista[0].precio, guardado.precio) },
-            { assertEquals(lista[0].raqueta, guardado.raqueta) },
+            {assertEquals(lista[0].descripcion, guardado.descripcion)},
             { assertEquals(lista[0].tipoTarea, guardado.tipoTarea) }
-
         )
     }
 

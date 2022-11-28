@@ -4,13 +4,21 @@ import entities.enums.TipoTarea
 import entities.pedidos.TareaTable
 import entities.pedidos.TareaTable.autoGenerate
 import entities.pedidos.TareaTable.nullable
+import kotlinx.serialization.Serializable
+import utils.serializer.UUIDSerializer
 import java.util.*
 
+@Serializable
 data class Tarea(
-    var id : Int?,
-    var uuid : UUID?,
+    var id: Int?,
+    @Serializable(with = UUIDSerializer::class)
+    var uuid: UUID?,
+    @Serializable(with = UUIDSerializer::class)
+    var idTrabajador: UUID?,
+    @Serializable(with = UUIDSerializer::class)
+    var idMaquina: UUID?,
+    var descripcion: String,
     var precio : Long,
-    var raqueta : String?,
-    var tipoTarea : TipoTarea,
-    var disponible : Boolean
+    var tipoTarea: TipoTarea,
+    var disponible: Boolean
 )

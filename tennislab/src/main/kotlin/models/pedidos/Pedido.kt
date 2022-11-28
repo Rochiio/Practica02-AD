@@ -8,6 +8,7 @@ import utils.serializer.LocalDateSerializer
 import utils.serializer.UUIDSerializer
 import java.time.LocalDate
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Modelo de pedido. Con serializacion para pasar a JSON.
@@ -26,5 +27,6 @@ data class Pedido(
     val precioTotal: Float,
     @Serializable(with = LocalDateSerializer::class)
     val topeEntrega: LocalDate,
+    val tareas : ArrayList<Tarea>
     ) {
 }
