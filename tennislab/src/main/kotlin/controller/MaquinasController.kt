@@ -30,7 +30,7 @@ class MaquinasController(
 
 
     /**
-     * Actualizar una encordadora
+     * Buscar una encordadora por su uuid.
      */
     @Throws(MaquinaError::class)
     fun getEncordadoraByUUID(uuid: UUID): Encordador {
@@ -90,7 +90,7 @@ class MaquinasController(
 
 
     /**
-     * Actualizar una personalizadora
+     * Conseguir personalizadora por su uuid.
      */
     @Throws(MaquinaError::class)
     fun getPersonalizadoraByUUID(uuid: UUID): Personalizadora {
