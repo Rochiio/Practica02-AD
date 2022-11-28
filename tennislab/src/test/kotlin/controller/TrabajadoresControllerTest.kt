@@ -1,5 +1,7 @@
 package controller
 
+import com.google.common.base.Predicates.equalTo
+import exception.TrabajadorError
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.*
@@ -10,9 +12,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import repositories.usuarios.TrabajadorRepositoryImpl
+import utils.PasswordParser
 import java.util.*
+import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 internal class TrabajadoresControllerTest {
@@ -51,6 +56,34 @@ internal class TrabajadoresControllerTest {
     }
 
     @Test
+    fun getTrabajadorByEmailAndPasswordErrorNoExiste(){
+        every{repository.findByEmail(test.email)} returns null
+
+        val exception = assertThrows(TrabajadorError::class.java) {
+            controller.getTrabajadorByEmailAndPassword(test.email,test.password)
+        }
+
+        assertEquals("Trabajador no existe", exception.item)
+
+
+        verify(exactly=1){repository.findByEmail(test.email)}
+    }
+
+    @Test
+    fun getTrabajadorByEmailAndPasswordErrorIncorrecto(){
+        every{repository.findByEmail(test.email)} returns test
+
+        val exception = assertThrows(TrabajadorError::class.java) {
+            controller.getTrabajadorByEmailAndPassword(test.email, PasswordParser.encriptar("111"))
+        }
+
+        assertEquals("Trabajador incorrecto", exception.item)
+
+
+        verify(exactly=1){repository.findByEmail(test.email)}
+    }
+
+    @Test
     fun addTrabajador() {
         every { repository.findByEmail(test.email) } returns null
         every { repository.save(test) } returns test
@@ -71,6 +104,18 @@ internal class TrabajadoresControllerTest {
 
         verify(exactly=1){ repository.save(test)}
         verify(exactly=1){ repository.findByEmail(test.email) }
+    }
+
+    @Test
+    fun addTrabajadorErrorExiste(){
+        every { repository.findByEmail(test.email) } returns test
+        var exception = assertThrows(TrabajadorError::class.java){
+            controller.addTrabajador(test)
+        }
+
+        assertEquals("Ya existe un trabajador con este email", exception.item)
+
+        verify(exactly=1){ repository.findByEmail(test.email)}
     }
 
     @Test
@@ -99,6 +144,16 @@ internal class TrabajadoresControllerTest {
         var eliminado = controller.deleteTrabajador(test)
         assertTrue(eliminado)
         verify(exactly=1){ repository.delete(test) }
+    }
+
+    @Test
+    fun deleteTrabajadorErrorNoExiste(){
+        every { repository.delete(test) } returns false
+        var exception = assertThrows(TrabajadorError::class.java){
+            controller.deleteTrabajador(test)
+        }
+
+        assertEquals("Problemas al eliminar el trabajador", exception.item)
     }
 
     @Test
