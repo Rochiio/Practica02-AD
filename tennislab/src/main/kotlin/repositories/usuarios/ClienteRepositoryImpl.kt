@@ -67,7 +67,6 @@ class ClienteRepositoryImpl(
     override fun add(item: Cliente): Cliente = transaction{
         logger.debug { "Add cliente"}
         clienteDAO.new {
-            uuid = item.uuid!!
             nombre = item.nombre
             apellido = item.apellido
             email = item.email
@@ -85,7 +84,6 @@ class ClienteRepositoryImpl(
     fun update(item: Cliente, updateItem: ClienteDAO): Cliente = transaction{
         logger.debug { "actualizando cliente" }
         updateItem.apply {
-            uuid = item.uuid!!
             nombre = item.nombre
             apellido = item.apellido
             email = item.email
