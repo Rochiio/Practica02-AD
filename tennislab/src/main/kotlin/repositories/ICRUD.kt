@@ -7,6 +7,7 @@ import java.util.UUID
  * Entities, models, uuid
  */
 interface ICRUD<T,ID> {
+
     fun findById(id: ID):T?
     fun findByUUID(uuid: UUID):T?
     fun save(item : T) : T

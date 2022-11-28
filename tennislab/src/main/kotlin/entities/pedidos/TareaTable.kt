@@ -6,28 +6,37 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import java.util.UUID
 
 /**
  * Entidad tarea para la base de datos.
  */
-object TareaTable : IntIdTable(){
+object TareaTable : IntIdTable() {
     var uuid = uuid("uuid").autoGenerate()
+    var id_trabajador = uuid("id_trabajador").nullable()
+    var id_maquina = uuid("id_maquina").nullable()
+    var id_pedido = uuid("id_pedido")
     var precio = long("precio")
-    var raqueta = varchar("raqueta", 50)
     var tipoTarea = enumeration("tipoTarea", TipoTarea::class)
+    var descripcion = varchar("descripcion", 200)
     var disponible = bool("disponible")
+
+
 }
 
-class TareaDAO(id : EntityID<Int>) : IntEntity(id){
+class TareaDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<TareaDAO>(TareaTable)
-    var uuid by TareaTable.uuid
-    var precio by TareaTable.precio
-    var raqueta by TareaTable.raqueta
-    var tipoTarea by TareaTable.tipoTarea
-    var disponible by TareaTable.disponible
 
+    var uuid by TareaTable.uuid
+    var idTrabajador by TareaTable.id_trabajador
+    var idMaquina by TareaTable.id_maquina
+    var idPedido by TareaTable.id_pedido
+    var precio by TareaTable.precio
+    var tipoTarea by TareaTable.tipoTarea
+    var descripcion by TareaTable.descripcion
+    var disponible by TareaTable.disponible
     override fun toString(): String {
-        return "Tarea(uuid=$uuid, precio=$precio, raqueta='$raqueta', tipoTarea=$tipoTarea, disponible=$disponible)"
+        return "TareaDAO(uuid=$uuid,idPedido=$idPedido, idTrabajador=$idTrabajador, idMaquina=$idMaquina, precio=$precio, tipoTarea=$tipoTarea, descripcion='$descripcion')"
     }
 
 
