@@ -4,5 +4,5 @@ import models.pedidos.Pedido
 import repositories.ICRUD
 import java.util.*
 
-interface PedidoRepository : ICRUD<Pedido, UUID> {
+interface PedidoRepository : ICRUD<Pedido, Int> {
 }
