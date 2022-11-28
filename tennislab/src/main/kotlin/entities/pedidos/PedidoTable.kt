@@ -40,10 +40,10 @@ class PedidoDAO(id: EntityID<Int>) : IntEntity(id) {
     var fechaFinal by PedidoTable.fechaFinal
     var precioTotal by PedidoTable.precioTotal
     var topeEntrega by PedidoTable.topeEntrega
-    val tareas by TareaDAO referrersOn TareaTable.id_pedido
+    //val tareas by TareaDAO referrersOn TareaTable.id_pedido
 
     override fun toString(): String {
-        return "Pedido(uuid=${id.value}, estado='$estado', entrega=$fechaEntrada, fechaSalida=$fechaSalida, fechaFinal=$fechaFinal, precioTotal=$precioTotal, topeEntrega=$topeEntrega, tareas=$tareas)"
+        return "Pedido(uuid=$uuid, estado='$estado', entrega=$fechaEntrada, fechaSalida=$fechaSalida, fechaFinal=$fechaFinal, precioTotal=$precioTotal, topeEntrega=$topeEntrega)"
     }
 
 
