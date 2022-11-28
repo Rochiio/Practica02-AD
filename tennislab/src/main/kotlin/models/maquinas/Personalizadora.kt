@@ -7,7 +7,7 @@ import java.util.*
  * Modelo personalizar.
  */
 data class Personalizadora(
-    val uuid : UUID?,
+    var uuid : UUID?,
     val marca: String,
     val modelo: String,
     val fechaAdquisicion: LocalDate,
