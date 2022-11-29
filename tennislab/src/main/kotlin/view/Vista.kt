@@ -2,14 +2,17 @@ package view
 
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
+import controller.ClientesController
 import controller.MaquinasController
 import controller.TrabajadoresController
 import entities.enums.TipoMaquina
+import exception.ClienteError
 import exception.MaquinaError
 import exception.TrabajadorError
 import exception.log
 import models.maquinas.Encordador
 import models.maquinas.Personalizadora
+import models.usuarios.Cliente
 import models.usuarios.Trabajador
 import utils.PasswordParser
 import java.time.LocalDate
@@ -20,7 +23,8 @@ import java.util.*
  */
 class Vista(
     private var trabController: TrabajadoresController,
-    private var maquinaController: MaquinasController
+    private var maquinaController: MaquinasController,
+    private var clienteController: ClientesController
 ) {
     private var terminal = Terminal()
 
@@ -100,13 +104,14 @@ class Vista(
             do {
                 terminal.println(
                     "1- Trabajadores \n" +
-                            "2- Maquinas \n" +
-                            "3- Pedidos \n" +
-                            "4- Productos \n" +
+                            "2- Clientes \n" +
+                            "3- Maquinas \n" +
+                            "4- Pedidos \n" +
+                            "5- Productos \n" +
                             "0- Salir"
                 )
                 opcion = readln().toIntOrNull() ?: -1
-            } while (opcion !in 0.. 4)
+            } while (opcion !in 0.. 5)
             opcionesBucleAdmin(opcion)
         }while(opcion!=0)
 
@@ -119,12 +124,176 @@ class Vista(
     private fun opcionesBucleAdmin(opcion: Int) {
         when(opcion){
             1 ->{administradorBucleUsuarios()}
-            2 ->{administradorBucleMaquinas()}
-            3 ->{}
+            2 ->{administradorBucleClientes()}
+            3 ->{administradorBucleMaquinas()}
             4 ->{}
+            5 ->{}
             0 ->{terminal.println(brightBlue.bg("Saliendo de la sesión"))
             }
         }
+    }
+
+
+    //-------------------------------------------- CLIENTES ------------------------------------------------------------
+
+
+    /**
+     * Bucle de administrador config clientes.
+     */
+    private fun administradorBucleClientes() {
+        var opcion: Int
+                do{
+                    terminal.println(brightBlue("------ Clientes Admin ------"))
+                    do {
+                        terminal.println(
+                            "1- Añadir Cliente \n" +
+                                    "2- Actualizar Cliente \n"+
+                                    "3- Listar Cliente \n"+
+                                    "4- Eliminar Cliente \n"+
+                                    "0- Salir")
+                        opcion= readln().toIntOrNull() ?: -1
+                    }while (opcion<0 || opcion>4)
+                    opcionesBucleAdminClientes(opcion)
+                }while (opcion!=0)
+    }
+
+
+    /**
+     * Opciones del bucle del administrador con los clientes.
+     */
+    private fun opcionesBucleAdminClientes(opcion: Int) {
+        when (opcion){
+            1 ->{addCliente()}
+            2 ->{actuCliente()}
+            3 ->{getClientes()}
+            4 ->{eliminarCliente()}
+            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de clientes"))}
+        }
+    }
+
+
+    /**
+     * Eliminar un cliente.
+     */
+    private fun eliminarCliente() {
+        var id: UUID? = null
+        var correcto=false
+
+        do {
+            print("Dime el UUID del cliente a eliminar: ")
+            val leer = readln()
+            try {
+                id =UUID.fromString(leer)
+                correcto=true
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            val encontrado = id?.let { clienteController.getClienteByUUID(it) }
+            encontrado?.let{ clienteController.deleteCliente(encontrado) }
+        }catch (e: ClienteError){
+            log(e)
+        }
+
+    }
+
+
+    /**
+     * Actualizar cliente
+     */
+    private fun actuCliente() {
+        var id: UUID? = null
+        var correcto=false
+
+        do {
+            print("Dime el UUID del cliente a actualizar: ")
+            val linea = readln()
+            try {
+                id = UUID.fromString(linea)
+                correcto=true
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            val encontrado = id?.let { clienteController.getClienteByUUID(it) }
+            encontrado?.let {
+                var usuario = creacionClientes()
+                usuario.uuid = it.uuid
+                clienteController.updateCliente(usuario)
+            }
+        }catch (e: ClienteError){
+            log(e)
+        }
+
+    }
+
+
+    /**
+     * Conseguir todos los clientes
+     */
+    private fun getClientes() {
+        val lista = clienteController.getAllClientes()
+        if (lista.isEmpty()){
+            println("Lista vacía")
+        }else{
+            for (cli in lista){
+                terminal.println(green(cli.toString()))
+            }
+        }
+    }
+
+
+    /**
+     * Crear el cliente
+     */
+    private fun addCliente() {
+        val usuario = creacionClientes()
+        try {
+            clienteController.addCliente(usuario)
+        }catch (e: ClienteError){
+            log(e)
+        }
+    }
+
+
+    /**
+     * Para crear clientes.
+     */
+    fun creacionClientes(): Cliente {
+        var nombre:String
+        do {
+            print("Nombre usuario: ")
+            nombre = readln()
+        }while (nombre.isEmpty())
+
+        var apellido:String
+        do {
+            print("Apellido usuario: ")
+            apellido = readln()
+        }while (apellido.isEmpty())
+
+        var email:String
+        do {
+            print("Correo usuario: ")
+            email = readln()
+        }while (!email.matches(Regex("[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}")))
+
+        var password:String
+        do {
+            print("Contraseña usuario: ")
+            password = readln()
+        }while (password.isEmpty())
+
+       //TODO faltan pedidos
+
+
+        return Cliente(null, null,nombre, apellido, email, PasswordParser.encriptar(password))
     }
 
 
