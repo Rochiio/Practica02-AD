@@ -5,6 +5,7 @@ import entities.pedidos.TareaDAO
 import entities.pedidos.TareaTable
 import entities.usuarios.TrabajadorTable
 import models.pedidos.Tarea
+import models.usuarios.Trabajador
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -16,7 +17,11 @@ import java.util.*
 
 internal class TareaRepositoryImplTest {
 
-    private var tareaTest = Tarea(null, null, UUID.randomUUID(), UUID.randomUUID(), "descripcion", 10, TipoTarea.ENCORDADO, true)
+    private var trabTest: Trabajador = Trabajador(1,
+        UUID.randomUUID(), "Prueba", "Test", "prueba@gmail.com", "12345", disponible = true,
+        administrador = false
+    )
+    private var tareaTest = Tarea(1, UUID.randomUUID(), trabTest, UUID.randomUUID(), "descripcion", 10, TipoTarea.ENCORDADO, true)
     private var repository = TareaRepositoryImpl(TareaDAO)
 
     @BeforeEach

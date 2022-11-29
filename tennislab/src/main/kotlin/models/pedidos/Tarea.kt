@@ -5,6 +5,7 @@ import entities.pedidos.TareaTable
 import entities.pedidos.TareaTable.autoGenerate
 import entities.pedidos.TareaTable.nullable
 import kotlinx.serialization.Serializable
+import models.usuarios.Trabajador
 import utils.serializer.UUIDSerializer
 import java.util.*
 
@@ -14,7 +15,7 @@ data class Tarea(
     @Serializable(with = UUIDSerializer::class)
     var uuid: UUID?,
     @Serializable(with = UUIDSerializer::class)
-    var idTrabajador: UUID?,
+    var idTrabajador: Trabajador,
     @Serializable(with = UUIDSerializer::class)
     var idMaquina: UUID?,
     var descripcion: String,
