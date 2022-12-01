@@ -4,14 +4,14 @@ import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.terminal.Terminal
 import controller.ClientesController
 import controller.MaquinasController
+import controller.ProductosController
 import controller.TrabajadoresController
 import entities.enums.TipoMaquina
-import exception.ClienteError
-import exception.MaquinaError
-import exception.TrabajadorError
-import exception.log
+import entities.enums.TipoProduct
+import exception.*
 import models.maquinas.Encordador
 import models.maquinas.Personalizadora
+import models.pedidos.Producto
 import models.usuarios.Cliente
 import models.usuarios.Trabajador
 import utils.PasswordParser
@@ -24,7 +24,8 @@ import java.util.*
 class Vista(
     private var trabController: TrabajadoresController,
     private var maquinaController: MaquinasController,
-    private var clienteController: ClientesController
+    private var clienteController: ClientesController,
+    private var productoController: ProductosController
 ) {
     private var terminal = Terminal()
 
@@ -127,11 +128,170 @@ class Vista(
             2 ->{administradorBucleClientes()}
             3 ->{administradorBucleMaquinas()}
             4 ->{}
-            5 ->{}
-            0 ->{terminal.println(brightBlue.bg("Saliendo de la sesión"))
+            5 ->{administradorBucleProductos()}
+            0 ->{terminal.println(blue.bg("Saliendo de la sesión"))
             }
         }
     }
+
+    //------------------------------------------- PRODUCTOS ------------------------------------------------------------
+
+    /**
+     * Bucle de administrador config productos.
+     */
+    private fun administradorBucleProductos() {
+        var opcion: Int
+        do{
+            terminal.println(brightBlue("------ Productos Admin ------"))
+            do {
+                terminal.println(
+                    "1- Añadir Producto \n" +
+                            "2- Actualizar Producto \n"+
+                            "3- Listar Producto \n"+
+                            "4- Eliminar Producto \n"+
+                            "0- Salir")
+                opcion= readln().toIntOrNull() ?: -1
+            }while (opcion<0 || opcion>4)
+            opcionesBucleAdminProductos(opcion)
+        }while (opcion!=0)
+    }
+
+    /**
+     * Opciones del bucle del administrador con los productos.
+     */
+    private fun opcionesBucleAdminProductos(opcion: Int) {
+        when (opcion){
+            1 ->{addProducto()}
+            2 ->{actuProducto()}
+            3 ->{getProductos()}
+            4 ->{eliminarProducto()}
+            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de productos🛒🛒"))}
+        }
+    }
+
+
+    /**
+     * Eliminar un producto.
+     */
+    private fun eliminarProducto() {
+        var id: UUID? = null
+        var correcto=false
+
+        do {
+            print("Dime el UUID del producto a eliminar: ")
+            val leer = readln()
+            try {
+                id =UUID.fromString(leer)
+                correcto=true
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            val encontrado = id?.let { productoController.getProductoByUUID(it) }
+            encontrado?.let{ productoController.deleteProducto(encontrado) }
+        }catch (e: ProductoError){
+            log(e)
+        }
+
+    }
+
+
+    /**
+     * Actualizar producto
+     */
+    private fun actuProducto() {
+        var id: UUID? = null
+        var correcto=false
+
+        do {
+            print("Dime el UUID del prodcuto a actualizar: ")
+            val linea = readln()
+            try {
+                id = UUID.fromString(linea)
+                correcto=true
+            }catch (e: Exception){
+                !correcto
+            }
+
+        }while(!correcto)
+
+        try {
+            val encontrado = id?.let { productoController.getProductoByUUID(it) }
+            encontrado?.let {
+                var producto = creacionProductos()
+                producto.uuid = it.uuid
+                productoController.updateProducto(producto)
+            }
+        }catch (e: ProductoError){
+            log(e)
+        }
+
+    }
+
+
+    /**
+     * Conseguir todos los productos
+     */
+    private fun getProductos() {
+        val lista = productoController.getAllProductos()
+        if (lista.isEmpty()){
+            println("Lista vacía")
+        }else{
+            for (prod in lista){
+                terminal.println(green(prod.toString()))
+            }
+        }
+    }
+
+
+    /**
+     * Crear el producto
+     */
+    private fun addProducto() {
+        val producto = creacionProductos()
+        try {
+            productoController.addProducto(producto)
+        }catch (e: ProductoError){
+            log(e)
+        }
+    }
+
+
+    /**
+     * Para crear productos.
+     */
+    fun creacionProductos(): Producto {
+        var listaTipos = TipoProduct.values().map { it.toString()}.toList()
+
+        var tipo:String
+        do {
+            println("Dime el tipo de producto: RAQUETA, CORDAJE, COMPLEMENTO")
+            tipo = readln()
+        }while (!listaTipos.contains(tipo))
+
+        println("Dime el marca de producto: ")
+        var marca:String = readln()
+        println("Dime el modelo del producto: ")
+        var modelo:String = readln()
+
+        var precio:Float
+        do {
+            println("Dime el precio del producto: ")
+            precio = readln().toFloatOrNull() ?: -1.0f
+        }while (precio <0.0f)
+
+        var stock:Int
+        do {
+            println("Dime el stock del producto: ")
+            stock = readln().toIntOrNull() ?: -1
+        }while (stock<=0)
+
+        return Producto(null, null, TipoProduct.valueOf(tipo), marca, modelo, precio, stock)
+    }
+
 
 
     //-------------------------------------------- CLIENTES ------------------------------------------------------------
@@ -167,7 +327,7 @@ class Vista(
             2 ->{actuCliente()}
             3 ->{getClientes()}
             4 ->{eliminarCliente()}
-            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de clientes"))}
+            0 ->{terminal.println(blue.bg("Saliendo de la configuración de clientes👩🏻👨🏻"))}
         }
     }
 
@@ -325,7 +485,7 @@ class Vista(
         when(opcion){
             1 -> bucleEncordadorasAdmin()
             2 -> buclePersonalizadorasAdmin()
-            0 -> terminal.println(brightBlue.bg("Saliendo de la configuración de máquinas"))
+            0 -> terminal.println(blue.bg("Saliendo de la configuración de máquinas"))
         }
 
     }
@@ -360,7 +520,7 @@ class Vista(
             2 ->{actuPersonalizadora()}
             3 ->{getPersonalizadoras()}
             4 ->{eliminarPersonalizadora()}
-            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de personalizadoras"))
+            0 ->{terminal.println(blue.bg("Saliendo de la configuración de personalizadoras🎾🎾"))
             }
         }
     }
@@ -525,7 +685,7 @@ class Vista(
             2 ->{actuEncordadora()}
             3 ->{getEncordadoras()}
             4 ->{eliminarEncordadora()}
-            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de encordadoras"))
+            0 ->{terminal.println(blue.bg("Saliendo de la configuración de encordadoras🎾🎾"))
             }
         }
     }
@@ -692,7 +852,7 @@ class Vista(
             2 ->{actuTrabajador()}
             3 ->{getTrabajadores()}
             4 ->{eliminarTrabajador()}
-            0 ->{terminal.println(brightBlue.bg("Saliendo de la configuración de trabajadores"))
+            0 ->{terminal.println(blue.bg("Saliendo de la configuración de trabajadores👩🏻👨🏻"))
             }
         }
     }

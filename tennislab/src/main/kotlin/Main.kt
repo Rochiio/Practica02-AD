@@ -1,12 +1,15 @@
 import config.AppConfig
 import controller.ClientesController
 import controller.MaquinasController
+import controller.ProductosController
 import controller.TrabajadoresController
 import db.DataBaseManager
 import entities.EncordadorDAO
 import entities.EncordadorTable
 import entities.maquinas.PersonalizadorDAO
 import entities.maquinas.PersonalizadorTable
+import entities.pedidos.ProductoDAO
+import entities.pedidos.ProductoTable
 import entities.usuarios.ClienteDAO
 import entities.usuarios.ClienteTable
 import entities.usuarios.TrabajadorDAO
@@ -16,6 +19,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import repositories.maquinas.EncordadoRepositoryImpl
 import repositories.maquinas.PersonalizadoraRepositoryImpl
+import repositories.productos.ProductoRepositoryImpl
 import repositories.usuarios.ClienteRepositoryImpl
 import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.PasswordParser
@@ -25,7 +29,7 @@ import view.Vista
 fun main(args: Array<String>) {
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
     transaction{
-        SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable)
+        SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable, ProductoTable)
 
         TrabajadorDAO.new {
             nombre = "Pepe"
@@ -38,8 +42,8 @@ fun main(args: Array<String>) {
 
         var vista= Vista(TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
             MaquinasController(EncordadoRepositoryImpl(EncordadorDAO), PersonalizadoraRepositoryImpl(PersonalizadorDAO)),
-            ClientesController(ClienteRepositoryImpl(ClienteDAO))
-        )
+            ClientesController(ClienteRepositoryImpl(ClienteDAO)), ProductosController(ProductoRepositoryImpl(ProductoDAO)))
+
 
         do {
             var num = vista.principal()

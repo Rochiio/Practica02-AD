@@ -12,7 +12,7 @@ import java.util.*
 data class Producto(
     val id:Int?,
     @Serializable(with = UUIDSerializer::class)
-    val uuid: UUID?,
+    var uuid: UUID?,
     val tipo: TipoProduct,
     val marca: String,
     val modelo: String,
