@@ -73,7 +73,7 @@ fun main(args: Array<String>) {
         pedido.tareas.forEach { println(it) }
         println("----------------------")
 
-/*
+
         var vista = Vista(
             TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
             MaquinasController(
@@ -86,7 +86,7 @@ fun main(args: Array<String>) {
         do {
             var num = vista.principal()
             vista.opcionesPrincipal(num)
-        } while (num != 0)*/
+        } while (num != 0)
     }
 
 
