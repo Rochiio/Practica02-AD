@@ -3,6 +3,8 @@ package repositories.pedidos
 import entities.EncordadorTable
 import entities.pedidos.TareaDAO
 import entities.pedidos.TareaTable
+import entities.usuarios.TrabajadorDAO
+import entities.usuarios.TrabajadorTable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import mappers.fromTareaDaoToTarea
@@ -39,11 +41,21 @@ class TareaRepositoryImpl(private var tareaDao: IntEntityClass<TareaDAO>) : Tare
         }
     }
 
+
     private fun update(item: Tarea, updateItem: TareaDAO): Tarea = transaction {
         logger.debug { "actualizando item" }
         updateItem.apply {
             uuid = item.uuid!!
-            idTrabajador = item.idTrabajador!!
+            idTrabajador = TrabajadorDAO.new {
+                uuid = item.idTrabajador.uuid!!
+                nombre = item.idTrabajador.nombre
+                 apellido = item.idTrabajador.apellido
+                 email = item.idTrabajador.email
+                 password = item.idTrabajador.password
+                 disponible = item.idTrabajador.disponible
+                 administrador = item.idTrabajador.administrador
+
+            }
             idMaquina = item.idMaquina!!
             descripcion = item.descripcion
             precio = item.precio
@@ -56,14 +68,25 @@ class TareaRepositoryImpl(private var tareaDao: IntEntityClass<TareaDAO>) : Tare
 
     override fun add(item: Tarea): Tarea = transaction {
         logger.debug { "actualizando item" }
-        tareaDao.new {
-            idTrabajador = item.idTrabajador!!
+        var a = tareaDao.new {
+
+            idTrabajador = TrabajadorDAO.new {
+                uuid = item.idTrabajador.uuid!!
+                nombre = item.idTrabajador.nombre
+                apellido = item.idTrabajador.apellido
+                email = item.idTrabajador.email
+                password = item.idTrabajador.password
+                disponible = item.idTrabajador.disponible
+                administrador = item.idTrabajador.administrador
+
+            }!!
             idMaquina = item.idMaquina!!
             precio = item.precio
             tipoTarea = item.tipoTarea
             descripcion = item.descripcion
             disponible = item.disponible
-        }.fromTareaDaoToTarea()
+        }
+            a.fromTareaDaoToTarea()
     }
 
     override fun delete(item: Tarea): Boolean = transaction {
