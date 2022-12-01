@@ -12,7 +12,7 @@ fun TareaDAO.fromTareaDaoToTarea(): Tarea = Tarea(
     id = id.value,
     uuid = uuid,
     idMaquina = idMaquina,
-    idTrabajador = idTrabajador,
+    idTrabajador = idTrabajador.fromTrabajadorDaoToTrabajador(),
 
     descripcion = descripcion,
     precio = precio,
@@ -29,5 +29,5 @@ fun PedidoDAO.fromPedidoDaoToPedido() : Pedido = Pedido(
     fechaFinal = fechaFinal,
     precioTotal = precioTotal,
     topeEntrega = topeEntrega,
-    tareas = TareaDAO.find { TareaTable.id_pedido eq uuid }.map { it.fromTareaDaoToTarea() } as ArrayList<Tarea>
+    tareas = TareaDAO.find { TareaTable.uuid eq uuid }.map { it.fromTareaDaoToTarea() } as ArrayList<Tarea>
 )

@@ -1,6 +1,9 @@
 package entities.pedidos
 
 import entities.enums.TipoTarea
+import entities.maquinas.MaquinaTable
+import entities.usuarios.TrabajadorDAO
+import entities.usuarios.TrabajadorTable
 import models.pedidos.Tarea
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -13,9 +16,9 @@ import java.util.UUID
  */
 object TareaTable : IntIdTable() {
     var uuid = uuid("uuid").autoGenerate()
-    var id_trabajador = uuid("id_trabajador").nullable()
+    var id_trabajador = reference("id_trabajador", TrabajadorTable)
     var id_maquina = uuid("id_maquina").nullable()
-    var id_pedido = uuid("id_pedido")
+    var id_pedido = reference("id_pedido", PedidoTable).nullable()
     var precio = long("precio")
     var tipoTarea = enumeration("tipoTarea", TipoTarea::class)
     var descripcion = varchar("descripcion", 200)
@@ -28,9 +31,9 @@ class TareaDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<TareaDAO>(TareaTable)
 
     var uuid by TareaTable.uuid
-    var idTrabajador by TareaTable.id_trabajador
+    var idTrabajador by TrabajadorDAO referencedOn TareaTable.id_trabajador
     var idMaquina by TareaTable.id_maquina
-    var idPedido by TareaTable.id_pedido
+    var idPedido by PedidoDAO optionalReferencedOn TareaTable.id_pedido
     var precio by TareaTable.precio
     var tipoTarea by TareaTable.tipoTarea
     var descripcion by TareaTable.descripcion
