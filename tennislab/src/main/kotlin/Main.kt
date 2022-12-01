@@ -6,20 +6,17 @@ import controller.TrabajadoresController
 import db.DataBaseManager
 import entities.EncordadorDAO
 import entities.EncordadorTable
-import entities.enums.TipoTarea
-import entities.maquinas.MaquinaTable
 import entities.maquinas.PersonalizadorDAO
 import entities.maquinas.PersonalizadorTable
 import entities.pedidos.ProductoDAO
 import entities.pedidos.ProductoTable
-import entities.pedidos.PedidoDAO
-import entities.pedidos.PedidoTable
-import entities.pedidos.TareaDAO
-import entities.pedidos.TareaTable
 import entities.usuarios.ClienteDAO
 import entities.usuarios.ClienteTable
 import entities.usuarios.TrabajadorDAO
 import entities.usuarios.TrabajadorTable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -30,10 +27,11 @@ import repositories.usuarios.ClienteRepositoryImpl
 import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.PasswordParser
 import view.Vista
-import java.time.LocalDate
 
 
-fun main(args: Array<String>) {
+
+
+fun main(args: Array<String>) = runBlocking{
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
     
     transaction{
@@ -62,9 +60,23 @@ fun main(args: Array<String>) {
     }
 
 
+    makeJsonListas()
 }
 
 
+/**
+ * Hacer los ficheros con json.
+ */
+suspend fun makeJsonListas() {
+    withContext(Dispatchers.IO) {
+
+    }
+}
+
+
+/**
+ * Iniciar la base de datos
+ */
 fun initDataBase() {
     val appConfig = AppConfig.fromPropertiesFile("src/main/resources/config.properties")
     println("Configuración: $appConfig")
