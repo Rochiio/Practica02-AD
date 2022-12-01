@@ -1,27 +1,18 @@
 package repositories.pedidos
 
-import entities.EncordadorTable
-import entities.enums.Estado
-import entities.maquinas.PersonalizadorDAO
-import entities.maquinas.PersonalizadorTable
 import entities.pedidos.PedidoDAO
 import entities.pedidos.PedidoTable
-import entities.pedidos.TareaDAO
-import entities.pedidos.TareaTable
 import mappers.fromPedidoDaoToPedido
-import mappers.fromPersonalizadorDaoToPersonalizadora
-import mappers.fromTareaDaoToTarea
-import models.maquinas.Personalizadora
 import models.pedidos.Pedido
-import models.pedidos.Tarea
 import mu.KotlinLogging
 import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
-import kotlin.collections.ArrayList
 
+/**
+ * Repositorio de pedidos
+ */
 class PedidoRepositoryImpl(
     private var pedidoDAO: IntEntityClass<PedidoDAO>
 ) : PedidoRepository {
