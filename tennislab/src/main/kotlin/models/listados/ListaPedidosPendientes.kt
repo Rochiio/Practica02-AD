@@ -1,12 +1,13 @@
-package models.pedidos
+package models.listados
 
 import kotlinx.serialization.Serializable
+import models.pedidos.Pedido
 
 /**
  * Lista de pedidos pendientes, serializable para pasar a JSON.
  */
 @Serializable
 data class ListaPedidosPendientes(
-    val pedidos: List<Pedido>
+    private val pedidos: List<Pedido>
     ) {
 }
