@@ -27,22 +27,26 @@ import repositories.usuarios.ClienteRepositoryImpl
 import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.PasswordParser
 import view.Vista
-import kotlin.coroutines.coroutineContext
+
+
 
 
 fun main(args: Array<String>) = runBlocking{
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    
     transaction{
         SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable, ProductoTable)
 
         TrabajadorDAO.new {
             nombre = "Pepe"
-            apellido="apellido"
+            apellido = "apellido"
             email = "pepe@gmail.com"
-            password= PasswordParser.encriptar("1234")
+            password = PasswordParser.encriptar("1234")
             disponible = true
             administrador = true
         }
+       
+
 
         var vista= Vista(TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
             MaquinasController(EncordadoRepositoryImpl(EncordadorDAO), PersonalizadoraRepositoryImpl(PersonalizadorDAO)),
@@ -52,12 +56,11 @@ fun main(args: Array<String>) = runBlocking{
         do {
             var num = vista.principal()
             vista.opcionesPrincipal(num)
-        }while (num!=0)
+        } while (num != 0)
     }
 
 
     makeJsonListas()
-
 }
 
 
