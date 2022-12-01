@@ -1,6 +1,7 @@
 import config.AppConfig
 import controller.ClientesController
 import controller.MaquinasController
+import controller.ProductosController
 import controller.TrabajadoresController
 import db.DataBaseManager
 import entities.EncordadorDAO
@@ -9,6 +10,8 @@ import entities.enums.TipoTarea
 import entities.maquinas.MaquinaTable
 import entities.maquinas.PersonalizadorDAO
 import entities.maquinas.PersonalizadorTable
+import entities.pedidos.ProductoDAO
+import entities.pedidos.ProductoTable
 import entities.pedidos.PedidoDAO
 import entities.pedidos.PedidoTable
 import entities.pedidos.TareaDAO
@@ -22,6 +25,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import repositories.maquinas.EncordadoRepositoryImpl
 import repositories.maquinas.PersonalizadoraRepositoryImpl
+import repositories.productos.ProductoRepositoryImpl
 import repositories.usuarios.ClienteRepositoryImpl
 import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.PasswordParser
@@ -31,10 +35,11 @@ import java.time.LocalDate
 
 fun main(args: Array<String>) {
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-    transaction {
-        SchemaUtils.create(TrabajadorTable, MaquinaTable, PedidoTable, TareaTable)
+    
+    transaction{
+        SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable, ProductoTable)
 
-        var tr = TrabajadorDAO.new {
+        TrabajadorDAO.new {
             nombre = "Pepe"
             apellido = "apellido"
             email = "pepe@gmail.com"
@@ -42,51 +47,18 @@ fun main(args: Array<String>) {
             disponible = true
             administrador = true
         }
-        var pedido = PedidoDAO.new {
-            estado = "fin"
-            fechaEntrada = LocalDate.now()
-            fechaSalida = LocalDate.now()
-            fechaFinal = LocalDate.now()
-            precioTotal = 10.0F
-            topeEntrega = LocalDate.now()
-        }
-        var t1 = TareaDAO.new {
-            idTrabajador = tr
-            idMaquina = null
-            idPedido = pedido
-            precio = 10
-            tipoTarea = TipoTarea.ENCORDADO
-            descripcion = "desc1"
-            disponible = true
-        }
-        var t2 = TareaDAO.new {
-            idTrabajador = tr
-            idMaquina = null
-            idPedido = pedido
-            precio = 10
-            tipoTarea = TipoTarea.ENCORDADO
-            descripcion = "desc2"
-            disponible = true
-        }
-        println("----------------------")
-        println(pedido)
-        pedido.tareas.forEach { println(it) }
-        println("----------------------")
+       
 
-/*
-        var vista = Vista(
-            TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
-            MaquinasController(
-                EncordadoRepositoryImpl(EncordadorDAO),
-                PersonalizadoraRepositoryImpl(PersonalizadorDAO)
-            ),
-            ClientesController(ClienteRepositoryImpl(ClienteDAO))
-        )
+
+        var vista= Vista(TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
+            MaquinasController(EncordadoRepositoryImpl(EncordadorDAO), PersonalizadoraRepositoryImpl(PersonalizadorDAO)),
+            ClientesController(ClienteRepositoryImpl(ClienteDAO)), ProductosController(ProductoRepositoryImpl(ProductoDAO)))
+
 
         do {
             var num = vista.principal()
             vista.opcionesPrincipal(num)
-        } while (num != 0)*/
+        } while (num != 0)
     }
 
 
