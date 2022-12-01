@@ -14,7 +14,6 @@ import java.util.UUID
 /**
  * Entidad trabajador para la base de datos.
  */
-
 object TrabajadorTable: IntIdTable() {
     val uuid = uuid("uuid").autoGenerate()
     val nombre = varchar("nombre",50)
