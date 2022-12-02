@@ -1,6 +1,7 @@
 package controller
 
 import exception.TareaError
+import models.pedidos.Pedido
 import models.pedidos.Tarea
 import repositories.pedidos.TareaRepository
 
@@ -15,10 +16,11 @@ class TareasController(private var repository: TareaRepository) {
     fun addTarea(tarea: Tarea): Tarea {
         tarea.uuid?.let { repository.findByUUID(it) }
             ?.let {
-                throw TareaError("Ya existe un tarea con el mismo UUID")
+                repository.save(tarea)
+                return tarea
             } ?: run {
-            repository.save(tarea)
-            return tarea
+            throw TareaError("Ya existe un tarea con el mismo UUID")
+
         }
     }
 
@@ -48,4 +50,16 @@ class TareasController(private var repository: TareaRepository) {
      * Busca un pedido por su UUID
      */
     fun getTareaByUUID(uuid: UUID) = repository.findByUUID(uuid)
+
+
+    fun addPedidoId(tarea : Tarea, pedido : Pedido) : Tarea{
+        tarea.idPedido = pedido.uuid
+        val find = getTareaByUUID(tarea.uuid!!)
+        find?.let {
+            updateTarea(tarea)
+        } ?: run{
+            addTarea(tarea)
+        }
+        return tarea
+    }
 }

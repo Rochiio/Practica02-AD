@@ -58,6 +58,8 @@ class PedidoRepositoryImpl(
             fechaFinal = item.fechaFinal
             precioTotal = item.precioTotal
             topeEntrega = item.topeEntrega
+
+
         }.fromPedidoDaoToPedido()
     }
 

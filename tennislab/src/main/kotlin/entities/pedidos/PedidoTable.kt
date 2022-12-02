@@ -43,7 +43,12 @@ class PedidoDAO(id: EntityID<Int>) : IntEntity(id) {
     val tareas by TareaDAO optionalReferrersOn  TareaTable.id_pedido
 
     override fun toString(): String {
-        return "Pedido(uuid=$uuid, estado='$estado', entrega=$fechaEntrada, fechaSalida=$fechaSalida, fechaFinal=$fechaFinal, precioTotal=$precioTotal, topeEntrega=$topeEntrega)"
+        return "Pedido(uuid=$uuid, estado='$estado', entrega=$fechaEntrada, fechaSalida=$fechaSalida, fechaFinal=$fechaFinal, precioTotal=$precioTotal, topeEntrega=$topeEntrega, tareas=${tareas.count()})"
+    }
+    fun getTareas() : String {
+        var s = ""
+        tareas.forEach { s += it }
+        return s
     }
 
 

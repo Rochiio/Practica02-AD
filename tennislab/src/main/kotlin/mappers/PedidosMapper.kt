@@ -13,13 +13,15 @@ fun TareaDAO.fromTareaDaoToTarea(): Tarea = Tarea(
     uuid = uuid,
     idMaquina = idMaquina,
     idTrabajador = idTrabajador.fromTrabajadorDaoToTrabajador(),
-
+    idPedido = idPedido?.uuid,
     descripcion = descripcion,
     precio = precio,
     tipoTarea = tipoTarea,
     disponible = disponible
 
 )
+
+
 
 fun PedidoDAO.fromPedidoDaoToPedido() : Pedido = Pedido(
     uuid = uuid,
