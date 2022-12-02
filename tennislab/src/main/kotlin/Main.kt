@@ -17,6 +17,10 @@ import entities.usuarios.ClienteTable
 import entities.usuarios.TrabajadorDAO
 import entities.usuarios.TrabajadorTable
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import models.usuarios.Trabajador
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -33,22 +37,60 @@ fun main(args: Array<String>) = runBlocking{
    /* Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
 
     transaction{
+=======
+fun main(args: Array<String>) = runBlocking {
+    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    println(Trabajador::class.members)
+    transaction {
+>>>>>>> develop
         SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable, ProductoTable)
 
-        TrabajadorDAO.new {
+        /*TrabajadorDAO.new {
             nombre = "Pepe"
             apellido = "apellido"
             email = "pepe@gmail.com"
             password = PasswordParser.encriptar("1234")
             disponible = true
             administrador = true
-        }
-       
+        }*/
 
+        val t = Trabajador(
+            id = null,
+            uuid = null,
+            nombre = "Pepe",
+            apellido = "apellido",
+            email = "pepe@gmail.com",
+            password = PasswordParser.encriptar("1234"),
+            disponible = true,
+            administrador = true
+        )
 
-        var vista= Vista(TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
-            MaquinasController(EncordadoRepositoryImpl(EncordadorDAO), PersonalizadoraRepositoryImpl(PersonalizadorDAO)),
-            ClientesController(ClienteRepositoryImpl(ClienteDAO)), ProductosController(ProductoRepositoryImpl(ProductoDAO)))
+        val t1 = Trabajador(
+            id = null,
+            uuid = null,
+            nombre = "Luis",
+            apellido = "apellido",
+            email = "luis@gmail.com",
+            password = PasswordParser.encriptar("1234"),
+            disponible = true,
+            administrador = false
+        )
+
+        val tC = TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO))
+        tC.addTrabajador(t)
+        tC.addTrabajador(t1)
+
+        println(tC.getAllTrabajadores())
+
+        var vista = Vista(
+            TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
+            MaquinasController(
+                EncordadoRepositoryImpl(EncordadorDAO),
+                PersonalizadoraRepositoryImpl(PersonalizadorDAO)
+            ),
+            ClientesController(ClienteRepositoryImpl(ClienteDAO)),
+            ProductosController(ProductoRepositoryImpl(ProductoDAO))
+        )
 
 
         do {
