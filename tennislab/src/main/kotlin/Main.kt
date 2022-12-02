@@ -23,6 +23,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import models.listados.AsignacionesEncordadores
+import models.listados.ListadoAsignacionesEncordadores
 import models.listados.ListadoProductosServicios
 import models.pedidos.Producto
 import models.usuarios.Trabajador
@@ -34,6 +36,7 @@ import repositories.maquinas.PersonalizadoraRepositoryImpl
 import repositories.productos.ProductoRepositoryImpl
 import repositories.usuarios.ClienteRepositoryImpl
 import repositories.usuarios.TrabajadorRepositoryImpl
+import utils.Data
 import utils.PasswordParser
 import utils.ficheros.FicheroJsonProductosServicios
 import view.Vista
@@ -110,26 +113,27 @@ suspend fun makeJsonListas() = withContext(Dispatchers.IO) {
  * Crear fichero de productos y servicios, mostrando un progress bar.
  */
 suspend fun makeListadoProductosServicios() = withContext(Dispatchers.IO) {
-//    val progress = t.progressAnimation {
-//        text("listado_productos_servicios.json")
-//        percentage()
-//        progressBar()
-//        completed()
-//    }
-//
-//    progress.start()
-//    progress.updateTotal(100)
-
-    var job = async {
-        FicheroJsonProductosServicios().writeFichero(DIR_JSON+"listado_productos_servicios.json",ListadoProductosServicios())
+    val progress = t.progressAnimation {
+        text("listado_productos_servicios.json")
+        percentage()
+        progressBar()
+        completed()
     }
 
-//    while (!job.isCompleted){
-//        progress.advance(5)
-//    }
+    progress.start()
+    progress.updateTotal(100)
+
+    var job = async {
+        FicheroJsonProductosServicios().writeFichero(DIR_JSON+"listado_productos_servicios.json",
+            ListadoProductosServicios(Data.servicios, Data.productos))
+    }
+
+    while (!job.isCompleted){
+        progress.advance(5)
+    }
 
     job.await()
-    //progress.stop()
+    progress.stop()
 }
 
 
