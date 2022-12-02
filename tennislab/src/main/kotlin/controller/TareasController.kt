@@ -53,7 +53,7 @@ class TareasController(private var repository: TareaRepository) {
 
 
     fun addPedidoId(tarea : Tarea, pedido : Pedido) : Tarea{
-        tarea.idPedido = pedido.uuid
+        //tarea.idPedido = pedido.uuid
         val find = getTareaByUUID(tarea.uuid!!)
         find?.let {
             updateTarea(tarea)
