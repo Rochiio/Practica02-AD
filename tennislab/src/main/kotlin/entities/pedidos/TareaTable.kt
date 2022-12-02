@@ -9,7 +9,6 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.ReferenceOption
 import java.util.UUID
 
 /**
@@ -19,7 +18,7 @@ object TareaTable : IntIdTable() {
     var uuid = uuid("uuid").autoGenerate()
     var id_trabajador = reference("id_trabajador", TrabajadorTable)
     var id_maquina = uuid("id_maquina").nullable()
-    var id_pedido = reference("id_pedido", PedidoTable, onDelete = ReferenceOption.CASCADE).nullable()
+    var id_pedido = reference("id_pedido", PedidoTable).nullable()
     var precio = long("precio")
     var tipoTarea = enumeration("tipoTarea", TipoTarea::class)
     var descripcion = varchar("descripcion", 200)

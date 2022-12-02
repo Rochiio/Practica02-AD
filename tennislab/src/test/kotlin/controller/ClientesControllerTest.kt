@@ -53,6 +53,7 @@ internal class ClientesControllerTest {
         verify(exactly=1){repository.findByUUID(test.uuid!!)}
     }
 
+
     @Test
     fun addClienteErrorExiste(){
         every { repository.findByUUID(test.uuid!!) } returns test
@@ -86,7 +87,7 @@ internal class ClientesControllerTest {
     @Test
     fun deleteCliente() {
         every{ repository.delete(test) } returns true
-        var eliminado = repository.delete(test)
+        var eliminado = controller.deleteCliente(test)
         assertTrue(eliminado)
         verify(exactly=1){repository.delete(test)}
     }

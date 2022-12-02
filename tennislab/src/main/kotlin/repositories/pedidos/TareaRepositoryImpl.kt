@@ -56,7 +56,7 @@ class TareaRepositoryImpl(private var tareaDao: IntEntityClass<TareaDAO>) : Tare
                  administrador = item.idTrabajador.administrador
 
             }
-            idMaquina = item.idMaquina
+            idMaquina = item.idMaquina!!
             descripcion = item.descripcion
             precio = item.precio
             tipoTarea = item.tipoTarea
