@@ -1,3 +1,5 @@
+import com.github.ajalt.mordant.animation.progressAnimation
+import com.github.ajalt.mordant.terminal.Terminal
 import config.AppConfig
 import controller.ClientesController
 import controller.MaquinasController
@@ -14,9 +16,7 @@ import entities.usuarios.ClienteDAO
 import entities.usuarios.ClienteTable
 import entities.usuarios.TrabajadorDAO
 import entities.usuarios.TrabajadorTable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -29,11 +29,9 @@ import utils.PasswordParser
 import view.Vista
 
 
-
-
 fun main(args: Array<String>) = runBlocking{
-    Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-    
+   /* Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+
     transaction{
         SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable, ProductoTable)
 
@@ -57,20 +55,35 @@ fun main(args: Array<String>) = runBlocking{
             var num = vista.principal()
             vista.opcionesPrincipal(num)
         } while (num != 0)
-    }
+    }*/
 
 
     makeJsonListas()
 }
 
-
 /**
- * Hacer los ficheros con json.
+ * Hacer los ficheros con json
  */
-suspend fun makeJsonListas() {
-    withContext(Dispatchers.IO) {
-
+suspend fun makeJsonListas() = withContext(Dispatchers.IO) {
+    val t = Terminal()
+    val progress = t.progressAnimation {
+        text("my-file.iso")
+        percentage()
+        progressBar()
+        completed()
+        speed("B/s")
+        timeRemaining()
     }
+
+    progress.start()
+    var job = async {
+        delay(1000)
+    }
+
+    job.await()
+    progress.advance(100)
+    progress.stop()
+
 }
 
 
