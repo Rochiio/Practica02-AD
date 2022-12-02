@@ -27,6 +27,6 @@ data class Pedido(
     val precioTotal: Float,
     @Serializable(with = LocalDateSerializer::class)
     val topeEntrega: LocalDate,
-    val tareas : ArrayList<Tarea>
+    var tareas : ArrayList<Tarea>
     ) {
 }

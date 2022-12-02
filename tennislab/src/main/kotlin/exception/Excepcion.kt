@@ -12,6 +12,8 @@ class TrabajadorError(val item: String) : Excepcion, Exception()
 class MaquinaError(val item: String) : Excepcion, Exception()
 class PedidoError(val item: String) : Excepcion, Exception()
 class ProductoError(val item: String) : Excepcion, Exception()
+class TareaError(val item: String) : Excepcion, Exception()
+
 
 fun log(e: Excepcion){
     var t = Terminal()
@@ -21,6 +23,7 @@ fun log(e: Excepcion){
         is ClienteError -> t.println(red("Error con clientes -> ${e.item}"))
         is MaquinaError -> t.println(red("Error con máquinas -> ${e.item}"))
         is PedidoError -> t.println(red("Error con pedidos -> ${e.item}"))
+        is TareaError -> t.println(red("Error con tareas -> ${e.item}"))
         is ProductoError -> t.println(red("Error con productos -> ${e.item}"))
     }
 }
