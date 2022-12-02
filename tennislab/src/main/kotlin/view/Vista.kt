@@ -33,6 +33,7 @@ class Vista(
     private var productoController: ProductosController
 ) {
     private var terminal = Terminal(width = 150)
+    private var usuarioLoggeado: Trabajador? = null
 
 
     /**
@@ -86,6 +87,7 @@ class Vista(
         }
 
         if (correcto != null) {
+            usuarioLoggeado = correcto
             if (correcto.administrador && correcto.disponible) {
                 administradorBucle()
             } else if (!correcto.administrador && correcto.disponible) {
