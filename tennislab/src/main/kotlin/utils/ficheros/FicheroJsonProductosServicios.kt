@@ -22,7 +22,8 @@ class FicheroJsonProductosServicios: FicherosJson<ListadoProductosServicios> {
 
         mutex.withLock {
             out = OutputStreamWriter(FileOutputStream(fichero, false))
-            out.use { it.write(json.encodeToString(item)) }
+            out.use { it.write(json.encodeToString(item))}
+            out.close()
         }
     }
 }
