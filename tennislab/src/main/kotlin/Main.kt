@@ -23,9 +23,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import models.listados.AsignacionesEncordadores
-import models.listados.ListadoAsignacionesEncordadores
-import models.listados.ListadoProductosServicios
+import models.listados.*
 import models.pedidos.Producto
 import models.usuarios.Trabajador
 import org.jetbrains.exposed.sql.Database
@@ -38,6 +36,9 @@ import repositories.usuarios.ClienteRepositoryImpl
 import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.Data
 import utils.PasswordParser
+import utils.ficheros.FicheroJsonAsignaciones
+import utils.ficheros.FicheroJsonPedidosCompletados
+import utils.ficheros.FicheroJsonPedidosPendientes
 import utils.ficheros.FicheroJsonProductosServicios
 import view.Vista
 import java.io.File
@@ -97,15 +98,116 @@ suspend fun makeJsonListas() = withContext(Dispatchers.IO) {
         Files.createDirectories(Path.of(DIR_JSON))
     }
 
-    var json = Json {prettyPrint = true}
-
     var productos = async {
        makeListadoProductosServicios()
     }
 
+    var asignaciones = async {
+        makeListadoAsignacionesEncordadores()
+    }
+
+    var pendientes = async {
+        makeListadoPedidosPendientes()
+    }
+
+    var completados = async {
+        makeListadoPedidosCompletados()
+    }
+
+
+
     productos.await()
+    asignaciones.await()
+    pendientes.await()
+    completados.await()
+}
 
 
+/**
+ * Crear fichero de pedidos completados, mostrando un progress bar.
+ */
+suspend fun makeListadoPedidosCompletados() = withContext(Dispatchers.IO) {
+    val progress = t.progressAnimation {
+        text("listado_pedidos_completados.json")
+        percentage()
+        progressBar()
+        completed()
+    }
+
+    progress.start()
+    progress.updateTotal(100)
+
+    var job = async {
+        FicheroJsonPedidosCompletados().writeFichero(DIR_JSON+"listado_pedidos_completados.json",
+            ListaPedidosCompletados(Data.pedidosCompletados.toList())
+        )
+    }
+
+    while (!job.isCompleted){
+        progress.advance(5)
+    }
+
+    job.await()
+    progress.stop()
+}
+
+
+
+
+/**
+ * Crear fichero de pedidos pendientes, mostrando un progress bar.
+ */
+suspend fun makeListadoPedidosPendientes() = withContext(Dispatchers.IO) {
+    val progress = t.progressAnimation {
+        text("listado_pedidos_pendientes.json")
+        percentage()
+        progressBar()
+        completed()
+    }
+
+    progress.start()
+    progress.updateTotal(100)
+
+    var job = async {
+        FicheroJsonPedidosPendientes().writeFichero(DIR_JSON+"listado_pedidos_pendientes.json",
+            ListaPedidosPendientes(Data.pedidosPendientes.toList()))
+    }
+
+    while (!job.isCompleted){
+        progress.advance(5)
+    }
+
+    job.await()
+    progress.stop()
+}
+
+
+
+/**
+ * Crear fichero de asignaciones de encordadores, mostrando un progress bar.
+ */
+suspend fun makeListadoAsignacionesEncordadores() = withContext(Dispatchers.IO) {
+    val progress = t.progressAnimation {
+        text("listado_asignaciones_encordadores.json")
+        percentage()
+        progressBar()
+        completed()
+    }
+
+    progress.start()
+    progress.updateTotal(100)
+
+    var job = async {
+        FicheroJsonAsignaciones().writeFichero(DIR_JSON+"listado_asignaciones_encordadores.json",
+            ListadoAsignacionesEncordadores(Data.asignaciones.toList()))
+    }
+
+    while (!job.isCompleted){
+        progress.advance(5)
+    }
+
+    job.await()
+    progress.stop()
 }
 
 
