@@ -16,10 +16,12 @@ class PedidosController(private var repository: PedidoRepository, private var ta
     fun addPedido(pedido: Pedido): Pedido {
         val find = pedido.uuid?.let { repository.findByUUID(it) }
         find?.let {
-            repository.save(pedido)
-            return pedido
-        } ?: run {
+
             throw PedidoError("Ya existe un pedido con el mismo UUID")
+
+        } ?: run {
+            return repository.save(pedido)
+
         }
     }
 

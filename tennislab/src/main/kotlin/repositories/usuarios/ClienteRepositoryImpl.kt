@@ -41,6 +41,10 @@ class ClienteRepositoryImpl(
         clienteDAO.find { ClienteTable.uuid eq uuid }.firstOrNull()?.fromClienteDaoToCliente()
     }
 
+    override fun findByEmail(email : String) : Cliente? = transaction {
+        logger.debug { "Buscando cliente por email" }
+        clienteDAO.find{ClienteTable.email eq email}.firstOrNull()?.fromClienteDaoToCliente()
+    }
 
     /**
      * Salvar un cliente.

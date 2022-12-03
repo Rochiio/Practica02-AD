@@ -1,4 +1,10 @@
 package models.pedidos
 
-class TareaPersonalizado {
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class TareaPersonalizado(
+    var pero : Int,
+    var balance : Float,
+    var rigidez : Int
+)

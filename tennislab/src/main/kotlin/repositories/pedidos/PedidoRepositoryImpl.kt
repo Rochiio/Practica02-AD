@@ -2,6 +2,8 @@ package repositories.pedidos
 
 import entities.pedidos.PedidoDAO
 import entities.pedidos.PedidoTable
+import entities.usuarios.ClienteDAO
+import entities.usuarios.ClienteTable
 import mappers.fromPedidoDaoToPedido
 import models.pedidos.Pedido
 import mu.KotlinLogging
@@ -31,18 +33,22 @@ class PedidoRepositoryImpl(
 
     override fun save(item: Pedido): Pedido = transaction {
         logger.debug { "Save pedido" }
-        val result = pedidoDAO.find { PedidoTable.uuid eq item.uuid!! }.firstOrNull()
+        var result : PedidoDAO? = null
+        item.uuid?.let {
+            result = pedidoDAO.find { PedidoTable.uuid eq it }.firstOrNull()
+        }
+
+        println(result)
         result?.let {
-            update(item, result)
+            update(item, result!!)
         } ?: run {
             add(item)
         }
     }
 
     fun update(item: Pedido, updateItem: PedidoDAO): Pedido = transaction {
-        logger.debug { "acualizando Personalizadora" }
+        logger.debug { "acualizando peedido" }
         updateItem.apply {
-            uuid = item.uuid!!
             estado = item.estado.toString()
             fechaSalida = item.fechaSalida
             fechaEntrada = item.fechaEntrada
@@ -55,15 +61,15 @@ class PedidoRepositoryImpl(
     }
 
     override fun add(item: Pedido): Pedido = transaction{
-        logger.debug { "añadiendo Personalizadora" }
+        logger.debug { "añadiendo pedido" }
         pedidoDAO.new {
-            uuid = item.uuid!!
             estado = item.estado.toString()
             fechaSalida = item.fechaSalida
             fechaEntrada = item.fechaEntrada
             fechaFinal = item.fechaFinal
             precioTotal = item.precioTotal
             topeEntrega = item.topeEntrega
+            cliente = ClienteDAO.find { ClienteTable.uuid eq item.cliente?.uuid!! }.first()
         }.fromPedidoDaoToPedido()
     }
 

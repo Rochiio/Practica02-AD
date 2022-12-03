@@ -34,7 +34,6 @@ class TrabajadoresController(private var repository: TrabajadorRepository) {
     @Throws(TrabajadorError::class)
     fun addTrabajador(trabajador: Trabajador): Trabajador{
         var existe = repository.findByEmail(trabajador.email)
-        println(existe)
         existe?.let {
 
             throw  TrabajadorError("Ya existe un trabajador con este email")

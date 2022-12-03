@@ -1,18 +1,15 @@
 import com.github.ajalt.mordant.animation.progressAnimation
 import com.github.ajalt.mordant.terminal.Terminal
 import config.AppConfig
-import controller.ClientesController
-import controller.MaquinasController
-import controller.ProductosController
-import controller.TrabajadoresController
+import controller.*
 import db.DataBaseManager
 import entities.EncordadorDAO
 import entities.EncordadorTable
+import entities.enums.Estado
 import entities.enums.TipoProduct
 import entities.maquinas.PersonalizadorDAO
 import entities.maquinas.PersonalizadorTable
-import entities.pedidos.ProductoDAO
-import entities.pedidos.ProductoTable
+import entities.pedidos.*
 import entities.usuarios.ClienteDAO
 import entities.usuarios.ClienteTable
 import entities.usuarios.TrabajadorDAO
@@ -24,50 +21,97 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import models.listados.*
+import models.pedidos.Pedido
 import models.pedidos.Producto
+import models.usuarios.Cliente
 import models.usuarios.Trabajador
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import repositories.maquinas.EncordadoRepositoryImpl
 import repositories.maquinas.PersonalizadoraRepositoryImpl
+import repositories.pedidos.PedidoRepositoryImpl
+import repositories.pedidos.TareaRepositoryImpl
 import repositories.productos.ProductoRepositoryImpl
 import repositories.usuarios.ClienteRepositoryImpl
 import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.Data
 import utils.PasswordParser
-import utils.ficheros.FicheroJsonAsignaciones
-import utils.ficheros.FicheroJsonPedidosCompletados
-import utils.ficheros.FicheroJsonPedidosPendientes
-import utils.ficheros.FicheroJsonProductosServicios
+import utils.ficheros.*
 import view.Vista
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.LocalDate
 import java.util.*
 
 val t = Terminal()
-var DIR_JSON = System.getProperty("user.dir")+ File.separator +"listados"+File.separator
-fun main(args: Array<String>) = runBlocking{
-   /* Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-
-
+var DIR_JSON = System.getProperty("user.dir") + File.separator + "listados" + File.separator
 fun main(args: Array<String>) = runBlocking {
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
-    println(Trabajador::class.members)
     transaction {
+        SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable, ProductoTable, PedidoTable, TareaTable)
 
-        SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable, ProductoTable)
-
-        TrabajadorDAO.new {
+        /*TrabajadorDAO.new {
             nombre = "Pepe"
             apellido = "apellido"
             email = "pepe@gmail.com"
             password = PasswordParser.encriptar("1234")
             disponible = true
             administrador = true
-        }
+        }*/
 
+        val t = Trabajador(
+            id = null,
+            uuid = null,
+            nombre = "Pepe",
+            apellido = "apellido",
+            email = "pepe@gmail.com",
+            password = PasswordParser.encriptar("1234"),
+            disponible = true,
+            administrador = true
+        )
+
+        val t1 = Trabajador(
+            id = null,
+            uuid = null,
+            nombre = "Luis",
+            apellido = "apellido",
+            email = "luis@gmail.com",
+            password = PasswordParser.encriptar("1234"),
+            disponible = true,
+            administrador = false
+        )
+
+        val tC = TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO))
+        val cC = ClientesController(ClienteRepositoryImpl(ClienteDAO))
+        var c1 = Cliente(
+            id = null,
+            uuid = null,
+            nombre = "pepe",
+            apellido = "lopez",
+            email = "c1@gmail.com",
+            password = PasswordParser.encriptar("1234"),
+            pedidos = null
+        )
+
+        c1 = cC.addCliente(c1)
+        println("////////////////////////////////////////")
+        var a = (cC.getAllClientes())
+        val p1 = Pedido(null, Estado.RECIBIDO, LocalDate.now().minusDays(5), fechaSalida = LocalDate.now(), fechaFinal = LocalDate.now().plusDays(5), precioTotal = 0F, topeEntrega = LocalDate.now().plusDays(10), c1, tareas = arrayListOf())
+        val pC = PedidosController(PedidoRepositoryImpl(PedidoDAO), TareaRepositoryImpl(TareaDAO))
+        pC.addPedido(p1)
+        println(p1)
+        println("------------------------------")
+        println(pC.getPedidos())
+        println("------------------------------")
+        println(cC.getAllClientes())
+        tC.addTrabajador(t)
+
+        tC.addTrabajador(t1)
+
+
+        println(tC.getAllTrabajadores())
 
         var vista = Vista(
             TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
@@ -84,7 +128,7 @@ fun main(args: Array<String>) = runBlocking {
             var num = vista.principal()
             vista.opcionesPrincipal(num)
         } while (num != 0)
-    }*/
+    }
 
 
     makeJsonListas()
@@ -94,12 +138,12 @@ fun main(args: Array<String>) = runBlocking {
  * Hacer los ficheros con json
  */
 suspend fun makeJsonListas() = withContext(Dispatchers.IO) {
-    if (!Files.isDirectory(Path.of(DIR_JSON))){
+    if (!Files.isDirectory(Path.of(DIR_JSON))) {
         Files.createDirectories(Path.of(DIR_JSON))
     }
 
     var productos = async {
-       makeListadoProductosServicios()
+        makeListadoProductosServicios()
     }
 
     var asignaciones = async {
@@ -138,20 +182,19 @@ suspend fun makeListadoPedidosCompletados() = withContext(Dispatchers.IO) {
     progress.updateTotal(100)
 
     var job = async {
-        FicheroJsonPedidosCompletados().writeFichero(DIR_JSON+"listado_pedidos_completados.json",
+        FicheroJsonPedidosCompletados().writeFichero(
+            DIR_JSON + "listado_pedidos_completados.json",
             ListaPedidosCompletados(Data.pedidosCompletados.toList())
         )
     }
 
-    while (!job.isCompleted){
+    while (!job.isCompleted) {
         progress.advance(5)
     }
 
     job.await()
     progress.stop()
 }
-
-
 
 
 /**
@@ -169,18 +212,19 @@ suspend fun makeListadoPedidosPendientes() = withContext(Dispatchers.IO) {
     progress.updateTotal(100)
 
     var job = async {
-        FicheroJsonPedidosPendientes().writeFichero(DIR_JSON+"listado_pedidos_pendientes.json",
-            ListaPedidosPendientes(Data.pedidosPendientes.toList()))
+        FicheroJsonPedidosPendientes().writeFichero(
+            DIR_JSON + "listado_pedidos_pendientes.json",
+            ListaPedidosPendientes(Data.pedidosPendientes.toList())
+        )
     }
 
-    while (!job.isCompleted){
+    while (!job.isCompleted) {
         progress.advance(5)
     }
 
     job.await()
     progress.stop()
 }
-
 
 
 /**
@@ -198,11 +242,13 @@ suspend fun makeListadoAsignacionesEncordadores() = withContext(Dispatchers.IO) 
     progress.updateTotal(100)
 
     var job = async {
-        FicheroJsonAsignaciones().writeFichero(DIR_JSON+"listado_asignaciones_encordadores.json",
-            ListadoAsignacionesEncordadores(Data.asignaciones.toList()))
+        FicheroJsonAsignaciones().writeFichero(
+            DIR_JSON + "listado_asignaciones_encordadores.json",
+            ListadoAsignacionesEncordadores(Data.asignaciones.toList())
+        )
     }
 
-    while (!job.isCompleted){
+    while (!job.isCompleted) {
         progress.advance(5)
     }
 
@@ -226,11 +272,13 @@ suspend fun makeListadoProductosServicios() = withContext(Dispatchers.IO) {
     progress.updateTotal(100)
 
     var job = async {
-        FicheroJsonProductosServicios().writeFichero(DIR_JSON+"listado_productos_servicios.json",
-            ListadoProductosServicios(Data.servicios, Data.productos))
+        FicheroJsonProductosServicios().writeFichero(
+            DIR_JSON + "listado_productos_servicios.json",
+            ListadoProductosServicios(Data.servicios, Data.productos)
+        )
     }
 
-    while (!job.isCompleted){
+    while (!job.isCompleted) {
         progress.advance(5)
     }
 

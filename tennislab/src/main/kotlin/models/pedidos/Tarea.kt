@@ -14,8 +14,8 @@ data class Tarea(
     var id: Int?,
     @Serializable(with = UUIDSerializer::class)
     var uuid: UUID?,
-    @Serializable(with = UUIDSerializer::class)
-    var idTrabajador: Trabajador,
+    //@Serializable(with = UUIDSerializer::class)
+    var idTrabajador: Trabajador?,
     @Serializable(with = UUIDSerializer::class)
     var idMaquina: UUID?,
     var descripcion: String,
