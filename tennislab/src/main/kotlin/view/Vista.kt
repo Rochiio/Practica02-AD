@@ -1,8 +1,5 @@
 package view
 
-import com.github.ajalt.mordant.rendering.BorderType
-import com.github.ajalt.mordant.rendering.BorderType.Companion.ROUNDED
-import com.github.ajalt.mordant.rendering.BorderType.Companion.SQUARE_DOUBLE_SECTION_SEPARATOR
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.table.table
@@ -13,10 +10,13 @@ import controller.ProductosController
 import controller.TrabajadoresController
 import entities.enums.TipoMaquina
 import entities.enums.TipoProduct
+import entities.enums.TipoTarea
 import exception.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import models.maquinas.Encordador
 import models.maquinas.Personalizadora
-import models.pedidos.Producto
+import models.pedidos.*
 import models.usuarios.Cliente
 import models.usuarios.Trabajador
 import utils.PasswordParser
@@ -33,7 +33,8 @@ class Vista(
     private var productoController: ProductosController
 ) {
     private var terminal = Terminal(width = 150)
-    private var usuarioLoggeado: Trabajador? = null
+    private var trabajadorLoggeado: Trabajador? = null
+    private var clienteLoggeado: Cliente? = null
 
 
     /**
@@ -44,11 +45,12 @@ class Vista(
         do {
             terminal.println(brightBlue("------ Bienvenido a tennislab🎾🎾 ------ \nelija una opción."))
             terminal.println(
-                "1- Iniciar sesión \n" +
-                        "0- Salir"
+                "1 - Iniciar sesión (Trabajador) \n" +
+                        "2 - Iniciar sesión (Cliente)" +
+                        "0 - Salir"
             )
-            opcion = readln().toIntOrNull() ?: 2
-        } while (opcion !in 0..1)
+            opcion = readln().toIntOrNull() ?: 3
+        } while (opcion !in 0..2)
         return opcion
     }
 
@@ -60,9 +62,199 @@ class Vista(
         when (num) {
             0 -> terminal.println(green.bg("Gracias por usar tennislab 🎾🎾"))
             1 -> loginBucle()
+            2 -> loginClienteBucle()
         }
     }
 
+    private fun loginClienteBucle() {
+        var email: String
+        var correcto: Cliente? = null
+
+        terminal.println(brightBlue("------ Log In Cliente ------"))
+        do {
+            terminal.print("Correo: ")
+            email = readln()
+        } while (!email.matches(Regex("[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}")))
+
+        terminal.print("Contraseña: ")
+        val password: String = readln()
+
+        try {
+            correcto = clienteController.getClienteByEmailAndPassword(email, password)
+        } catch (e: ClienteError) {
+            log(e)
+        }
+
+        if (correcto != null) {
+            clienteLoggeado = correcto
+            clienteBucle()
+        }
+    }
+
+    private fun clienteBucle() {
+        var opcion: Int
+        do {
+            terminal.println(brightBlue("------ Cliente ------"))
+            do {
+                terminal.println(
+                    "1- Realizar pedido \n" +
+                            "2- Comprobar pedidos \n" +
+                            "3- Cancelar pedido \n" +
+                            "0- Salir"
+                )
+                opcion = readln().toIntOrNull() ?: -1
+            } while (opcion !in 0..3)
+            opcionesClienteBucle(opcion)
+        } while (opcion != 0)
+
+
+    }
+
+    private fun opcionesClienteBucle(opcion: Int) {
+        when (opcion) {
+            1 -> {
+                realizarPedidoBucle()
+            }
+
+            2 -> {
+                comprobarPedidosBucle()
+            }
+
+            3 -> {
+                cancelarPedidoBucle()
+            }
+
+            0 -> {
+                terminal.println(blue.bg("Saliendo de la sesión"))
+            }
+        }
+    }
+
+    private fun cancelarPedidoBucle() {
+        TODO("Not yet implemented")
+    }
+
+    private fun comprobarPedidosBucle() {
+        TODO("Not yet implemented")
+    }
+
+    private fun realizarPedidoBucle() {
+        var opcion: Int
+        var pedido: Pedido? = null
+        terminal.println(brightBlue("------ Realización de pedido ------"))
+
+        do {
+            terminal.println(brightBlue("------ Tipo de tarea ------"))
+            do {
+                terminal.println(
+                    "1- Encordado \n" +
+                            "2- Personalizado \n" +
+                            "3- Adquisicion \n" +
+                            "4- Confirmar pedido\n" +
+                            "0- Salir"
+                )
+                opcion = readln().toIntOrNull() ?: -1
+            } while (opcion < 0 || opcion > 3)
+            opcionesBucleTarea(opcion)
+        } while (opcion != 0)
+    }
+
+    private fun opcionesBucleTarea(opcion: Int) {
+        val tareas = mutableListOf<Tarea>()
+        when (opcion) {
+            1 -> {
+                tareas.add(creacionTareaEncordado())
+            }
+
+            2 -> {
+                tareas.add(creacionTareaPersonalizado())
+            }
+
+            3 -> {
+
+            }
+
+            4 -> {
+                creacionPedido(tareas)
+            }
+
+            0 -> {
+                terminal.println(blue.bg("Saliendo de la creacion de tareas"))
+            }
+        }
+    }
+
+    private fun creacionPedido(tareas: MutableList<Tarea>) {
+        var pedido: Pedido? = null
+        TODO("HACER LA CREACIOND E PEDIDO")
+    }
+
+
+    fun creacionTareaEncordado(): Tarea {
+        var tarea: Tarea? = null
+
+        terminal.println("Indica la tensión vertical: ")
+        val tV = readln().toIntOrNull() ?: -1
+
+        terminal.println("Indica la tensión horizontal: ")
+        val tH = readln().toIntOrNull() ?: -1
+
+        terminal.println("Indica el cordaje vertical (escribe el uuid): ")
+        var id = readln()
+        //TODO(Control de errores del uuid)
+        val cV = productoController.getProductoByUUID(UUID.fromString(id))
+
+        terminal.println("Indica el cordaje vertical (escribe el uuid): ")
+        id = readln()
+        //TODO(Control de errores del uuid)
+        val cH = productoController.getProductoByUUID(UUID.fromString(id))
+
+        terminal.println("Numero de nudos que quieres (2 o 4): ")
+        val nudos = readln().toIntOrNull() ?: 2
+        val json: Json = Json
+        val descripcion = json.encodeToString(TareaEncordado(tH, tV, cV, cH, nudos))
+
+        val precio = cH.precio + cV.precio + 15L
+        tarea = Tarea(
+            null,
+            null,
+            null,
+            null,
+            descripcion = descripcion,
+            precio = precio.toLong(),
+            tipoTarea = TipoTarea.ENCORDADO,
+            disponible = true
+        )
+        return tarea
+    }
+
+    fun creacionTareaPersonalizado(): Tarea {
+        var tarea: Tarea? = null
+
+        terminal.println("Indica el nuevo peso de la raqueta: ")
+        val peso = readln().toIntOrNull() ?: -1
+
+        terminal.println("Indica el nuevo balance de la raqueta: ")
+        val balance = readln().toFloatOrNull() ?: -1F
+
+        terminal.println("Indica la nueva rigidez de la raqueta: ")
+        var rigidez = readln().toIntOrNull() ?: -1
+        val json: Json = Json
+        val descripcion = json.encodeToString(TareaPersonalizado(peso, balance, rigidez))
+
+        val precio = 10L
+        tarea = Tarea(
+            null,
+            null,
+            null,
+            null,
+            descripcion = descripcion,
+            precio = precio.toLong(),
+            tipoTarea = TipoTarea.PERSONALIZADO,
+            disponible = true
+        )
+        return tarea
+    }
 
     /**
      * Bucle del login para el logeo del trabajador en su turno.
@@ -87,7 +279,8 @@ class Vista(
         }
 
         if (correcto != null) {
-            usuarioLoggeado = correctoif (correcto.administrador && correcto.disponible) {
+            trabajadorLoggeado = correcto
+            if (correcto.administrador && correcto.disponible) {
                 administradorBucle()
             } else if (!correcto.administrador && correcto.disponible) {
                 encordadorBucle()
@@ -135,23 +328,27 @@ class Vista(
             1 -> {
                 administradorBucleUsuarios()
             }
+
             2 -> {
                 administradorBucleClientes()
             }
+
             3 -> {
                 administradorBucleMaquinas()
             }
+
             4 -> {}
             5 -> {
                 administradorBucleProductos()
             }
+
             0 -> {
                 terminal.println(blue.bg("Saliendo de la sesión"))
             }
         }
     }
 
-    //------------------------------------------- PRODUCTOS ------------------------------------------------------------
+//------------------------------------------- PRODUCTOS ------------------------------------------------------------
 
     /**
      * Bucle de administrador config productos.
@@ -182,15 +379,19 @@ class Vista(
             1 -> {
                 addProducto()
             }
+
             2 -> {
                 actuProducto()
             }
+
             3 -> {
                 getProductos()
             }
+
             4 -> {
                 eliminarProducto()
             }
+
             0 -> {
                 terminal.println(brightBlue.bg("Saliendo de la configuración de productos🛒🛒"))
             }
@@ -249,7 +450,7 @@ class Vista(
         try {
             val encontrado = id?.let { productoController.getProductoByUUID(it) }
             encontrado?.let {
-                var producto = creacionProductos()
+                val producto = creacionProductos()
                 producto.uuid = it.uuid
                 productoController.updateProducto(producto)
             }
@@ -265,6 +466,15 @@ class Vista(
      */
     private fun getProductos() {
         val lista = productoController.getAllProductos()
+        mostrarTablaProductos(lista)
+    }
+
+    private fun getCordajes() {
+        val lista = productoController.getAllProductos().filter { it.tipo == TipoProduct.CORDAJE }
+        mostrarTablaProductos(lista)
+    }
+
+    private fun mostrarTablaProductos(lista: List<Producto>) {
         if (lista.isEmpty()) {
             println("Lista vacía")
         } else {
@@ -275,15 +485,17 @@ class Vista(
 
 
                 header {
-                    style(blue,bold = true)
+                    style(blue, bold = true)
                     row("ID", "TIPO", "MARCA", "MODELO", "PRECIO", "STOCK")
                 }
                 for (prod in lista) {
                     body {
                         rowStyles(cyan, brightCyan)
 
-                        row(prod.uuid, prod.tipo, prod.marca, prod.modelo, prod.precio, prod.stock
-                        ) }
+                        row(
+                            prod.uuid, prod.tipo, prod.marca, prod.modelo, prod.precio, prod.stock
+                        )
+                    }
                 }
             })
         }
@@ -307,7 +519,7 @@ class Vista(
      * Para crear productos.
      */
     fun creacionProductos(): Producto {
-        var listaTipos = TipoProduct.values().map { it.toString() }.toList()
+        val listaTipos = TipoProduct.values().map { it.toString() }.toList()
 
         var tipo: String
         do {
@@ -316,9 +528,9 @@ class Vista(
         } while (!listaTipos.contains(tipo))
 
         println("Dime el marca de producto: ")
-        var marca: String = readln()
+        val marca: String = readln()
         println("Dime el modelo del producto: ")
-        var modelo: String = readln()
+        val modelo: String = readln()
 
         var precio: Float
         do {
@@ -336,7 +548,7 @@ class Vista(
     }
 
 
-    //-------------------------------------------- CLIENTES ------------------------------------------------------------
+//-------------------------------------------- CLIENTES ------------------------------------------------------------
 
 
     /**
@@ -369,15 +581,19 @@ class Vista(
             1 -> {
                 addCliente()
             }
+
             2 -> {
                 actuCliente()
             }
+
             3 -> {
                 getClientes()
             }
+
             4 -> {
                 eliminarCliente()
             }
+
             0 -> {
                 terminal.println(blue.bg("Saliendo de la configuración de clientes👩🏻👨🏻"))
             }
@@ -436,7 +652,7 @@ class Vista(
         try {
             val encontrado = id?.let { clienteController.getClienteByUUID(it) }
             encontrado?.let {
-                var usuario = creacionClientes()
+                val usuario = creacionClientes()
                 usuario.uuid = it.uuid
                 clienteController.updateCliente(usuario)
             }
@@ -496,7 +712,7 @@ class Vista(
     /**
      * Para crear clientes.
      */
-    fun creacionClientes(): Cliente {
+    private fun creacionClientes(): Cliente {
         var nombre: String
         do {
             print("Nombre usuario: ")
@@ -521,14 +737,14 @@ class Vista(
             password = readln()
         } while (password.isEmpty())
 
-        //TODO faltan pedidos
 
+//se crea una lista de pedidos vacía
 
-        return Cliente(null, null, nombre, apellido, email, PasswordParser.encriptar(password))
+        return Cliente(null, null, nombre, apellido, email, PasswordParser.encriptar(password), null)
     }
 
 
-    //------------------------------------------- MAQUINAS -------------------------------------------------------------
+//------------------------------------------- MAQUINAS -------------------------------------------------------------
 
     /**
      * Bucle para elegir que máquinas queremos ver.
@@ -563,7 +779,7 @@ class Vista(
     }
 
 
-    //-------------------------------------- PERSONALIZADORAS ----------------------------------------------------------
+//-------------------------------------- PERSONALIZADORAS ----------------------------------------------------------
 
 
     /**
@@ -592,15 +808,19 @@ class Vista(
             1 -> {
                 addPersonalizadora()
             }
+
             2 -> {
                 actuPersonalizadora()
             }
+
             3 -> {
                 getPersonalizadoras()
             }
+
             4 -> {
                 eliminarPersonalizadora()
             }
+
             0 -> {
                 terminal.println(blue.bg("Saliendo de la configuración de personalizadoras🎾🎾"))
             }
@@ -651,14 +871,23 @@ class Vista(
 
 
                 header {
-                    style(blue,bold = true)
+                    style(blue, bold = true)
                     row("ID", "MODELO", "MARCA", "FECHA ADQUISICION", "MANIOBRABILIDAD", "BALANCE", "RIGIDEZ")
                 }
                 for (pers in lista) {
                     body {
                         rowStyles(cyan, brightCyan)
 
-                        row(pers.uuid, pers.modelo, pers.marca, pers.fechaAdquisicion, pers.maniobrabilidad, pers.balance, pers.rigidez) }
+                        row(
+                            pers.uuid,
+                            pers.modelo,
+                            pers.marca,
+                            pers.fechaAdquisicion,
+                            pers.maniobrabilidad,
+                            pers.balance,
+                            pers.rigidez
+                        )
+                    }
                 }
             })
         }
@@ -687,7 +916,7 @@ class Vista(
         try {
             val encontrado = id?.let { maquinaController.getPersonalizadoraByUUID(it) }
             encontrado?.let {
-                var personalizadora = creacionPersonalizadora()
+                val personalizadora = creacionPersonalizadora()
                 personalizadora.uuid = it.uuid
                 maquinaController.updatePersonalizadora(personalizadora)
             }
@@ -746,7 +975,7 @@ class Vista(
         } while (rigidez != "SI" && rigidez != "NO")
 
 
-        var campos = fecha.split("-")
+        val campos = fecha.split("-")
         return Personalizadora(
             null, marca, modelo, LocalDate.of(campos[2].toInt(), campos[1].toInt(), campos[0].toInt()),
             true, maniobrabilidad == "SI", balance == "SI", rigidez == "SI"
@@ -754,7 +983,7 @@ class Vista(
     }
 
 
-    //--------------------------------------------- ENCORDADORAS -------------------------------------------------------
+//--------------------------------------------- ENCORDADORAS -------------------------------------------------------
 
 
     /**
@@ -783,15 +1012,19 @@ class Vista(
             1 -> {
                 addEncordadora()
             }
+
             2 -> {
                 actuEncordadora()
             }
+
             3 -> {
                 getEncordadoras()
             }
+
             4 -> {
                 eliminarEncordadora()
             }
+
             0 -> {
                 terminal.println(blue.bg("Saliendo de la configuración de encordadoras🎾🎾"))
             }
@@ -842,16 +1075,24 @@ class Vista(
 
 
                 header {
-                    style(blue,bold = true)
+                    style(blue, bold = true)
                     row("ID", "MODELO", "MARCA", "FECHA ADQUISICION", "AUTOMATICA", "TENSION MAXIMA", "TENSION MINIMA")
                 }
                 for (trab in lista) {
                     body {
                         rowStyles(cyan, brightCyan)
 
-                        row(trab.uuid, trab.modelo, trab.marca, trab.fechaAdquisicion, if(trab.automatico == TipoMaquina.AUTOMATICA) "✅" else "❌", trab.tensionMaxima, trab.tensionMinima,
+                        row(
+                            trab.uuid,
+                            trab.modelo,
+                            trab.marca,
+                            trab.fechaAdquisicion,
+                            if (trab.automatico == TipoMaquina.AUTOMATICA) "✅" else "❌",
+                            trab.tensionMaxima,
+                            trab.tensionMinima,
 
-                        ) }
+                            )
+                    }
                 }
             })
         }
@@ -880,7 +1121,7 @@ class Vista(
         try {
             val encontrado = id?.let { maquinaController.getEncordadoraByUUID(it) }
             encontrado?.let {
-                var encordadora = creacionEncordadora()
+                val encordadora = creacionEncordadora()
                 encordadora.uuid = it.uuid
                 maquinaController.updateEncordadora(encordadora)
             }
@@ -938,7 +1179,7 @@ class Vista(
             tensionMax = readln().toIntOrNull() ?: 0
         } while (tensionMax <= 0)
 
-        var campos = fecha.split("-")
+        val campos = fecha.split("-")
         return Encordador(
             null,
             marca,
@@ -952,7 +1193,7 @@ class Vista(
     }
 
 
-    //----------------------------------------- TRABAJADORES -----------------------------------------------------------
+//----------------------------------------- TRABAJADORES -----------------------------------------------------------
 
 
     /**
@@ -985,15 +1226,19 @@ class Vista(
             1 -> {
                 addTrabajador()
             }
+
             2 -> {
                 actuTrabajador()
             }
+
             3 -> {
                 getTrabajadores()
             }
+
             4 -> {
                 eliminarTrabajador()
             }
+
             0 -> {
                 terminal.println(blue.bg("Saliendo de la configuración de trabajadores👩🏻👨🏻"))
             }
@@ -1051,7 +1296,7 @@ class Vista(
         try {
             val encontrado = id?.let { trabController.getTrabajadorByUUID(it) }
             encontrado?.let {
-                var usuario = creacionTrabajadores()
+                val usuario = creacionTrabajadores()
                 usuario.uuid = it.uuid
                 trabController.updateTrabajador(usuario)
             }
@@ -1151,4 +1396,23 @@ class Vista(
     }
 
 
+//---------------------------------PEDIDOS------------------------------------------------------
+
+    private fun administradorBuclePedidos() {
+        var opcion: Int
+        do {
+            terminal.println(brightBlue("------ Pedidos Admin ------"))
+            do {
+                terminal.println(
+                    "1- Añadir Pedido \n" +
+                            "2- Actualizar Pedido \n" +
+                            "3- Listar Cliente \n" +
+                            "4- Eliminar Cliente \n" +
+                            "0- Salir"
+                )
+                opcion = readln().toIntOrNull() ?: -1
+            } while (opcion < 0 || opcion > 4)
+            opcionesBucleAdminClientes(opcion)
+        } while (opcion != 0)
+    }
 }

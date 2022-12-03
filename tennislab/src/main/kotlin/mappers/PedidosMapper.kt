@@ -21,13 +21,18 @@ fun TareaDAO.fromTareaDaoToTarea(): Tarea = Tarea(
 
 )
 
-fun PedidoDAO.fromPedidoDaoToPedido() : Pedido = Pedido(
-    uuid = uuid,
-    estado = Estado.valueOf(estado),
-    fechaEntrada = fechaEntrada,
-    fechaSalida = fechaSalida,
-    fechaFinal = fechaFinal,
-    precioTotal = precioTotal,
-    topeEntrega = topeEntrega,
-    tareas = TareaDAO.find { TareaTable.uuid eq uuid }.map { it.fromTareaDaoToTarea() } as ArrayList<Tarea>
-)
+fun PedidoDAO.fromPedidoDaoToPedido() : Pedido  {
+
+    var p = Pedido(
+        uuid = uuid,
+        estado = Estado.valueOf(estado),
+        fechaEntrada = fechaEntrada,
+        fechaSalida = fechaSalida,
+        fechaFinal = fechaFinal,
+        precioTotal = precioTotal,
+        topeEntrega = topeEntrega,
+        cliente = cliente?.fromClienteDaoToCliente(),
+        tareas = TareaDAO.find { TareaTable.uuid eq uuid }.map { it.fromTareaDaoToTarea() } as ArrayList<Tarea>
+    )
+    return p
+}

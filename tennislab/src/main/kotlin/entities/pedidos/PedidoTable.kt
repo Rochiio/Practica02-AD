@@ -1,6 +1,8 @@
 package entities.pedidos
 
 import entities.pedidos.PedidoDAO.Companion.referrersOn
+import entities.usuarios.ClienteDAO
+import entities.usuarios.ClienteTable
 import entities.usuarios.TrabajadorDAO
 import entities.usuarios.TrabajadorTable
 import models.pedidos.Tarea
@@ -21,6 +23,7 @@ object PedidoTable : IntIdTable() {
     val uuid = uuid("uuid").autoGenerate()
 
     val estado = varchar("estado", 10)
+    val cliente = reference("cliente", ClienteTable).nullable()
     val fechaEntrada = date("fechaEntrada")
     val fechaSalida = date("fechaSalida")
     val fechaFinal = date("fechaFinal")
@@ -40,6 +43,7 @@ class PedidoDAO(id: EntityID<Int>) : IntEntity(id) {
     var fechaFinal by PedidoTable.fechaFinal
     var precioTotal by PedidoTable.precioTotal
     var topeEntrega by PedidoTable.topeEntrega
+    var cliente by ClienteDAO optionalReferencedOn  PedidoTable.cliente
     val tareas by TareaDAO optionalReferrersOn  TareaTable.id_pedido
 
     override fun toString(): String {

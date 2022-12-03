@@ -1,6 +1,7 @@
 package mappers
 
 import entities.usuarios.ClienteDAO
+import models.pedidos.Pedido
 import models.usuarios.Cliente
 
 /**
@@ -14,6 +15,7 @@ fun ClienteDAO.fromClienteDaoToCliente(): Cliente {
             apellido = apellido,
             email = email,
             password = password,
+            pedidos = pedidos?.fromPedidoDaoToPedido()
         )
 }
 

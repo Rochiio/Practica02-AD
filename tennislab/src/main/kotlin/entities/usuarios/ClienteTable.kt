@@ -10,6 +10,7 @@ import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import java.util.*
 
 /**
@@ -21,7 +22,7 @@ object ClienteTable: IntIdTable() {
     val apellido= ClienteTable.varchar("apellido", 50)
     val email  = ClienteTable.varchar("email", 50)
     val password = ClienteTable.varchar("password", 200)
-    //val pedidos = reference("pedidos", PedidoTable)
+    val pedido = reference("pedidos", PedidoTable, onDelete = ReferenceOption.CASCADE).nullable()
 }
 
 class ClienteDAO(id: EntityID<Int>): IntEntity(id){
@@ -31,10 +32,11 @@ class ClienteDAO(id: EntityID<Int>): IntEntity(id){
     var apellido by ClienteTable.apellido
     var email by ClienteTable.email
     var password by ClienteTable.password
+    val pedidos by PedidoDAO optionalReferencedOn ClienteTable.pedido
     override fun toString(): String {
         return "ClienteDAO(uuid=$uuid, nombre='$nombre', apellido='$apellido', email='$email', password='$password')"
     }
-    //val pedidos by PedidoDAO referrersOn ClienteTable.pedidos
+
 
 
 }

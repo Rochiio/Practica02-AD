@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.21")
     testImplementation(kotlin("test"))
     //MOCKK
     testImplementation("io.mockk:mockk:${mockkVersion}")

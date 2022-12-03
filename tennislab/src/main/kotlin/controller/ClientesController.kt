@@ -1,7 +1,9 @@
 package controller
 
 import exception.ClienteError
+import exception.TrabajadorError
 import models.usuarios.Cliente
+import models.usuarios.Trabajador
 import repositories.usuarios.ClienteRepository
 import java.util.*
 
@@ -16,11 +18,21 @@ class ClientesController(private var repository: ClienteRepository) {
         existe?.let {
             throw  ClienteError("Ya existe un cliente con este UUID")
         }?: run{
-            repository.save(cliente)
-            return cliente
+            return repository.save(cliente)
         }
     }
-
+    @Throws(ClienteError::class)
+    fun getClienteByEmailAndPassword(email: String, password: String): Cliente?{
+        var find = repository.findByEmail(email)
+        find?.let {
+            if (find.password != password){
+                throw ClienteError("Cliente incorrecto")
+            }
+        }?: run {
+            throw ClienteError("Cliente no existe")
+        }
+        return find
+    }
 
     /**
      * Conseguir todos los clientes que existen.
