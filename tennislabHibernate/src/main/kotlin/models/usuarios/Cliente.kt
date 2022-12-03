@@ -2,16 +2,16 @@ package models.usuarios
 
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
-import java.util.UUID
+import java.util.*
 import javax.persistence.*
 
 /**
- * Modelo de trabajador
+ * Modelo de cliente
  */
 @Entity
-@Table(name = "trabajadores")
-@NamedQuery(name ="Trabajado.findAll", query = "select t from Trabajador t")
-data class Trabajador(
+@Table(name = "clientes")
+@NamedQuery(name = "Cliente.finAll", query = "select c from Cliente c")
+data class Cliente(
     @Id @GeneratedValue
     @GenericGenerator(
         name = "UUID",
@@ -19,12 +19,10 @@ data class Trabajador(
     )
     @Column(name = "uuid")
     @Type(type = "uuid-char")
-    val uuid:UUID = UUID.randomUUID(),
+    val uuid: UUID = UUID.randomUUID(),
     var nombre:String,
     var apellido:String,
     var email:String,
     var password:String,
-    var disponible:Boolean,
-    var administrador: Boolean
 ) {
 }
