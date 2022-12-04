@@ -55,8 +55,8 @@ class EncordadorRepositoryImpl: EncordadorRepository {
         logger.debug { "Eliminando todos los encordadores" }
         var eliminado = false
         HibernateManager.transaction{
-            var query: TypedQuery<Encordador> = manager.createNamedQuery("Encordador.deleteAll", Encordador::class.java)
-            query.firstResult
+            var query = manager.createQuery("delete from Encordador")
+            query.executeUpdate()
             eliminado = true
         }
         return eliminado

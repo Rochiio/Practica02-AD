@@ -12,7 +12,7 @@ import javax.persistence.*
 @Table(name = "clientes")
 @NamedQueries(
     NamedQuery(name ="Cliente.findAll", query = "select c from Cliente c"),
-    NamedQuery(name = "Cliente.deleteAll", query = "delete from Cliente ")
+    NamedQuery(name ="Cliente.findByEmail", query="select c from Cliente c where c.email = :email")
 )data class Cliente(
     @Id @GeneratedValue
     @GenericGenerator(

@@ -57,8 +57,8 @@ class ProductoRepositoryImpl: ProductoRepository {
         logger.debug { "Eliminando todos los productos" }
         var eliminado = false
         HibernateManager.transaction {
-            var query: TypedQuery<Producto> = manager.createNamedQuery("Producto.deleteAll", Producto::class.java)
-            query.firstResult
+            var query = manager.createQuery("delete from Producto")
+            query.executeUpdate()
             eliminado = true
         }
         return eliminado

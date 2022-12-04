@@ -5,4 +5,5 @@ import repositories.ICRUD
 import java.util.*
 
 interface ClienteRepository: ICRUD<Cliente, UUID> {
+    fun findByEmail(email: String):Cliente?
 }

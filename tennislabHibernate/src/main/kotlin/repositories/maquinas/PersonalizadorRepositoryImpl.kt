@@ -55,8 +55,8 @@ class PersonalizadorRepositoryImpl: PersonalizadorRepository {
         logger.debug { "Eliminando todos los personalizadores" }
         var eliminado = false
         HibernateManager.transaction{
-            var query: TypedQuery<Personalizador> = manager.createNamedQuery("Personalizador.deleteAll", Personalizador::class.java)
-            query.firstResult
+            var query = manager.createQuery("delete from Personalizador ")
+            query.executeUpdate()
             eliminado = true
         }
         return eliminado
