@@ -2,7 +2,9 @@ package repositories.usuarios
 
 import db.HibernateManager
 import db.HibernateManager.manager
+import models.usuarios.Cliente
 import models.usuarios.Trabajador
+import mu.KotlinLogging
 import java.util.*
 import javax.persistence.TypedQuery
 
@@ -10,7 +12,10 @@ import javax.persistence.TypedQuery
  * Implementacion repositorio de trabajadores
  */
 class TrabajadorRepositoryImpl: TrabajadorRepository {
+    private var logger = KotlinLogging.logger {}
+
     override fun findById(id: UUID): Trabajador? {
+        logger.debug { "Buscando trabajador por el id" }
         var encontrado: Trabajador? = null
         HibernateManager.query {
             encontrado = manager.find(Trabajador::class.java, id)
@@ -19,13 +24,16 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
     }
 
     override fun save(item: Trabajador): Trabajador {
+        logger.debug { "Salvando trabajador" }
+        var add: Trabajador? = null
         HibernateManager.transaction {
-            manager.merge(item)
+            add = manager.merge(item)
         }
-        return item
+        return add!!
     }
 
     override fun delete(item: Trabajador): Boolean {
+        logger.debug { "Eliminando trabajador"}
         var eliminado = false
         HibernateManager.transaction {
             manager.remove(item)
@@ -34,10 +42,9 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
         return eliminado
     }
 
-    /**
-     * TODO da problema el name, investigar
-     */
+
     override fun findAll(): List<Trabajador> {
+        logger.debug { "Buscando todos los trabajadores" }
         var lista = mutableListOf<Trabajador>()
         HibernateManager.query {
             var query: TypedQuery<Trabajador> = manager.createNamedQuery("Trabajador.findAll", Trabajador::class.java)
@@ -47,6 +54,11 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
     }
 
     override fun deleteAll(): Boolean {
-        TODO("Not yet implemented")
+        var eliminado = false
+        HibernateManager.transaction {
+            var query: TypedQuery<Trabajador> = manager.createNamedQuery("Trabajador.deleteAll", Trabajador::class.java)
+            eliminado = true
+        }
+        return eliminado
     }
 }
