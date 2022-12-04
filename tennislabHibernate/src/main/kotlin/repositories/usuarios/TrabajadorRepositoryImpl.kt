@@ -46,7 +46,8 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
         logger.debug { "Eliminando trabajador"}
         var eliminado = false
         HibernateManager.transaction {
-            manager.remove(item)
+            item.disponible = false
+            manager.merge(item)
             eliminado = true
         }
         return eliminado
@@ -66,7 +67,8 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
     override fun deleteAll(): Boolean {
         var eliminado = false
         HibernateManager.transaction {
-            var query: TypedQuery<Trabajador> = manager.createNamedQuery("Trabajador.deleteAll", Trabajador::class.java)
+            var query = manager.createQuery("delete from Trabajador")
+            query.executeUpdate()
             eliminado = true
         }
         return eliminado

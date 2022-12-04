@@ -65,8 +65,8 @@ class ClienteRepositoryImpl: ClienteRepository {
         logger.debug { "Eliminando todos los clientes" }
         var eliminado = false
         HibernateManager.transaction{
-            var query: TypedQuery<Cliente> = manager.createNamedQuery("Cliente.deleteAll", Cliente::class.java)
-            query.firstResult
+            var query = manager.createQuery("delete from Cliente")
+            query.executeUpdate()
             eliminado = true
         }
         return eliminado

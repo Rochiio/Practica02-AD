@@ -12,7 +12,6 @@ import javax.persistence.*
 @Table(name = "trabajadores")
 @NamedQueries(
     NamedQuery(name ="Trabajador.findAll", query = "select t from Trabajador t"),
-    NamedQuery(name = "Trabajador.deleteAll", query = "delete from Trabajador"),
     NamedQuery(name = "Trabajador.findByEmail", query = "select t from Trabajador t where t.email= :email")
 )
 data class Trabajador(
