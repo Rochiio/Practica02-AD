@@ -2,14 +2,14 @@ package controller
 
 import exception.MaquinaError
 import models.maquinas.Encordador
-import models.maquinas.Personalizadora
-import repositories.maquinas.EncordadoRepository
-import repositories.maquinas.PersonalizadoraRepository
+import models.maquinas.Personalizador
+import repositories.maquinas.EncordadorRepository
+import repositories.maquinas.PersonalizadorRepository
 import java.util.*
 
 class MaquinasController(
-    private var encordadoraRepo: EncordadoRepository,
-    private var personalizadoraRepo: PersonalizadoraRepository
+    private var encordadoraRepo: EncordadorRepository,
+    private var personalizadoraRepo: PersonalizadorRepository
 ) {
 
 
@@ -18,7 +18,7 @@ class MaquinasController(
      */
     @Throws(MaquinaError::class)
     fun addEncordadora(item: Encordador):Encordador{
-        var existe = item.uuid?.let { encordadoraRepo.findByUUID(it) }
+        var existe = encordadoraRepo.findById(item.uuid)
         existe?.let {
             throw  MaquinaError("Ya existe una encordadora con este UUID")
         }?: run{
@@ -33,7 +33,7 @@ class MaquinasController(
      */
     @Throws(MaquinaError::class)
     fun getEncordadoraByUUID(uuid: UUID): Encordador {
-        var existe = encordadoraRepo.findByUUID(uuid)
+        var existe = encordadoraRepo.findById(uuid)
         existe?.let {
             return it
         }?: run{
@@ -77,8 +77,8 @@ class MaquinasController(
      * Añadir una personalizadora
      */
     @Throws(MaquinaError::class)
-    fun addPersonalizadora(item: Personalizadora):Personalizadora{
-        var existe = item.uuid?.let { personalizadoraRepo.findByUUID(it) }
+    fun addPersonalizadora(item: Personalizador): Personalizador {
+        var existe = personalizadoraRepo.findById(item.uuid)
         existe?.let {
             throw  MaquinaError("Ya existe una personalizadora con este UUID")
         }?: run{
@@ -92,8 +92,8 @@ class MaquinasController(
      * Conseguir personalizadora por su uuid.
      */
     @Throws(MaquinaError::class)
-    fun getPersonalizadoraByUUID(uuid: UUID): Personalizadora {
-        var existe = personalizadoraRepo.findByUUID(uuid)
+    fun getPersonalizadoraByUUID(uuid: UUID): Personalizador {
+        var existe = personalizadoraRepo.findById(uuid)
         existe?.let {
             return it
         }?: run{
@@ -105,7 +105,7 @@ class MaquinasController(
     /**
      * Actualizar una personalizadora
      */
-    fun updatePersonalizadora(item: Personalizadora):Personalizadora{
+    fun updatePersonalizadora(item: Personalizador):Personalizador{
         return personalizadoraRepo.save(item)
     }
 
@@ -113,7 +113,7 @@ class MaquinasController(
     /**
      * Conseguir todas las personalizadoras.
      */
-    fun getAllPersonalizadoras(): List<Personalizadora> {
+    fun getAllPersonalizadoras(): List<Personalizador> {
         return personalizadoraRepo.findAll()
     }
 
@@ -122,7 +122,7 @@ class MaquinasController(
      * Eliminar una personalizadora.
      */
     @Throws(MaquinaError::class)
-    fun deletePersonalizadora(personalizadora: Personalizadora):Boolean {
+    fun deletePersonalizadora(personalizadora: Personalizador):Boolean {
         var correcto = personalizadoraRepo.delete(personalizadora)
         if(correcto){
             println("Personalizadora eliminada correctamente")
