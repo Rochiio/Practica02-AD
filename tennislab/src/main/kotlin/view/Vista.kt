@@ -1100,7 +1100,7 @@ class Vista(
 
         val campos = fecha.split("-")
         return Personalizadora(
-            null, marca, modelo, LocalDate.of(campos[2].toInt(), campos[1].toInt(), campos[0].toInt()),
+            null, null, marca, modelo, LocalDate.of(campos[2].toInt(), campos[1].toInt(), campos[0].toInt()),
             true, maniobrabilidad == "SI", balance == "SI", rigidez == "SI"
         )
     }

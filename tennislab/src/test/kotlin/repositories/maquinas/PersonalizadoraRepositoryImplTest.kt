@@ -17,10 +17,9 @@ import java.util.*
 
 internal class PersonalizadoraRepositoryImplTest {
 
-    private var personalizadoraTest: Personalizadora = Personalizadora(
-        UUID.randomUUID(), "MarcaPrueba", "ModeloPrueba",
-        LocalDate.now(),
-        true, true, true, true
+    private var personalizadoraTest: Personalizadora = Personalizadora(null,
+        UUID.randomUUID(), "MarcaPrueba", "ModeloPrueba", LocalDate.now(),
+        disponible = true, maniobrabilidad = true, balance = true, rigidez =true
     )
 
     private var repository = PersonalizadoraRepositoryImpl(PersonalizadorDAO)
@@ -39,18 +38,19 @@ internal class PersonalizadoraRepositoryImplTest {
         SchemaUtils.create(PersonalizadorTable)
 
         var guardado = repository.save(personalizadoraTest)
-        var encontrado = repository.findById(1)
+        var encontrado = repository.findById(guardado.id!!)
 
         assertAll(
             { assertNotNull(encontrado) },
+            { assertEquals(encontrado?.id, guardado.id) },
             { assertEquals(encontrado?.uuid, guardado.uuid) },
             { assertEquals(encontrado?.marca, guardado.marca) },
             { assertEquals(encontrado?.modelo, guardado.modelo) },
             { assertEquals(encontrado?.fechaAdquisicion, guardado.fechaAdquisicion) },
             { assertEquals(encontrado?.disponible, guardado.disponible) },
-            { assertTrue(encontrado?.maniobrabilidad!!) },
-            { assertTrue(encontrado?.balance !!) },
-            { assertTrue(encontrado?.rigidez!!) }
+            { assertEquals(encontrado?.maniobrabilidad, guardado.maniobrabilidad) },
+            { assertEquals(encontrado?.balance, guardado.balance) },
+            { assertEquals(encontrado?.rigidez, guardado.rigidez) }
 
         )
     }
@@ -69,9 +69,9 @@ internal class PersonalizadoraRepositoryImplTest {
             { assertEquals(encontrado?.modelo, guardado.modelo) },
             { assertEquals(encontrado?.fechaAdquisicion, guardado.fechaAdquisicion) },
             { assertEquals(encontrado?.disponible, guardado.disponible) },
-            { assertTrue(encontrado?.maniobrabilidad!!) },
-            { assertTrue(encontrado?.balance !!) },
-            { assertTrue(encontrado?.rigidez!!) }
+            { assertEquals(encontrado?.maniobrabilidad, guardado.maniobrabilidad) },
+            { assertEquals(encontrado?.balance, guardado.balance) },
+            { assertEquals(encontrado?.rigidez, guardado.rigidez) }
 
         )
     }
@@ -84,14 +84,14 @@ internal class PersonalizadoraRepositoryImplTest {
 
         assertAll(
             { assertNotNull(guardado) },
-            { assertEquals(guardado?.uuid, personalizadoraTest.uuid) },
-            { assertEquals(guardado?.marca, personalizadoraTest.marca) },
-            { assertEquals(guardado?.modelo, personalizadoraTest.modelo) },
-            { assertEquals(guardado?.fechaAdquisicion, personalizadoraTest.fechaAdquisicion) },
-            { assertEquals(guardado?.disponible, personalizadoraTest.disponible) },
-            { assertTrue(guardado?.maniobrabilidad!!) },
-            { assertTrue(guardado?.balance !!) },
-            { assertTrue(guardado?.rigidez!!) }
+            { assertEquals(guardado.uuid, personalizadoraTest.uuid) },
+            { assertEquals(guardado.marca, personalizadoraTest.marca) },
+            { assertEquals(guardado.modelo, personalizadoraTest.modelo) },
+            { assertEquals(guardado.fechaAdquisicion, personalizadoraTest.fechaAdquisicion) },
+            { assertEquals(guardado.disponible, personalizadoraTest.disponible) },
+            { assertEquals(guardado.maniobrabilidad, personalizadoraTest.maniobrabilidad) },
+            { assertEquals(guardado.balance, personalizadoraTest.balance) },
+            { assertEquals(guardado.rigidez, personalizadoraTest.rigidez) }
 
         )
     }
@@ -104,14 +104,14 @@ internal class PersonalizadoraRepositoryImplTest {
 
         assertAll(
             { assertNotNull(guardado) },
-            { assertEquals(guardado?.uuid, personalizadoraTest.uuid) },
-            { assertEquals(guardado?.marca, personalizadoraTest.marca) },
-            { assertEquals(guardado?.modelo, personalizadoraTest.modelo) },
-            { assertEquals(guardado?.fechaAdquisicion, personalizadoraTest.fechaAdquisicion) },
-            { assertEquals(guardado?.disponible, personalizadoraTest.disponible) },
-            { assertTrue(guardado?.maniobrabilidad!!) },
-            { assertTrue(guardado?.balance !!) },
-            { assertTrue(guardado?.rigidez!!) }
+            { assertEquals(guardado.uuid, personalizadoraTest.uuid) },
+            { assertEquals(guardado.marca, personalizadoraTest.marca) },
+            { assertEquals(guardado.modelo, personalizadoraTest.modelo) },
+            { assertEquals(guardado.fechaAdquisicion, personalizadoraTest.fechaAdquisicion) },
+            { assertEquals(guardado.disponible, personalizadoraTest.disponible) },
+            { assertEquals(guardado.maniobrabilidad, personalizadoraTest.maniobrabilidad) },
+            { assertEquals(guardado.balance, personalizadoraTest.balance) },
+            { assertEquals(guardado.rigidez, personalizadoraTest.rigidez) }
 
         )
     }
