@@ -10,7 +10,10 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "trabajadores")
-@NamedQuery(name ="Trabajado.findAll", query = "select t from Trabajador t")
+@NamedQueries(
+    NamedQuery(name ="Trabajador.findAll", query = "select t from Trabajador t"),
+    NamedQuery(name = "Trabajador.deleteAll", query = "delete from Trabajador")
+)
 data class Trabajador(
     @Id @GeneratedValue
     @GenericGenerator(
