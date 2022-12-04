@@ -10,8 +10,10 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "clientes")
-@NamedQuery(name = "Cliente.finAll", query = "select c from Cliente c")
-data class Cliente(
+@NamedQueries(
+    NamedQuery(name ="Cliente.findAll", query = "select c from Cliente c"),
+    NamedQuery(name = "Cliente.deleteAll", query = "delete from Cliente ")
+)data class Cliente(
     @Id @GeneratedValue
     @GenericGenerator(
         name = "UUID",

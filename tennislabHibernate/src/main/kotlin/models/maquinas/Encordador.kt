@@ -12,7 +12,10 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "encordadores")
-@NamedQuery(name = "Encordador.findAll", query="select e from Encordador e")
+@NamedQueries(
+    NamedQuery(name ="Encordador.findAll", query = "select e from Encordador e"),
+    NamedQuery(name = "Encordador.deleteAll", query = "delete from Encordador ")
+)
 data class Encordador(
     @Id @GeneratedValue
     @GenericGenerator(
