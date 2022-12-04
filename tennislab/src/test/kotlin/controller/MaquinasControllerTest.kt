@@ -27,7 +27,7 @@ internal class MaquinasControllerTest {
 
     private var encordadora = Encordador(UUID.fromString("27c1af75-3bd1-4a71-be4c-a498ab5e7d85"),"marca","test",
         LocalDate.now(),true, TipoMaquina.AUTOMATICA,10,3)
-    private var personalizadora = Personalizadora(UUID.fromString("27c1af75-3bd1-4a71-be4c-a498ab5e7d85"),"marca","modelo",
+    private var personalizadora = Personalizadora(null, UUID.fromString("27c1af75-3bd1-4a71-be4c-a498ab5e7d85"),"marca","modelo",
     LocalDate.now(), disponible = true, maniobrabilidad = true, balance = false, rigidez = false)
 
     init {
