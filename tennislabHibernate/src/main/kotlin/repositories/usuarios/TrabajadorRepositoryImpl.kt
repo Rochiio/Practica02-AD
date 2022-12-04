@@ -13,6 +13,16 @@ import javax.persistence.TypedQuery
  */
 class TrabajadorRepositoryImpl: TrabajadorRepository {
     private var logger = KotlinLogging.logger {}
+    override fun findByEmail(email: String): Trabajador? {
+        logger.debug { "Buscando trabajador por su email" }
+        var encontrado:Trabajador? = null
+        HibernateManager.query {
+            var query: TypedQuery<Trabajador> = manager.createNamedQuery("Trabajador.findByEmail",  Trabajador::class.java)
+            query.setParameter("email", email)
+            encontrado = query.singleResult
+        }
+        return encontrado
+    }
 
     override fun findById(id: UUID): Trabajador? {
         logger.debug { "Buscando trabajador por el id" }
