@@ -16,11 +16,12 @@ class TareasController(private var repository: TareaRepository) {
     fun addTarea(tarea: Tarea): Tarea {
         tarea.uuid?.let { repository.findByUUID(it) }
             ?.let {
-                repository.save(tarea)
-                return tarea
-            } ?: run {
-            throw TareaError("Ya existe un tarea con el mismo UUID")
 
+                throw TareaError("Ya existe un tarea con el mismo UUID")
+
+            } ?: run {
+            repository.save(tarea)
+            return tarea
         }
     }
 

@@ -1,5 +1,6 @@
 package entities.pedidos
 
+import entities.EncordadorTable.nullable
 import entities.pedidos.PedidoDAO.Companion.referrersOn
 import entities.usuarios.ClienteDAO
 import entities.usuarios.ClienteTable
@@ -25,8 +26,8 @@ object PedidoTable : IntIdTable() {
     val estado = varchar("estado", 10)
     val cliente = reference("cliente", ClienteTable).nullable()
     val fechaEntrada = date("fechaEntrada")
-    val fechaSalida = date("fechaSalida")
-    val fechaFinal = date("fechaFinal")
+    val fechaSalida = date("fechaSalida").nullable()
+    val fechaFinal = date("fechaFinal").nullable()
     val precioTotal = float("precioFinal")
     val topeEntrega = date("topeEntrega")
 }

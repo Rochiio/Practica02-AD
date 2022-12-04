@@ -16,12 +16,12 @@ import java.util.UUID
  */
 object TareaTable : IntIdTable() {
     var uuid = uuid("uuid").autoGenerate()
-    var id_trabajador = reference("id_trabajador", TrabajadorTable)
+    var id_trabajador = reference("id_trabajador", TrabajadorTable).nullable()
     var id_maquina = uuid("id_maquina").nullable()
     var id_pedido = reference("id_pedido", PedidoTable).nullable()
     var precio = long("precio")
     var tipoTarea = enumeration("tipoTarea", TipoTarea::class)
-    var descripcion = varchar("descripcion", 200)
+    var descripcion = varchar("descripcion", 500)
     var disponible = bool("disponible")
 
 
@@ -31,7 +31,7 @@ class TareaDAO(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<TareaDAO>(TareaTable)
 
     var uuid by TareaTable.uuid
-    var idTrabajador by TrabajadorDAO referencedOn TareaTable.id_trabajador
+    var idTrabajador by TrabajadorDAO optionalReferencedOn  TareaTable.id_trabajador
     var idMaquina by TareaTable.id_maquina
     var idPedido by PedidoDAO optionalReferencedOn TareaTable.id_pedido
     var precio by TareaTable.precio
