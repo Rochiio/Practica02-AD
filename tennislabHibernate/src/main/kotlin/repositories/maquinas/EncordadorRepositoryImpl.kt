@@ -3,6 +3,7 @@ package repositories.maquinas
 import db.HibernateManager
 import db.HibernateManager.manager
 import models.maquinas.Encordador
+import models.pedidos.Producto
 import mu.KotlinLogging
 import java.util.*
 import javax.persistence.TypedQuery
@@ -35,7 +36,7 @@ class EncordadorRepositoryImpl: EncordadorRepository {
         logger.debug { "Eliminando encordador" }
         var eliminado = false
         HibernateManager.transaction {
-            manager.remove(item)
+            manager.remove(manager.find(Encordador::class.java, item.uuid))
             eliminado = true
         }
         return eliminado

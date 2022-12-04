@@ -37,7 +37,7 @@ class ProductoRepositoryImpl: ProductoRepository {
         logger.debug { "Eliminando producto"}
         var eliminado = false
         HibernateManager.transaction {
-            manager.remove(item)
+            manager.remove(manager.find(Producto::class.java, item.uuid))
             eliminado= true
         }
         return eliminado

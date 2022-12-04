@@ -45,7 +45,7 @@ class ClienteRepositoryImpl: ClienteRepository {
         logger.debug { "Eliminando cliente"}
         var eliminado = false
         HibernateManager.transaction {
-            manager.remove(item)
+            manager.remove(manager.find(Cliente::class.java, item.uuid))
             eliminado = true
         }
         return eliminado
