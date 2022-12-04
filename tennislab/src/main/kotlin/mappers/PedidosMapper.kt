@@ -12,7 +12,7 @@ fun TareaDAO.fromTareaDaoToTarea(): Tarea = Tarea(
     id = id.value,
     uuid = uuid,
     idMaquina = idMaquina,
-    idTrabajador = idTrabajador.fromTrabajadorDaoToTrabajador(),
+    idTrabajador = idTrabajador?.fromTrabajadorDaoToTrabajador(),
 
     descripcion = descripcion,
     precio = precio,

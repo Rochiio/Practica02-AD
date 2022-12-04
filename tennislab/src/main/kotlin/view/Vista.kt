@@ -4,10 +4,8 @@ import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
-import controller.ClientesController
-import controller.MaquinasController
-import controller.ProductosController
-import controller.TrabajadoresController
+import controller.*
+import entities.enums.Estado
 import entities.enums.TipoMaquina
 import entities.enums.TipoProduct
 import entities.enums.TipoTarea
@@ -22,6 +20,7 @@ import models.usuarios.Trabajador
 import utils.PasswordParser
 import java.time.LocalDate
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Vista del usuario.
@@ -30,6 +29,8 @@ class Vista(
     private var trabController: TrabajadoresController,
     private var maquinaController: MaquinasController,
     private var clienteController: ClientesController,
+    private var pedidosController: PedidosController,
+    private var tareasController: TareasController,
     private var productoController: ProductosController
 ) {
     private var terminal = Terminal(width = 150)
@@ -46,7 +47,7 @@ class Vista(
             terminal.println(brightBlue("------ Bienvenido a tennislab🎾🎾 ------ \nelija una opción."))
             terminal.println(
                 "1 - Iniciar sesión (Trabajador) \n" +
-                        "2 - Iniciar sesión (Cliente)" +
+                        "2 - Iniciar sesión (Cliente)\n" +
                         "0 - Salir"
             )
             opcion = readln().toIntOrNull() ?: 3
@@ -135,7 +136,8 @@ class Vista(
     }
 
     private fun comprobarPedidosBucle() {
-        TODO("Not yet implemented")
+        val lista = pedidosController.getPedidos().filter { it.cliente == clienteLoggeado }
+        getPedidos(lista)
     }
 
     private fun realizarPedidoBucle() {
@@ -154,28 +156,41 @@ class Vista(
                             "0- Salir"
                 )
                 opcion = readln().toIntOrNull() ?: -1
-            } while (opcion < 0 || opcion > 3)
+            } while (opcion < 0 || opcion > 4)
             opcionesBucleTarea(opcion)
-        } while (opcion != 0)
+        } while (opcion != 0 && opcion!= 4)
     }
 
+    private val tareas = mutableListOf<Tarea>()
     private fun opcionesBucleTarea(opcion: Int) {
-        val tareas = mutableListOf<Tarea>()
         when (opcion) {
             1 -> {
-                tareas.add(creacionTareaEncordado())
+                val tarea = creacionTareaEncordado()
+                tareasController.addTarea(tarea)
+                tareas.add(tarea)
             }
 
             2 -> {
-                tareas.add(creacionTareaPersonalizado())
+                val tarea = creacionTareaPersonalizado()
+                tareasController.addTarea(tarea)
+                tareas.add(tarea)
             }
 
             3 -> {
-
+                val tarea = createTareaAdquisicion()
+                tareasController.addTarea(tarea)
+                tareas.add(tarea)
             }
 
             4 -> {
-                creacionPedido(tareas)
+                val pedido = creacionPedido(tareas)
+                pedido?.let {
+                    pedidosController.addPedido(pedido)
+                    terminal.println("Pedido creado")
+                }
+
+                getPedidos(pedidosController.getPedidos())
+
             }
 
             0 -> {
@@ -184,9 +199,24 @@ class Vista(
         }
     }
 
-    private fun creacionPedido(tareas: MutableList<Tarea>) {
+    private fun creacionPedido(tareas: MutableList<Tarea>): Pedido? {
         var pedido: Pedido? = null
-        TODO("HACER LA CREACIOND E PEDIDO")
+        var precio = 0F
+        tareas.forEach { precio += it.precio }
+        println(precio)
+        pedido = Pedido(
+            null,
+            Estado.RECIBIDO,
+            LocalDate.now(),
+            LocalDate.parse("2022-12-31"),
+            null,
+            precio,
+            LocalDate.now().plusDays(15),
+            clienteLoggeado,
+            tareas as ArrayList<Tarea>
+        )
+        tareas.clear()
+        return pedido
     }
 
 
@@ -199,15 +229,24 @@ class Vista(
         terminal.println("Indica la tensión horizontal: ")
         val tH = readln().toIntOrNull() ?: -1
 
-        terminal.println("Indica el cordaje vertical (escribe el uuid): ")
-        var id = readln()
-        //TODO(Control de errores del uuid)
-        val cV = productoController.getProductoByUUID(UUID.fromString(id))
 
-        terminal.println("Indica el cordaje vertical (escribe el uuid): ")
-        id = readln()
-        //TODO(Control de errores del uuid)
-        val cH = productoController.getProductoByUUID(UUID.fromString(id))
+        var id = -1
+
+        do {
+            terminal.println("Indica el cordaje vertical (escribe el indice): ")
+            getCordajes()
+            terminal.println("ID: ")
+            id = readln().toIntOrNull() ?: 0
+        } while (id !in (0 until productoController.getAllProductos().size))
+        val cV = productoController.getAllProductos()[id]
+
+        do {
+            terminal.println("Indica el cordaje horizontal (escribe el indice): ")
+            getCordajes()
+            terminal.println("ID: ")
+            id = readln().toIntOrNull() ?: 0
+        } while (id !in (0 until productoController.getAllProductos().size))
+        val cH = productoController.getAllProductos()[id]
 
         terminal.println("Numero de nudos que quieres (2 o 4): ")
         val nudos = readln().toIntOrNull() ?: 2
@@ -225,6 +264,9 @@ class Vista(
             tipoTarea = TipoTarea.ENCORDADO,
             disponible = true
         )
+        tarea.let {
+            tareasController.addTarea(tarea)
+        }
         return tarea
     }
 
@@ -253,7 +295,86 @@ class Vista(
             tipoTarea = TipoTarea.PERSONALIZADO,
             disponible = true
         )
+        tarea.let {
+            tareasController.addTarea(tarea)
+        }
         return tarea
+    }
+
+
+    private fun createTareaAdquisicion(): Tarea {
+        var tarea: Tarea? = null
+        val productos = mutableListOf<Producto>()
+        var repeat: Boolean
+        do {
+            repeat = false
+            terminal.println("Selecciona el producto que vas a comprar (marca el indice):")
+            var index: Int
+            getProductos()
+            index = readln().toIntOrNull() ?: -1
+            while (index == -1) {
+                terminal.println(red("INDICE INCORRECTO. VUELVE A INTENTARLO"))
+                getProductos()
+                index = readln().toIntOrNull() ?: -1
+            }
+            terminal.println("Añadiendo producto al carrito")
+            productos.add(productoController.getAllProductos()[index])
+            terminal.println("¿Quieres añadir otro producto? (S/N)")
+            var opt = readln()
+            if (opt.equals("s", ignoreCase = true))
+                repeat = true
+        } while (repeat)
+        var precio = 0F
+        productos.forEach { precio += it.precio }
+        val json: Json = Json
+        val descripcion = json.encodeToString(TareaAdquisicion(ListaProductos(productos), precio))
+
+        tarea = Tarea(
+            null,
+            null,
+            null,
+            null,
+            descripcion = descripcion,
+            precio = precio.toLong(),
+            tipoTarea = TipoTarea.PERSONALIZADO,
+            disponible = true
+        )
+        return tarea
+    }
+
+    private fun getPedidos(lista : List<Pedido>) {
+        //val lista = pedidosController.getPedidos()
+        if (lista.isEmpty()) {
+            println("Lista vacía")
+        } else {
+
+            terminal.println(table {
+
+                align = TextAlign.CENTER
+
+
+
+                header {
+                    style(blue, bold = true)
+                    row("ID", "FECHA ENTRADA", "FECHA SALIDA", "FECHA FINAL", "PRECIO", "TOPE ENTREGA", "CLIENTE")
+                }
+                for (pedido in lista) {
+                    body {
+                        rowStyles(cyan, brightCyan)
+                        row(
+                            pedido.uuid,
+                            pedido.fechaEntrada,
+                            pedido.fechaSalida,
+                            pedido.fechaFinal,
+                            pedido.precioTotal,
+                            pedido.topeEntrega,
+                            pedido.cliente?.uuid
+                        )
+                    }
+                }
+            })
+
+        }
     }
 
     /**
@@ -475,6 +596,7 @@ class Vista(
     }
 
     private fun mostrarTablaProductos(lista: List<Producto>) {
+        var index = 0
         if (lista.isEmpty()) {
             println("Lista vacía")
         } else {
@@ -486,16 +608,17 @@ class Vista(
 
                 header {
                     style(blue, bold = true)
-                    row("ID", "TIPO", "MARCA", "MODELO", "PRECIO", "STOCK")
+                    row("INDEX", "ID", "TIPO", "MARCA", "MODELO", "PRECIO", "STOCK")
                 }
                 for (prod in lista) {
                     body {
                         rowStyles(cyan, brightCyan)
 
                         row(
-                            prod.uuid, prod.tipo, prod.marca, prod.modelo, prod.precio, prod.stock
+                            index, prod.uuid, prod.tipo, prod.marca, prod.modelo, prod.precio, prod.stock
                         )
                     }
+                    index++
                 }
             })
         }

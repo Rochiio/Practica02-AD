@@ -47,13 +47,13 @@ class TareaRepositoryImpl(private var tareaDao: IntEntityClass<TareaDAO>) : Tare
         updateItem.apply {
             uuid = item.uuid!!
             idTrabajador = TrabajadorDAO.new {
-                uuid = item.idTrabajador.uuid!!
-                nombre = item.idTrabajador.nombre
-                 apellido = item.idTrabajador.apellido
-                 email = item.idTrabajador.email
-                 password = item.idTrabajador.password
-                 disponible = item.idTrabajador.disponible
-                 administrador = item.idTrabajador.administrador
+                uuid = item.idTrabajador?.uuid!!
+                nombre = item.idTrabajador!!.nombre
+                apellido = item.idTrabajador!!.apellido
+                email = item.idTrabajador!!.email
+                password = item.idTrabajador!!.password
+                disponible = item.idTrabajador!!.disponible
+                administrador = item.idTrabajador!!.administrador
 
             }
             idMaquina = item.idMaquina!!
@@ -70,23 +70,14 @@ class TareaRepositoryImpl(private var tareaDao: IntEntityClass<TareaDAO>) : Tare
         logger.debug { "actualizando item" }
         var a = tareaDao.new {
 
-            idTrabajador = TrabajadorDAO.new {
-                uuid = item.idTrabajador.uuid!!
-                nombre = item.idTrabajador.nombre
-                apellido = item.idTrabajador.apellido
-                email = item.idTrabajador.email
-                password = item.idTrabajador.password
-                disponible = item.idTrabajador.disponible
-                administrador = item.idTrabajador.administrador
-
-            }!!
-            idMaquina = item.idMaquina!!
+            idTrabajador = null
+            idMaquina = null
             precio = item.precio
             tipoTarea = item.tipoTarea
             descripcion = item.descripcion
             disponible = item.disponible
         }
-            a.fromTareaDaoToTarea()
+        a.fromTareaDaoToTarea()
     }
 
     override fun delete(item: Tarea): Boolean = transaction {
@@ -99,7 +90,7 @@ class TareaRepositoryImpl(private var tareaDao: IntEntityClass<TareaDAO>) : Tare
     }
 
     override fun findAll(): List<Tarea> = transaction {
-        logger.debug{"recuperando todas las tareas"}
+        logger.debug { "recuperando todas las tareas" }
         tareaDao.all().map { it.fromTareaDaoToTarea() }
     }
 

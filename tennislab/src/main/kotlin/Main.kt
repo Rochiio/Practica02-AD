@@ -50,7 +50,15 @@ var DIR_JSON = System.getProperty("user.dir") + File.separator + "listados" + Fi
 fun main(args: Array<String>) = runBlocking {
     Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
     transaction {
-        SchemaUtils.create(TrabajadorTable, EncordadorTable, PersonalizadorTable, ClienteTable, ProductoTable, PedidoTable, TareaTable)
+        SchemaUtils.create(
+            TrabajadorTable,
+            EncordadorTable,
+            PersonalizadorTable,
+            ClienteTable,
+            ProductoTable,
+            PedidoTable,
+            TareaTable
+        )
 
         /*TrabajadorDAO.new {
             nombre = "Pepe"
@@ -95,17 +103,17 @@ fun main(args: Array<String>) = runBlocking {
             pedidos = null
         )
 
+        val cordaje = Producto(null, null, TipoProduct.CORDAJE, "cuerda", "bonita", 10F, 100)
+        val cordaje2 = Producto(null, null, TipoProduct.CORDAJE, "cuerda2", "bonita2", 10F, 100)
+
+        val productosController = ProductosController(ProductoRepositoryImpl(ProductoDAO))
+        productosController.addProducto(cordaje)
+        productosController.addProducto(cordaje2)
+
         c1 = cC.addCliente(c1)
         println("////////////////////////////////////////")
         var a = (cC.getAllClientes())
-        val p1 = Pedido(null, Estado.RECIBIDO, LocalDate.now().minusDays(5), fechaSalida = LocalDate.now(), fechaFinal = LocalDate.now().plusDays(5), precioTotal = 0F, topeEntrega = LocalDate.now().plusDays(10), c1, tareas = arrayListOf())
-        val pC = PedidosController(PedidoRepositoryImpl(PedidoDAO), TareaRepositoryImpl(TareaDAO))
-        pC.addPedido(p1)
-        println(p1)
-        println("------------------------------")
-        println(pC.getPedidos())
-        println("------------------------------")
-        println(cC.getAllClientes())
+
         tC.addTrabajador(t)
 
         tC.addTrabajador(t1)
@@ -120,6 +128,9 @@ fun main(args: Array<String>) = runBlocking {
                 PersonalizadoraRepositoryImpl(PersonalizadorDAO)
             ),
             ClientesController(ClienteRepositoryImpl(ClienteDAO)),
+            PedidosController(PedidoRepositoryImpl(PedidoDAO), TareaRepositoryImpl(TareaDAO)),
+            TareasController(TareaRepositoryImpl(TareaDAO)),
+
             ProductosController(ProductoRepositoryImpl(ProductoDAO))
         )
 

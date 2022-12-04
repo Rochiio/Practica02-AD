@@ -52,7 +52,7 @@ class PedidoRepositoryImpl(
             estado = item.estado.toString()
             fechaSalida = item.fechaSalida
             fechaEntrada = item.fechaEntrada
-            fechaFinal = item.fechaFinal
+            fechaFinal = item.fechaFinal!!
             precioTotal = item.precioTotal
             topeEntrega = item.topeEntrega
 

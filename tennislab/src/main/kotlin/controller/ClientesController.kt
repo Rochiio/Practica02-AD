@@ -5,6 +5,7 @@ import exception.TrabajadorError
 import models.usuarios.Cliente
 import models.usuarios.Trabajador
 import repositories.usuarios.ClienteRepository
+import utils.PasswordParser
 import java.util.*
 
 class ClientesController(private var repository: ClienteRepository) {
@@ -24,8 +25,9 @@ class ClientesController(private var repository: ClienteRepository) {
     @Throws(ClienteError::class)
     fun getClienteByEmailAndPassword(email: String, password: String): Cliente?{
         var find = repository.findByEmail(email)
+        println(find)
         find?.let {
-            if (find.password != password){
+            if (find.password != PasswordParser.encriptar(password)){
                 throw ClienteError("Cliente incorrecto")
             }
         }?: run {
