@@ -11,7 +11,10 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "personalizadores")
-@NamedQuery(name = "Personalizador.findAll", query = "select p from Personalizador p")
+@NamedQueries(
+    NamedQuery(name ="Personalizador.findAll", query = "select p from Personalizador p"),
+    NamedQuery(name = "Personalizador.deleteAll", query = "delete from Personalizador ")
+)
 data class Personalizador(
     @Id @GeneratedValue
     @GenericGenerator(
