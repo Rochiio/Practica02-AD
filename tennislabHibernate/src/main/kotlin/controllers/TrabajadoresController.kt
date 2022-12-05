@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import exception.TrabajadorError
 import models.usuarios.Trabajador
