@@ -32,11 +32,11 @@ fun EncordadorDAO.fromEncordadorDaoToEncordador(): Encordador = Encordador(
 )
 
 fun PersonalizadorDAO.fromPersonalizadorDaoToPersonalizadora(): Personalizadora = Personalizadora(
+    id = id.value,
     uuid = uuid,
     marca = marca,
     modelo = modelo,
     fechaAdquisicion = fechaAdquisicion,
-
     disponible = disponible,
     maniobrabilidad = maniobrabilidad,
     balance = balance,

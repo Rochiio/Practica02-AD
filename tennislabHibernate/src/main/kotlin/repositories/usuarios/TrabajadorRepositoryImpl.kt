@@ -13,6 +13,16 @@ import javax.persistence.TypedQuery
  */
 class TrabajadorRepositoryImpl: TrabajadorRepository {
     private var logger = KotlinLogging.logger {}
+    override fun findByEmail(email: String): Trabajador? {
+        logger.debug { "Buscando trabajador por su email" }
+        var encontrado:Trabajador? = null
+        HibernateManager.query {
+            var query: TypedQuery<Trabajador> = manager.createNamedQuery("Trabajador.findByEmail",  Trabajador::class.java)
+            query.setParameter("email", email)
+            encontrado = query.singleResult
+        }
+        return encontrado
+    }
 
     override fun findById(id: UUID): Trabajador? {
         logger.debug { "Buscando trabajador por el id" }
@@ -36,7 +46,8 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
         logger.debug { "Eliminando trabajador"}
         var eliminado = false
         HibernateManager.transaction {
-            manager.remove(item)
+            item.disponible = false
+            manager.merge(item)
             eliminado = true
         }
         return eliminado
@@ -56,7 +67,8 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
     override fun deleteAll(): Boolean {
         var eliminado = false
         HibernateManager.transaction {
-            var query: TypedQuery<Trabajador> = manager.createNamedQuery("Trabajador.deleteAll", Trabajador::class.java)
+            var query = manager.createQuery("delete from Trabajador")
+            query.executeUpdate()
             eliminado = true
         }
         return eliminado

@@ -56,7 +56,6 @@ internal class TrabajadorRepositoryImplTest {
 
         var guardado = repository.save(trabTest)
         var encontrado = repository.findById(guardado.id!!)
-        println(encontrado)
         assertAll(
             { assertNotNull(encontrado) },
             { assertEquals(encontrado?.id, guardado.id) },

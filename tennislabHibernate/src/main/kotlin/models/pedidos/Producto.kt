@@ -11,10 +11,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "productos")
-@NamedQueries(
-    NamedQuery(name ="Producto.findAll", query = "select p from Producto p"),
-    NamedQuery(name = "Producto.deleteAll", query = "delete from Producto ")
-)
+@NamedQuery(name ="Producto.findAll", query = "select p from Producto p")
 data class Producto(
     @Id @GeneratedValue
     @GenericGenerator(
