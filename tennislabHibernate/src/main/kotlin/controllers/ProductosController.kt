@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import exception.ProductoError
 import models.pedidos.Producto

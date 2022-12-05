@@ -1,5 +1,6 @@
 package repositories.maquinas
 
+import entities.enums.TipoMaquina
 import models.maquinas.Encordador
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -10,7 +11,7 @@ import java.time.LocalDate
 class EncordadorRepositoryImplTest {
     private var repository = EncordadorRepositoryImpl()
     private var test = Encordador(modelo="modelo", marca = "marca", fechaAdquisicion = LocalDate.now(), disponible = true,
-        automatico = false, tensionMaxima = 10, tensionMinima = 5)
+        automatico = TipoMaquina.AUTOMATICA, tensionMaxima = 10, tensionMinima = 5)
 
     @BeforeEach
     fun setUp() {

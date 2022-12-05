@@ -1,5 +1,7 @@
 package models.maquinas
 
+import entities.enums.TipoMaquina
+import entities.enums.TipoProduct
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
 import java.time.LocalDate
@@ -26,7 +28,7 @@ data class Encordador(
     var marca: String,
     var fechaAdquisicion: LocalDate,
     var disponible: Boolean,
-    var automatico: Boolean,
+    var automatico: TipoMaquina,
     var tensionMaxima: Int,
     var tensionMinima: Int
 ) {
