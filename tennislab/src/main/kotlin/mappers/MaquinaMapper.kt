@@ -11,14 +11,14 @@ import models.maquinas.Personalizadora
 /**
  * Mapper de MaquinaDAO a maquina modelo.
  */
-fun MaquinaDAO.fromMaquinaDaoToMaquina(): Maquina = Maquina(
-    uuid = id.value,
-    marca = marca,
-    modelo = modelo,
-    fechaAdquisicion = fechaAdquisicion,
-    numeroSerie = numeroSerie,
-    disponible = disponible
-)
+//fun MaquinaDAO.fromMaquinaDaoToMaquina(): Maquina = Maquina(
+//    uuid = id.value,
+//    marca = marca,
+//    modelo = modelo,
+//    fechaAdquisicion = fechaAdquisicion,
+//    numeroSerie = numeroSerie,
+//    disponible = disponible
+//)
 
 fun EncordadorDAO.fromEncordadorDaoToEncordador(): Encordador = Encordador(
     uuid = uuid,
@@ -43,16 +43,16 @@ fun PersonalizadorDAO.fromPersonalizadorDaoToPersonalizadora(): Personalizadora 
     rigidez = rigidez
 )
 
-fun Personalizadora.fromPersonalizadorToPersonalizadorDao() : PersonalizadorDAO = PersonalizadorDAO.new {
-    uuid = uuid
-    marca = marca
-    modelo = modelo
-    fechaAdquisicion = fechaAdquisicion
-    disponible = disponible
-    maniobrabilidad = maniobrabilidad
-    balance = balance
-    rigidez = rigidez
-}
+//fun Personalizadora.fromPersonalizadorToPersonalizadorDao() : PersonalizadorDAO = PersonalizadorDAO.new {
+//    uuid = uuid
+//    marca = marca
+//    modelo = modelo
+//    fechaAdquisicion = fechaAdquisicion
+//    disponible = disponible
+//    maniobrabilidad = maniobrabilidad
+//    balance = balance
+//    rigidez = rigidez
+//}
 
 /*fun Encordador.fromEncordadorToEncordadorDao() : EncordadorDAO = EncordadorDAO.new {
     uuid = uuid
