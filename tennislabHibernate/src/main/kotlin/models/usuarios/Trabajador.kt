@@ -14,6 +14,7 @@ import javax.persistence.*
     NamedQuery(name ="Trabajador.findAll", query = "select t from Trabajador t"),
     NamedQuery(name = "Trabajador.findByEmail", query = "select t from Trabajador t where t.email= :email")
 )
+@Embeddable
 data class Trabajador(
     @Id @GeneratedValue
     @GenericGenerator(

@@ -17,6 +17,7 @@ import models.maquinas.Personalizadora
 import models.pedidos.*
 import models.usuarios.Cliente
 import models.usuarios.Trabajador
+import utils.Data
 import utils.PasswordParser
 import java.time.LocalDate
 import java.util.*
@@ -132,7 +133,16 @@ class Vista(
     }
 
     private fun cancelarPedidoBucle() {
-        TODO("Not yet implemented")
+        terminal.println("Introduce el pedido que quieres eliminar (selecciona con el indice): ")
+        val lista = pedidosController.getPedidos().filter { it.cliente == clienteLoggeado }
+        getPedidos(lista)
+        var indice = readln().toIntOrNull() ?: -1
+        if (indice < 0 || indice > lista.size) {
+            terminal.println(red("INDICE DE PEDIDO INCORRECTO"))
+        } else {
+            pedidosController.deletePedido(lista[indice])
+        }
+
     }
 
     private fun comprobarPedidosBucle() {
@@ -158,33 +168,34 @@ class Vista(
                 opcion = readln().toIntOrNull() ?: -1
             } while (opcion < 0 || opcion > 4)
             opcionesBucleTarea(opcion)
-        } while (opcion != 0 && opcion!= 4)
+        } while (opcion != 0 && opcion != 4)
     }
 
-    private val tareas = mutableListOf<Tarea>()
+
     private fun opcionesBucleTarea(opcion: Int) {
         when (opcion) {
             1 -> {
                 val tarea = creacionTareaEncordado()
                 tareasController.addTarea(tarea)
-                tareas.add(tarea)
+                Data.tareasCreadas.add(tarea)
             }
 
             2 -> {
                 val tarea = creacionTareaPersonalizado()
                 tareasController.addTarea(tarea)
-                tareas.add(tarea)
+                Data.tareasCreadas.add(tarea)
             }
 
             3 -> {
                 val tarea = createTareaAdquisicion()
                 tareasController.addTarea(tarea)
-                tareas.add(tarea)
+                Data.tareasCreadas.add(tarea)
             }
 
             4 -> {
-                val pedido = creacionPedido(tareas)
+                val pedido = creacionPedido(Data.tareasCreadas)
                 pedido?.let {
+                    Data.pedidosPendientes.add(pedido)
                     pedidosController.addPedido(pedido)
                     terminal.println("Pedido creado")
                 }
@@ -215,7 +226,8 @@ class Vista(
             clienteLoggeado,
             tareas as ArrayList<Tarea>
         )
-        tareas.clear()
+        Data.tareasCreadas.clear()
+
         return pedido
     }
 
@@ -342,8 +354,9 @@ class Vista(
         return tarea
     }
 
-    private fun getPedidos(lista : List<Pedido>) {
+    private fun getPedidos(lista: List<Pedido>) {
         //val lista = pedidosController.getPedidos()
+        var indice = 0
         if (lista.isEmpty()) {
             println("Lista vacía")
         } else {
@@ -356,12 +369,22 @@ class Vista(
 
                 header {
                     style(blue, bold = true)
-                    row("ID", "FECHA ENTRADA", "FECHA SALIDA", "FECHA FINAL", "PRECIO", "TOPE ENTREGA", "CLIENTE")
+                    row(
+                        "INDICE",
+                        "ID",
+                        "FECHA ENTRADA",
+                        "FECHA SALIDA",
+                        "FECHA FINAL",
+                        "PRECIO",
+                        "TOPE ENTREGA",
+                        "CLIENTE"
+                    )
                 }
                 for (pedido in lista) {
                     body {
                         rowStyles(cyan, brightCyan)
                         row(
+                            indice,
                             pedido.uuid,
                             pedido.fechaEntrada,
                             pedido.fechaSalida,
@@ -371,6 +394,8 @@ class Vista(
                             pedido.cliente?.uuid
                         )
                     }
+
+                    indice++
                 }
             })
 
