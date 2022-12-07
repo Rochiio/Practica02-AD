@@ -1,5 +1,6 @@
 package controller
 
+import db.HibernateManager
 import exception.PedidoError
 import models.pedidos.Pedido
 import models.pedidos.Tarea
@@ -7,6 +8,11 @@ import repositories.pedidos.PedidoRepository
 import repositories.pedidos.TareaRepository
 import java.util.UUID
 
+
+fun main(){
+    val h = HibernateManager
+    println(h)
+}
 class PedidosController(private var repository: PedidoRepository,
     //private var tareaRepository: TareaRepository
 ) {

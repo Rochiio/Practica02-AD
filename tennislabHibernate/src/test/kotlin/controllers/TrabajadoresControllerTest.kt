@@ -24,7 +24,8 @@ internal class TrabajadoresControllerTest {
     private lateinit var controller: TrabajadoresController
 
     private var test = Trabajador(UUID.fromString("27c1af75-3bd1-4a71-be4c-a498ab5e7d85"),
-        "Test","Prueba","test@gmail.com","1234", disponible = true, administrador = false)
+        "Test","Prueba","test@gmail.com","1234", disponible = true, administrador = false, mutableListOf()
+    )
 
     init {
         MockKAnnotations.init(this)

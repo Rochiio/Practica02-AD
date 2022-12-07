@@ -9,11 +9,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
+import repositories.usuarios.ClienteRepositoryImpl
 import java.time.LocalDate
 import java.util.*
 
 internal class PedidoRepositoryImplTest {
     private var clienteTest = Cliente(
+        uuid = UUID.fromString("e337c6ed-1735-4177-8239-c712e86f2e2d"),
         nombre = "Prueba",
         apellido = "Test",
         email = "pepe@gmailo",
@@ -21,8 +24,9 @@ internal class PedidoRepositoryImplTest {
         pedido = mutableListOf()
     )
     private val pedidoTest = Pedido(
+        uuid = UUID.fromString("c2666cfe-f7cb-4990-8fa6-ab85fe44bb9e"),
         estado = "RECIBIDO",
-        cliente = clienteTest,
+        cliente = null,
         fechaEntrada = LocalDate.now(),
         fechaFinal = LocalDate.now(),
         fechaSalida = LocalDate.now(),
@@ -31,6 +35,9 @@ internal class PedidoRepositoryImplTest {
         tareas = mutableListOf()
     )
     private var repository = PedidoRepositoryImpl()
+
+
+
 
     @BeforeEach
     fun setUp() {
@@ -41,6 +48,7 @@ internal class PedidoRepositoryImplTest {
 
     @Test
     fun findById() {
+
         var guardado = repository.save(pedidoTest)
         var encontrado = repository.findById(guardado.uuid)
         println(guardado)
@@ -66,7 +74,7 @@ internal class PedidoRepositoryImplTest {
 
         assertAll(
             { assertNotNull(pedidoTest) },
-            { assertEquals(guardado.uuid, pedidoTest.uuid) },
+            { assertNotNull(guardado.uuid) },
             { assertEquals(guardado.estado, pedidoTest.estado) },
             { assertEquals(guardado.cliente, pedidoTest.cliente) },
             { assertEquals(guardado.fechaEntrada, pedidoTest.fechaEntrada) },

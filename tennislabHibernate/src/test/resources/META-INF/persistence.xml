@@ -14,6 +14,8 @@
         <class>models.maquinas.Encordador</class>
         <class>models.maquinas.Personalizador</class>
         <class>models.pedidos.Producto</class>
+        <class>models.pedidos.Pedido</class>
+        <class>models.pedidos.Tarea</class>
 
 
         <properties>

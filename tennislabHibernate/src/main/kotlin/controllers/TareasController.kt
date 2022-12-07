@@ -13,6 +13,7 @@ class TareasController(private var repository: TareaRepository) {
     /**
      * Añade un pedido
      */
+    @Throws(TareaError::class)
     fun addTarea(tarea: Tarea): Tarea {
         tarea.uuid.let { repository.findById(it) }
             ?.let {
@@ -38,8 +39,10 @@ class TareasController(private var repository: TareaRepository) {
     /**
      * Elimina un pedido
      */
-    fun deleteTarea(Tarea: Tarea): Boolean {
-        if (repository.delete(Tarea)) {
+    @Throws(TareaError::class)
+
+    fun deleteTarea(tarea: Tarea): Boolean {
+        if (repository.delete(tarea)) {
             println("Tarea eliminado correctamente")
             return true
         } else {

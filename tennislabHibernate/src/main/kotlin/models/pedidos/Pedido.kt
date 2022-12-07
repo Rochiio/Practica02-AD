@@ -3,18 +3,10 @@ package models.pedidos
 import models.usuarios.Cliente
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
-import javax.persistence.Table
 
 import java.time.LocalDate
 import java.util.UUID
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.NamedQuery
-import javax.persistence.OneToMany
+import javax.persistence.*
 
 
 @Entity
@@ -29,14 +21,14 @@ data class Pedido(
     val uuid: UUID = UUID.randomUUID(),
     var estado: String,
     @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)
-    var cliente: Cliente,
+    @JoinColumn(name = "cliente_id", nullable = true)
+    var cliente: Cliente?,
     var fechaEntrada: LocalDate,
     var fechaSalida: LocalDate,
     var fechaFinal: LocalDate,
     var precioTotal: Float,
     var topeEntrega: LocalDate,
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "idPedido", fetch = FetchType.EAGER)
     var tareas: MutableList<Tarea>
 )

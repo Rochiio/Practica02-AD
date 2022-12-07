@@ -27,7 +27,7 @@ import javax.persistence.*
     var apellido:String,
     var email:String,
     var password:String,
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "cliente")
     var pedido : MutableList<Pedido>
 ) {
 }

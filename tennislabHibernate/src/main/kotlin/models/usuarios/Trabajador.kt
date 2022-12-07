@@ -1,5 +1,6 @@
 package models.usuarios
 
+import models.pedidos.Tarea
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
 import java.util.UUID
@@ -14,7 +15,6 @@ import javax.persistence.*
     NamedQuery(name ="Trabajador.findAll", query = "select t from Trabajador t"),
     NamedQuery(name = "Trabajador.findByEmail", query = "select t from Trabajador t where t.email= :email")
 )
-@Embeddable
 data class Trabajador(
     @Id @GeneratedValue
     @GenericGenerator(
@@ -29,6 +29,8 @@ data class Trabajador(
     var email:String,
     var password:String,
     var disponible:Boolean,
-    var administrador: Boolean
+    var administrador: Boolean,
+    @OneToMany(mappedBy = "idTrabajador", fetch = FetchType.EAGER)
+    var tareas : MutableList<Tarea>
 ) {
 }

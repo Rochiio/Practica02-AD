@@ -20,12 +20,13 @@ data class Tarea(
     @Column(name = "uuid")
     @Type(type = "uuid-char")
     val uuid: UUID = UUID.randomUUID(),
-    @Embedded
-    var idTrabajador: Trabajador,
+    @ManyToOne
+    @JoinColumn(name = "trabajador", nullable = true)
+    var idTrabajador: Trabajador?,
     var idMaquina: UUID,
     @ManyToOne
-    @JoinColumn(name = "pedido_id", nullable = false)
-    var idPedido: Pedido,
+    @JoinColumn(name = "pedido_id", nullable = true)
+    var idPedido: Pedido?,
     var precio: Long,
     var tipoTarea: TipoTarea,
     var descripcion: String,
