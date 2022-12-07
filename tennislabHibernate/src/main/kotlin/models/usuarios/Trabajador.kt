@@ -1,5 +1,6 @@
 package models.usuarios
 
+import models.pedidos.Tarea
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
 import java.util.UUID
@@ -28,6 +29,8 @@ data class Trabajador(
     var email:String,
     var password:String,
     var disponible:Boolean,
-    var administrador: Boolean
+    var administrador: Boolean,
+    @OneToMany(mappedBy = "idTrabajador", fetch = FetchType.EAGER)
+    var tareas : MutableList<Tarea>
 ) {
 }

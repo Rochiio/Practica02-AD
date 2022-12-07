@@ -63,6 +63,7 @@ class ProductoRepositoryImpl(
         val existe = item.id?.let { productoDAO.findById(it) } ?: return@transaction false
         logger.debug { "eliminando producto: $item" }
         existe.delete()
+
         return@transaction true
     }
 

@@ -103,6 +103,15 @@ fun main(args: Array<String>) = runBlocking {
             pedidos = null
         )
 
+        var c2 = Cliente(
+            id = null,
+            uuid = null,
+            nombre = "ana",
+            apellido = "lopez",
+            email = "c2@gmail.com",
+            password = PasswordParser.encriptar("1234"),
+            pedidos = null
+        )
         val cordaje = Producto(null, null, TipoProduct.CORDAJE, "cuerda", "bonita", 10F, 100)
         val cordaje2 = Producto(null, null, TipoProduct.CORDAJE, "cuerda2", "bonita2", 10F, 100)
 
@@ -111,9 +120,21 @@ fun main(args: Array<String>) = runBlocking {
         productosController.addProducto(cordaje2)
 
         c1 = cC.addCliente(c1)
+        c2 = cC.addCliente(c2)
         println("////////////////////////////////////////")
         var a = (cC.getAllClientes())
-
+        val pedido = Pedido(
+            null,
+            Estado.RECIBIDO,
+            LocalDate.now().minusDays(23),
+            LocalDate.now(),
+            LocalDate.now(),
+            100F,
+            LocalDate.now(),
+            c2,
+            arrayListOf()
+        )
+        PedidosController(PedidoRepositoryImpl(PedidoDAO), TareaRepositoryImpl(TareaDAO)).addPedido(pedido)
         tC.addTrabajador(t)
 
         tC.addTrabajador(t1)

@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Assertions.*
 class TrabajadorRepositoryImplTest {
     private var repo = TrabajadorRepositoryImpl()
     private var test = Trabajador(nombre="Prueba", apellido = "Test", email = "pepe@gmailo", password = "1234",
-        disponible = true, administrador = false)
+        disponible = true, administrador = false, tareas = mutableListOf()
+    )
 
     @BeforeEach
     fun setUp() {

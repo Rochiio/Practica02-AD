@@ -24,7 +24,8 @@ internal class ClientesControllerTest {
     private lateinit var controller: ClientesController
 
     private var test = Cliente(UUID.fromString("27c1af75-3bd1-4a71-be4c-a498ab5e7d85"),
-    "Test","Pruebi","pruebi@gmail.com","123454")
+    "Test","Pruebi","pruebi@gmail.com","123454", mutableListOf()
+    )
 
     init {
         MockKAnnotations.init(this)

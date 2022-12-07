@@ -1,5 +1,6 @@
 package models.usuarios
 
+import models.pedidos.Pedido
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
 import java.util.*
@@ -26,5 +27,7 @@ import javax.persistence.*
     var apellido:String,
     var email:String,
     var password:String,
+    @OneToMany(mappedBy = "cliente")
+    var pedido : MutableList<Pedido>
 ) {
 }

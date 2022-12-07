@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions.*
 
 class ClienteRepositoryImplTest {
     private var repository = ClienteRepositoryImpl()
-    private var test = Cliente(nombre="Prueba", apellido = "Test", email = "pepe@gmailo", password = "1234")
+    private var test = Cliente(nombre="Prueba", apellido = "Test", email = "pepe@gmailo", password = "1234", pedido = mutableListOf())
 
     @BeforeEach
     fun setUp() {
