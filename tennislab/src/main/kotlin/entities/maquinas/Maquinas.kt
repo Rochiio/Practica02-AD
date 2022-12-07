@@ -9,6 +9,7 @@ import java.util.*
 
 /**
  * Entidad de maquinas para la base de datos.
+ * TODO Se deberia de quitar
  */
 object MaquinaTable : UUIDTable("maquinas") {
     //val uuid = uuid("uuid").autoGenerate()

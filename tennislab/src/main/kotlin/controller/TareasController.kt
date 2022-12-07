@@ -43,7 +43,7 @@ class TareasController(private var repository: TareaRepository) {
             println("Tarea eliminado correctamente")
             return true
         } else {
-            throw TareaError("Error al eliminar el cliente")
+            throw TareaError("Error al eliminar la tarea")
         }
     }
 

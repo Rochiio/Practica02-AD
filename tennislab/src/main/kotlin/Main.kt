@@ -128,7 +128,8 @@ fun main(args: Array<String>) = runBlocking {
                 PersonalizadoraRepositoryImpl(PersonalizadorDAO)
             ),
             ClientesController(ClienteRepositoryImpl(ClienteDAO)),
-            PedidosController(PedidoRepositoryImpl(PedidoDAO), TareaRepositoryImpl(TareaDAO)),
+            PedidosController(PedidoRepositoryImpl(PedidoDAO), //TareaRepositoryImpl(TareaDAO)
+                 ),
             TareasController(TareaRepositoryImpl(TareaDAO)),
 
             ProductosController(ProductoRepositoryImpl(ProductoDAO))

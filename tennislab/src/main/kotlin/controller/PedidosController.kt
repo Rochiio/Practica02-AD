@@ -7,7 +7,9 @@ import repositories.pedidos.PedidoRepository
 import repositories.pedidos.TareaRepository
 import java.util.UUID
 
-class PedidosController(private var repository: PedidoRepository, private var tareaRepository: TareaRepository) {
+class PedidosController(private var repository: PedidoRepository,
+                        //private var tareaRepository: TareaRepository
+) {
 
     /**
      * Añade un pedido
@@ -44,7 +46,7 @@ class PedidosController(private var repository: PedidoRepository, private var ta
             println("Pedido eliminado correctamente")
             return true
         } else {
-            throw PedidoError("Error al eliminar el cliente")
+            throw PedidoError("Error al eliminar el pedido")
         }
     }
 
