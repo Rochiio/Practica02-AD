@@ -23,7 +23,7 @@ data class Trabajador(
     )
     @Column(name = "uuid")
     @Type(type = "uuid-char")
-    val uuid:UUID = UUID.randomUUID(),
+    var uuid:UUID = UUID.randomUUID(),
     var nombre:String,
     var apellido:String,
     var email:String,

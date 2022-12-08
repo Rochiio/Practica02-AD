@@ -23,7 +23,7 @@ data class Tarea(
     @ManyToOne
     @JoinColumn(name = "trabajador", nullable = true)
     var idTrabajador: Trabajador?,
-    var idMaquina: UUID,
+    var idMaquina: UUID?,
     @ManyToOne
     @JoinColumn(name = "pedido_id", nullable = true)
     var idPedido: Pedido?,

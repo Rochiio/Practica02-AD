@@ -23,7 +23,7 @@ data class Encordador(
     )
     @Column(name = "uuid")
     @Type(type = "uuid-char")
-    val uuid: UUID = UUID.randomUUID(),
+    var uuid: UUID = UUID.randomUUID(),
     var modelo :String,
     var marca: String,
     var fechaAdquisicion: LocalDate,
