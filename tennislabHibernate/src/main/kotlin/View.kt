@@ -1,10 +1,15 @@
 package view
 
+import ListaProductos
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 import controller.*
+import controllers.ClientesController
+import controllers.MaquinasController
+import controllers.ProductosController
+import controllers.TrabajadoresController
 import entities.enums.Estado
 import entities.enums.TipoMaquina
 import entities.enums.TipoProduct
@@ -13,12 +18,13 @@ import exception.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import models.maquinas.Encordador
-import models.maquinas.Personalizadora
+import models.maquinas.Personalizador
 import models.pedidos.*
 import models.usuarios.Cliente
 import models.usuarios.Trabajador
 import utils.Data
 import utils.PasswordParser
+import view.models.pedidos.TareaAdquisicion
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
@@ -216,15 +222,15 @@ class Vista(
         tareas.forEach { precio += it.precio }
         println(precio)
         pedido = Pedido(
-            null,
-            Estado.RECIBIDO,
-            LocalDate.now(),
-            LocalDate.parse("2022-12-31"),
-            null,
-            precio,
-            LocalDate.now().plusDays(15),
-            clienteLoggeado,
-            tareas as ArrayList<Tarea>
+
+            estado = Estado.RECIBIDO.toString(),
+            fechaEntrada = LocalDate.now(),
+            fechaSalida = LocalDate.parse("2022-12-31"),
+            fechaFinal = LocalDate.parse("2022-12-31").plusDays(14),
+            precioTotal = precio,
+            topeEntrega = LocalDate.now().plusDays(30),
+            cliente = clienteLoggeado,
+            tareas = tareas as ArrayList<Tarea>
         )
         Data.tareasCreadas.clear()
 
@@ -267,10 +273,9 @@ class Vista(
 
         val precio = cH.precio + cV.precio + 15L
         tarea = Tarea(
-            null,
-            null,
-            null,
-            null,
+            idTrabajador = null,
+            idMaquina = null,
+            idPedido = null,
             descripcion = descripcion,
             precio = precio.toLong(),
             tipoTarea = TipoTarea.ENCORDADO,
@@ -298,10 +303,9 @@ class Vista(
 
         val precio = 10L
         tarea = Tarea(
-            null,
-            null,
-            null,
-            null,
+            idTrabajador = null,
+            idMaquina = null,
+            idPedido = null,
             descripcion = descripcion,
             precio = precio.toLong(),
             tipoTarea = TipoTarea.PERSONALIZADO,
@@ -342,10 +346,9 @@ class Vista(
         val descripcion = json.encodeToString(TareaAdquisicion(ListaProductos(productos), precio))
 
         tarea = Tarea(
-            null,
-            null,
-            null,
-            null,
+            idTrabajador = null,
+            idMaquina = null,
+            idPedido = null,
             descripcion = descripcion,
             precio = precio.toLong(),
             tipoTarea = TipoTarea.ADQUISICION,
@@ -692,7 +695,13 @@ class Vista(
             stock = readln().toIntOrNull() ?: -1
         } while (stock <= 0)
 
-        return Producto(null, null, TipoProduct.valueOf(tipo), marca, modelo, precio, stock)
+        return Producto(
+            tipo = TipoProduct.valueOf(tipo),
+            marca = marca,
+            modelo = modelo,
+            precio = precio,
+            stock = stock
+        )
     }
 
 
@@ -888,7 +897,13 @@ class Vista(
 
 //se crea una lista de pedidos vacía
 
-        return Cliente(null, null, nombre, apellido, email, PasswordParser.encriptar(password), null)
+        return Cliente(
+            nombre = nombre,
+            apellido = apellido,
+            email = email,
+            password = PasswordParser.encriptar(password),
+            pedido = mutableListOf()
+        )
     }
 
 
@@ -1090,7 +1105,7 @@ class Vista(
     /**
      * Creacion de una personalizadora preguntando al usuario.
      */
-    private fun creacionPersonalizadora(): Personalizadora {
+    private fun creacionPersonalizadora(): Personalizador {
         var marca: String
         do {
             print("Marca personalizadora: ")
@@ -1124,8 +1139,8 @@ class Vista(
 
 
         val campos = fecha.split("-")
-        return Personalizadora(
-            null, null, marca, modelo, LocalDate.of(campos[2].toInt(), campos[1].toInt(), campos[0].toInt()),
+        return Personalizador(
+            UUID.randomUUID(), marca, modelo, LocalDate.of(campos[2].toInt(), campos[1].toInt(), campos[0].toInt()),
             true, maniobrabilidad == "SI", balance == "SI", rigidez == "SI"
         )
     }
@@ -1329,7 +1344,7 @@ class Vista(
 
         val campos = fecha.split("-")
         return Encordador(
-            null,
+            UUID.randomUUID(),
             marca,
             modelo,
             LocalDate.of(campos[2].toInt(), campos[1].toInt(), campos[0].toInt()),
@@ -1540,7 +1555,10 @@ class Vista(
         admin = respuesta == "S"
 
 
-        return Trabajador(null, null, nombre, apellido, email, PasswordParser.encriptar(password), true, admin)
+        return Trabajador(
+            UUID.randomUUID(), nombre, apellido, email, PasswordParser.encriptar(password), true, admin,
+            mutableListOf()
+        )
     }
 
 

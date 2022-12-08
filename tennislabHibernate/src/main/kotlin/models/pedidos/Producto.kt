@@ -20,7 +20,7 @@ data class Producto(
     )
     @Column(name = "uuid")
     @Type(type = "uuid-char")
-    val uuid: UUID = UUID.randomUUID(),
+    var uuid: UUID = UUID.randomUUID(),
     var tipo: TipoProduct,
     var marca: String,
     var modelo: String,
