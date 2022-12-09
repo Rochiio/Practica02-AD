@@ -12,6 +12,7 @@ Rocío Palao🙋🏻‍♀️ & Mohamed Asidah🙋🏽‍♂️
 
 ### Proyecto:
 Proyecto sobre la administración de una tienda de tennis, que realiza distintos tipos de servicios y venta de produtos.
+Video de youtube: https://youtu.be/D0cRXdlMZu4
 
 <br>
 

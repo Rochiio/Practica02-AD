@@ -1,8 +1,10 @@
 package models.usuarios
 
+import kotlinx.serialization.Serializable
 import models.pedidos.Tarea
 import org.hibernate.annotations.GenericGenerator
 import org.hibernate.annotations.Type
+import utils.serializer.UUIDSerializer
 import java.util.UUID
 import javax.persistence.*
 
@@ -15,6 +17,7 @@ import javax.persistence.*
     NamedQuery(name ="Trabajador.findAll", query = "select t from Trabajador t"),
     NamedQuery(name = "Trabajador.findByEmail", query = "select t from Trabajador t where t.email= :email")
 )
+@Serializable
 data class Trabajador(
     @Id @GeneratedValue
     @GenericGenerator(
@@ -23,6 +26,8 @@ data class Trabajador(
     )
     @Column(name = "uuid")
     @Type(type = "uuid-char")
+    @Serializable(with = UUIDSerializer::class)
+
     var uuid:UUID = UUID.randomUUID(),
     var nombre:String,
     var apellido:String,
