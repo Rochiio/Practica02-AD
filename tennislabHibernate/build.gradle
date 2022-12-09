@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.20'
     id 'org.jetbrains.kotlin.plugin.allopen' version '1.6.20'
     id 'org.jetbrains.kotlin.plugin.noarg' version '1.6.20'
-    //id ("plugin.serialization") version "1.7.20" TODO no fufa
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.20'
 }
 
 group 'es.joseluisgs'
@@ -59,7 +59,7 @@ dependencies {
     //SHA-512
     implementation("com.google.guava:guava:31.1-jre")
     // Serializa Json
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation('org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1')
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
