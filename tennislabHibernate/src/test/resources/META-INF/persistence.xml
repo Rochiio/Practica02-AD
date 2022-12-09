@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+    <persistence-unit name="default">
+
+        <description>Aplicacion TennisLab en Hibernate</description>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Añadir clases -->
+        <class>models.usuarios.Trabajador</class>
+        <class>models.usuarios.Cliente</class>
+        <class>models.maquinas.Encordador</class>
+        <class>models.maquinas.Personalizador</class>
+        <class>models.pedidos.Producto</class>
+        <class>models.pedidos.Pedido</class>
+        <class>models.pedidos.Tarea</class>
+
+
+        <properties>
+            <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
+            <property name="hibernate.connection.username" value="ro"/>
+            <property name="hibernate.connection.password" value=""/>
+            <property name="hibernate.connection.url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;"/>
+
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>
