@@ -19,7 +19,7 @@ class TrabajadorRepositoryImpl: TrabajadorRepository {
         HibernateManager.query {
             var query: TypedQuery<Trabajador> = manager.createNamedQuery("Trabajador.findByEmail",  Trabajador::class.java)
             query.setParameter("email", email)
-            encontrado = query.singleResult
+            encontrado = query.resultList.firstOrNull()
         }
         return encontrado
     }

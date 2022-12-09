@@ -25,7 +25,7 @@ data class Pedido(
     val fechaSalida: LocalDate?,
     @Serializable(with = LocalDateSerializer::class)
     val fechaFinal: LocalDate?,
-    val precioTotal: Float,
+    var precioTotal: Float,
     @Serializable(with = LocalDateSerializer::class)
     val topeEntrega: LocalDate,
     val cliente : Cliente?,

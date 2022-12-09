@@ -23,107 +23,108 @@ import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class PedidosControllerTest {
+
     @MockK
     private lateinit var repository: PedidoRepositoryImpl
 
     @InjectMockKs
     private lateinit var controller: PedidosController
 
-    private var test = Pedido(null, Estado.EN_PROCESO, LocalDate.now(), LocalDate.now(), null, 500.52f,
-        LocalDate.now(), null, ArrayList<Tarea>())
+    private val pedidoTest = Pedido(
+        uuid = UUID.fromString("c2666cfe-f7cb-4990-8fa6-ab85fe44bb9e"),
+        estado = Estado.RECIBIDO,
+        cliente = null,
+        fechaEntrada = LocalDate.now(),
+        fechaFinal = LocalDate.now(),
+        fechaSalida = LocalDate.now(),
+        precioTotal = 100F,
+        topeEntrega = LocalDate.now(),
+        tareas = arrayListOf()
+    )
 
     init {
         MockKAnnotations.init(this)
     }
 
-    /*@Test
+    @Test
     fun addPedido() {
-        every{ repository.findByUUID(test.uuid!!)} returns null
-        every { repository.save(test) } returns test
-         var add = controller.addPedido(test)
+        every { repository.findByUUID(pedidoTest.uuid!!) } returns null
+        every { repository.save(pedidoTest) } returns pedidoTest
+        var res = controller.addPedido(pedidoTest)
         assertAll(
-            { assertEquals(add.uuid, test.uuid)},
-            { assertEquals(add.estado, test.estado)},
-            { assertEquals(add.fechaEntrada, test.fechaEntrada)},
-            { assertEquals(add.fechaFinal, test.fechaFinal)},
-            { assertEquals(add.fechaSalida, test.fechaSalida)},
-            { assertEquals(add.precioTotal, test.precioTotal)},
-            { assertEquals(add.topeEntrega, test.topeEntrega)},
-            { assertEquals(add.cliente, test.cliente)},
-            { assertEquals(add.tareas, test.tareas)}
+            { assertNotNull(res) },
+            { assertEquals(pedidoTest.uuid, res.uuid) },
+            { assertEquals(pedidoTest.estado, res.estado) },
+            { assertEquals(pedidoTest.cliente, res.cliente) },
+            { assertEquals(pedidoTest.fechaEntrada, res.fechaEntrada) },
+            { assertEquals(pedidoTest.fechaFinal, res.fechaFinal) },
+            { assertEquals(pedidoTest.fechaSalida, res.fechaSalida) },
+            { assertEquals(pedidoTest.precioTotal, res.precioTotal) },
+            { assertEquals(pedidoTest.topeEntrega, res.topeEntrega) }
         )
 
-        verify(exactly=1){repository.findByUUID(test.uuid!!)}
-        verify(exactly=1){repository.save(test)}
-    }*/
+        verify(exactly=1){repository.findByUUID(pedidoTest.uuid!!)}
+        verify(exactly=1){repository.save(pedidoTest)}
+    }
 
-    /*@Test
-    fun addPedidoYaExiste() {
-        every { repository.findByUUID(test.uuid!!) } returns test
-        var exception = assertThrows(PedidoError::class.java){
-            controller.addPedido(test)
+    @Test
+    fun addPedidoError() {
+        every { repository.findByUUID(pedidoTest.uuid!!) } returns pedidoTest
+        var exception = assertThrows(PedidoError::class.java) {
+            controller.addPedido(pedidoTest)
         }
 
         assertEquals("Ya existe un pedido con el mismo UUID", exception.item)
 
-        verify(exactly=1){ repository.findByUUID(test.uuid!!) }
-    }*/
+        verify(exactly=1){repository.findByUUID(pedidoTest.uuid!!)}
+    }
 
     @Test
     fun getPedidos() {
-        every{ repository.findAll() } returns listOf(test)
-        var lista = controller.getPedidos()
-        assertAll(
-            { assertTrue(lista.isNotEmpty())},
-            { assertEquals(lista[0].uuid, test.uuid)},
-            { assertEquals(lista[0].estado, test.estado)},
-            { assertEquals(lista[0].fechaEntrada, test.fechaEntrada)},
-            { assertEquals(lista[0].fechaFinal, test.fechaFinal)},
-            { assertEquals(lista[0].fechaSalida, test.fechaSalida)},
-            { assertEquals(lista[0].precioTotal, test.precioTotal)},
-            { assertEquals(lista[0].topeEntrega, test.topeEntrega)},
-            { assertEquals(lista[0].cliente, test.cliente)},
-            { assertEquals(lista[0].tareas, test.tareas)}
-        )
+        every { repository.findAll() } returns listOf(pedidoTest)
 
-        verify(exactly=1){ repository.findAll() }
+        val res = controller.getPedidos()
+        assertTrue(res.isNotEmpty())
+        assertEquals(res[0], pedidoTest)
+
+        verify(exactly=1){repository.findAll()}
+    }
+
+    @Test
+    fun updatePedido() {
+        every { repository.save(pedidoTest) } returns pedidoTest
+        pedidoTest.precioTotal = 200F
+        val res = controller.updatePedido(pedidoTest)
+        assertEquals(pedidoTest, res)
+
+        verify(exactly=1){repository.save(pedidoTest)}
     }
 
     @Test
     fun deletePedido() {
-        every { repository.delete(test) } returns true
-        var eliminado = controller.deletePedido(test)
-        assertTrue(eliminado)
-        verify(exactly=1){repository.delete(test)}
+        every { repository.delete(pedidoTest) } returns true
+        val res = controller.deletePedido(pedidoTest)
+        assertTrue(res)
+        verify(exactly=1){repository.delete(pedidoTest)}
     }
 
     @Test
-    fun deletePedidoError(){
-        every{ repository.delete(test)} returns false
-        var exception = assertThrows(PedidoError::class.java){
-            controller.deletePedido(test)
+    fun deletePedidoError() {
+        every { repository.delete(pedidoTest) } returns false
+        var exception = assertThrows(PedidoError::class.java) {
+            controller.deletePedido(pedidoTest)
         }
         assertEquals("Error al eliminar el pedido", exception.item)
-        verify(exactly=1){repository.delete(test)}
+        verify(exactly=1){repository.delete(pedidoTest)}
     }
 
-    /*@Test
+    @Test
     fun getPedidoByUUID() {
-        every { repository.findByUUID(test.uuid!!) } returns test
-        var find = controller.getPedidoByUUID(test.uuid!!)
-        assertAll(
-            { assertNotNull(find)},
-            { assertEquals(find?.uuid, test.uuid)},
-            { assertEquals(find?.estado, test.estado)},
-            { assertEquals(find?.fechaEntrada, test.fechaEntrada)},
-            { assertEquals(find?.fechaFinal, test.fechaFinal)},
-            { assertEquals(find?.fechaSalida, test.fechaSalida)},
-            { assertEquals(find?.precioTotal, test.precioTotal)},
-            { assertEquals(find?.topeEntrega, test.topeEntrega)},
-            { assertEquals(find?.cliente, test.cliente)},
-            { assertEquals(find?.tareas, test.tareas)}
-        )
+        every { repository.findByUUID(pedidoTest.uuid!!) } returns pedidoTest
+        val res = controller.getPedidoByUUID(pedidoTest.uuid!!)
 
-        verify(exactly=1){ repository.findByUUID(test.uuid!!)}
-    }*/
+        assertEquals(pedidoTest, res)
+
+        verify(exactly=1){repository.findByUUID(pedidoTest.uuid!!)}
+    }
 }

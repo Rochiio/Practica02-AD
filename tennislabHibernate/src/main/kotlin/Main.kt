@@ -1,36 +1,18 @@
-import com.github.ajalt.mordant.animation.progressAnimation
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.terminal.Terminal
-import config.AppConfig
 import controller.*
-import db.DataBaseManager
-import entities.EncordadorDAO
-import entities.EncordadorTable
-import entities.enums.Estado
-import entities.enums.TipoProduct
-import entities.maquinas.PersonalizadorDAO
-import entities.maquinas.PersonalizadorTable
-import entities.pedidos.*
-import entities.usuarios.ClienteDAO
-import entities.usuarios.ClienteTable
-import entities.usuarios.TrabajadorDAO
-import entities.usuarios.TrabajadorTable
+import controllers.ClientesController
+import controllers.MaquinasController
+import controllers.ProductosController
+import controllers.TrabajadoresController
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import models.listados.*
-import models.pedidos.Pedido
-import models.pedidos.Producto
-import models.usuarios.Cliente
 import models.usuarios.Trabajador
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
-import repositories.maquinas.EncordadoRepositoryImpl
-import repositories.maquinas.PersonalizadoraRepositoryImpl
+import repositories.maquinas.EncordadorRepositoryImpl
+import repositories.maquinas.PersonalizadorRepositoryImpl
 import repositories.pedidos.PedidoRepositoryImpl
 import repositories.pedidos.TareaRepositoryImpl
 import repositories.productos.ProductoRepositoryImpl
@@ -39,49 +21,41 @@ import repositories.usuarios.TrabajadorRepositoryImpl
 import utils.Data
 import utils.PasswordParser
 import utils.ficheros.*
-import view.Vista
+import view.view.Vista
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
-import java.time.LocalDate
-import java.util.*
 
 val t = Terminal()
 var DIR_JSON = System.getProperty("user.dir") + File.separator + "listados" + File.separator
 fun main(args: Array<String>) = runBlocking {
-    initDataBase()
-    transaction {
-
-        TrabajadorDAO.new {
-            nombre = "Pepe"
-            apellido = "apellido"
-            email = "pepe@gmail.com"
-            password = PasswordParser.encriptar("1234")
-            disponible = true
-            administrador = true
-        }
 
 
-
-        var vista = Vista(
-            TrabajadoresController(TrabajadorRepositoryImpl(TrabajadorDAO)),
-            MaquinasController(
-                EncordadoRepositoryImpl(EncordadorDAO),
-                PersonalizadoraRepositoryImpl(PersonalizadorDAO)
-            ),
-            ClientesController(ClienteRepositoryImpl(ClienteDAO)),
-            PedidosController(PedidoRepositoryImpl(PedidoDAO)),
-            TareasController(TareaRepositoryImpl(TareaDAO)),
-
-            ProductosController(ProductoRepositoryImpl(ProductoDAO))
+        var inicial = Trabajador(
+            nombre = "Pepe",
+            apellido = "apellido",
+            email = "pepe@gmail.com",
+            password = PasswordParser.encriptar("1234"),
+            disponible = true,
+            administrador = true,
+            tareas = mutableListOf()
         )
 
+
+        var trabajadoresController= TrabajadoresController(TrabajadorRepositoryImpl())
+
+        trabajadoresController.addTrabajador(inicial)
+
+
+
+    var vista = Vista(trabajadoresController, MaquinasController(EncordadorRepositoryImpl(),
+            PersonalizadorRepositoryImpl()), ClientesController(ClienteRepositoryImpl()), PedidosController(PedidoRepositoryImpl())
+            ,TareasController(TareaRepositoryImpl()),ProductosController(ProductoRepositoryImpl()))
 
         do {
             var num = vista.principal()
             vista.opcionesPrincipal(num)
         } while (num != 0)
-    }
 
 
     makeJsonListas()
@@ -188,14 +162,3 @@ suspend fun makeListadoProductosServicios() = withContext(Dispatchers.IO) {
 }
 
 
-/**
- * Iniciar la base de datos
- */
-fun initDataBase() {
-    val appConfig = AppConfig.fromPropertiesFile("src/main/resources/config.properties")
-    println("Configuración: $appConfig")
-
-    // Iniciamos la base de datos con la configuracion que hemos leido
-    DataBaseManager.init(appConfig)
-
-}

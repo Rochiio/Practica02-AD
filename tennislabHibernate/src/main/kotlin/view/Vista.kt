@@ -1,4 +1,4 @@
-package view
+package view.view
 
 import ListaProductos
 import com.github.ajalt.mordant.rendering.TextAlign
