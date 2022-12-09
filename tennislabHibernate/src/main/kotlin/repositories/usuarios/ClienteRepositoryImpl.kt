@@ -18,7 +18,7 @@ class ClienteRepositoryImpl: ClienteRepository {
         HibernateManager.query {
             var query: TypedQuery<Cliente> = manager.createNamedQuery("Cliente.findByEmail", Cliente::class.java)
             query.setParameter("email",email)
-            encontrado = query.singleResult
+            encontrado = query.resultList.firstOrNull()
         }
         return encontrado
     }

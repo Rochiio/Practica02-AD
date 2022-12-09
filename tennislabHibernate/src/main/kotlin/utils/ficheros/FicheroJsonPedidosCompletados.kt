@@ -22,7 +22,7 @@ class FicheroJsonPedidosCompletados: FicherosJson<ListaPedidosCompletados> {
         var fichero = File(path)
 
         mutex.withLock {
-            out = OutputStreamWriter(FileOutputStream(fichero, true))
+            out = OutputStreamWriter(FileOutputStream(fichero, false))
             out.use { it.write(json.encodeToString(item)) }
         }
     }
